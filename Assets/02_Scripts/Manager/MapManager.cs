@@ -24,13 +24,15 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
-        StartNewStage(1);
-        // TODO: SaveManager 생성 시 변경해야 할 최우선 로직
+        int savedStage = SaveManager.Instance.GetCurrentStage();
+        StartNewStage(savedStage);
     }
 
     private void StartNewStage(int stage)
     {
         _currentStage = stage;
+        SaveManager.Instance.SaveStage(_currentStage);
+
         ChangeMapBasedOnStage(_currentStage).Forget();
         OnStageChanged?.Invoke(_currentStage);
     }
