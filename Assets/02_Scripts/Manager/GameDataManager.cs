@@ -64,7 +64,7 @@ public class GameDataManager : MonoBehaviour
     {
         CharacterDataList = LoadData<CharacterData>("Character");
 
-        BaseStatDataList = LoadData<BaseStatData>("BaseStat");
+        BaseStatDataList = LoadData<BaseStatData>("CharacterBaseStat");
     }
 
     // [사용부] ===========================================================
