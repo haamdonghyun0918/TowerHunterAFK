@@ -16,7 +16,7 @@ public class MapManager : MonoBehaviour
 
     [Header("Map Addressables")]
     [SerializeField] private SpriteRenderer _mapBackGround;
-    [SerializeField] private string[] _mapAddressableKeys = { "Map1", "Map2", "Map3" };
+    [SerializeField] private string[] _mapAddressableKeys = { "Map1", "Map2", "Map3", "Map3", "Map4", "Map5", "Map6", "Map7", "Map8" };
 
     private int _currentStage;
     public event Action<int> OnStageChanged;
