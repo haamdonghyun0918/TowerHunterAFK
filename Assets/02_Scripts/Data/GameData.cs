@@ -29,3 +29,11 @@ public class BaseStatData : GameDataBase
     public int BaseMp;
     public int BaseAtkSpeed;
 }
+
+[System.Serializable]
+public class MonsterData : GameDataBase
+{
+    public int BaseAtk;
+    public int BaseHp;
+    public int BaseAtkSpeed;
+}

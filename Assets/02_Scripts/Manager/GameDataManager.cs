@@ -26,6 +26,8 @@ public class GameDataManager : MonoBehaviour
     public Dictionary<string, CharacterData> CharacterDataList { get; private set; } = new Dictionary<string, CharacterData>();
     public Dictionary<string, BaseStatData> BaseStatDataList { get; private set; } = new Dictionary<string, BaseStatData>();
 
+    public Dictionary<string, MonsterData> MonsterDataList { get; private set; } = new Dictionary<string, MonsterData>();
+
     private Dictionary<string, T> LoadData<T>(string tableName) where T : GameDataBase
     {
         string resourcePath = $"JsonOutput/{tableName}";
@@ -65,6 +67,8 @@ public class GameDataManager : MonoBehaviour
         CharacterDataList = LoadData<CharacterData>("Character");
 
         BaseStatDataList = LoadData<BaseStatData>("CharacterBaseStat");
+
+        MonsterDataList = LoadData<MonsterData>("Monster");
     }
 
     // [사용부] ===========================================================
@@ -81,5 +85,12 @@ public class GameDataManager : MonoBehaviour
         if (BaseStatDataList == null || string.IsNullOrEmpty(id)) return null;
 
         return BaseStatDataList.TryGetValue(id, out var item) ? item : null;
+    }
+
+    public MonsterData GetMonsterData(string id)
+    {
+        if (MonsterDataList == null || string.IsNullOrEmpty(id)) return null;
+
+        return MonsterDataList.TryGetValue(id, out var item) ? item : null;
     }
 }
