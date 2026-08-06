@@ -20,7 +20,7 @@ public class MapManager : MonoBehaviour
     public async UniTaskVoid ChangeMapBasedOnStage(int currentStage)
     {
         // 1 ~ 10: 맵 어드레서블 키 0번, 11~ 20: 맵 어드레서블 키 1번 이런식으로 진행
-        int mapIndex = (currentStage - 1) / 10;
+        int mapIndex = ((currentStage - 1) % (_mapAddressableKeys.Length * 10)) / 10;
 
         if (mapIndex >= _mapAddressableKeys.Length)
         {
@@ -47,10 +47,5 @@ public class MapManager : MonoBehaviour
         {
             Debug.LogError("맵 이미지를 불러기 실패");
         }
-    }
-
-    private void Start()
-    {
-        ChangeMapBasedOnStage(17).Forget();
     }
 }
