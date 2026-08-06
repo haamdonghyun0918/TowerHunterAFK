@@ -1,12 +1,14 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance { get; private set; }
-
-    private const string SaveFileName = "GameSaveData.json";
     public SaveData CurrentSaveData { get; private set; }
+    private const string SaveFileName = "GameSaveData.json";
+
+    public event Action<int> OnGoldChanged;
 
     private void Awake()
     {
@@ -74,12 +76,14 @@ public class SaveManager : MonoBehaviour
     {
         CurrentSaveData.Gold = gold;
         SaveToFile(CurrentSaveData);
+        OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
 
     public void AddGold(int amount)
     {
         CurrentSaveData.Gold += amount;
         SaveToFile(CurrentSaveData);
+        OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
 
     public int GetGold()

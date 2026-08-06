@@ -5,6 +5,9 @@ using System;
 
 public class MapManager : MonoBehaviour
 {
+    public static MapManager Instance { get; private set; }
+    public int CurrentStage { get; private set; }
+
     [Header("Player Spawn & Clear Spot")]
     [SerializeField] private Transform _playerSpawnSpot;
     [SerializeField] private Transform _playerClearSpot;
@@ -16,11 +19,24 @@ public class MapManager : MonoBehaviour
 
     [Header("Map Addressables")]
     [SerializeField] private SpriteRenderer _mapBackGround;
-    [SerializeField] private string[] _mapAddressableKeys = { "Map1", "Map2", "Map3", "Map3", "Map4", "Map5", "Map6", "Map7", "Map8" };
+    [SerializeField] private string[] _mapAddressableKeys = { "Map1", "Map2", "Map3", "Map4", "Map5", "Map6", "Map7", "Map8" };
 
-    private int _currentStage;
     public event Action<int> OnStageChanged;
     public event Action OnStageCleared;
+    public event Action OnStageFailed;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -30,22 +46,28 @@ public class MapManager : MonoBehaviour
 
     private void StartNewStage(int stage)
     {
-        _currentStage = stage;
-        SaveManager.Instance.SaveStage(_currentStage);
+        CurrentStage = stage;
+        SaveManager.Instance.SaveStage(CurrentStage);
 
-        ChangeMapBasedOnStage(_currentStage).Forget();
-        OnStageChanged?.Invoke(_currentStage);
+        ChangeMapBasedOnStage(CurrentStage).Forget();
+        OnStageChanged?.Invoke(CurrentStage);
     }
 
     private void ClearedCurrentStage()
     {
         OnStageCleared?.Invoke();
-        StartNewStage(_currentStage + 1);
+        StartNewStage(CurrentStage + 1);
+    }
+
+    public void FailedStage()
+    {
+        OnStageFailed?.Invoke();
+        int rollBackStage = ((CurrentStage - 1) / 10) * 10 + 1;
+        StartNewStage(rollBackStage);
     }
 
     private async UniTaskVoid ChangeMapBasedOnStage(int currentStage)
     {
-        // 1 ~ 10: 맵 어드레서블 키 0번, 11~ 20: 맵 어드레서블 키 1번 이런식으로 진행
         int mapIndex = ((currentStage - 1) % (_mapAddressableKeys.Length * 10)) / 10;
 
         if (mapIndex >= _mapAddressableKeys.Length)
