@@ -366,11 +366,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
   _playerSpawnSpot: {fileID: 5854807008796774494}
-  _PlayerClearSpot: {fileID: 1623910584566201234}
+  _playerClearSpot: {fileID: 0}
   _monsterSpawnSpot1: {fileID: 3047196628895472564}
   _monsterSpawnSpot2: {fileID: 7035995303465366460}
   _monsterSpawnSpot3: {fileID: 3051840139055448444}
   _mapBackGround: {fileID: 7388458170876776421}
+  _mapAddressableKeys:
+  - Map1
+  - Map2
+  - Map3
+  - Map4
+  - Map5
+  - Map6
+  - Map7
+  - Map8
 --- !u!1 &5142488163924305315
 GameObject:
   m_ObjectHideFlags: 0
