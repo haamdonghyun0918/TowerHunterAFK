@@ -12,6 +12,10 @@ public class Monster : MonoBehaviour
     [Header("데이터 관련")]
     private MonsterData _monsterData;
 
+    [Header("전투 관련")]
+    private GameObject TargetCharacter;
+    private Character _targetCharacterComponent;
+
     private Animator _monsterAnimator;
 
     private Action<int, int> _onChangedHp;
@@ -19,6 +23,7 @@ public class Monster : MonoBehaviour
     private void Awake()
     {
         this.gameObject.SetActive(true);
+        _targetCharacterComponent = TargetCharacter.GetComponentInChildren<Character>();
     }
 
     private void Start()    // [TODO] 우선 Start로 하고 동적생성이 되면 OnEnable로 변경
@@ -32,6 +37,15 @@ public class Monster : MonoBehaviour
         SetStatData();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            //[TODO] 타겟Id 받아와서 공격
+            AtkTarget("character_Test_01");
+        }
+    }
+
     private void SetStatData()
     {
         _monsterAtk = _monsterData.BaseAtk;
@@ -42,12 +56,11 @@ public class Monster : MonoBehaviour
 
     private void AtkTarget(string targetId)
     {
-        //[TODO] 평타공격
-        // var data = GameDataManager.Inst.GetData(targetId);
-        if (targetId == "data.Id")  // 포멧으로 데이터 확인
+        var data = GameDataManager.Instance.GetCharacterData(targetId);
+        if (targetId == $"{data.Id}")  // 포멧으로 데이터 확인
         {
-            // var target = GameObjectManager.Inst.GetTarget(targetId);
-            // target.TakeDamage(_monsterAtk);
+            //[TODO] 오브젝트 매니저에서 타겟 받아오기
+            _targetCharacterComponent.TakeDamage(_monsterAtk);
         }
     }
 
