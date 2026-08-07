@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     private int _characterHp;
     private int _characterMaxHp;
     private int _characterMp;
+    private int _characterMaxMp;
     private int _characterAtk;
     private int _characterAtkSpeed;
 
@@ -25,14 +26,15 @@ public class Character : MonoBehaviour
 
     private Animator _characterAnimator;
 
-    private Action<int> _onChangedHp;
-    private Action<int> _onChangedMp;
+    private Action<int, int> _onChangedHp;
+    private Action<int, int> _onChangedMp;
 
     private bool _isCoolTime = false;
+    private bool _isDead = false;
 
     private void Awake()
     {
-        
+        _isDead = false;
     }
 
     private void Start()    // [TODO] 우선 Start로 하고 동적생성이 되면 OnEnable로 변경
@@ -63,6 +65,7 @@ public class Character : MonoBehaviour
         _characterAtkSpeed = baseStatData.BaseAtkSpeed;
         _characterMaxHp = baseStatData.BaseHp;
         _characterHp = baseStatData.BaseHp;
+        _characterMaxMp = baseStatData.BaseMp;
         _characterMp = baseStatData.BaseMp;
     }
 
@@ -78,6 +81,8 @@ public class Character : MonoBehaviour
 
     private void AtkTarget()
     {
+        if (_isDead == true) return;
+
         _targetMonsterComponent.TakeDamage(_characterAtk);
         Debug.Log($"타겟에게 {_characterAtk} 데미지를 줍니다.");
         if (_isCoolTime == true)
@@ -88,7 +93,10 @@ public class Character : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (_isDead == true) return;
+
         _characterHp -= damage;
+        InvokeStatChangedEvent();
         Debug.Log($"{_characterData.Name}가 {damage} 데미지를 받았습니다.");
         
         if (_characterHp <= 0)
@@ -101,6 +109,9 @@ public class Character : MonoBehaviour
     {
         //[TODO] 죽음 애니메이션 재생
         Debug.Log($"{_characterData.Name}이 죽었습니다.");
+        ResetStateChangedEvent();
+        this.gameObject.SetActive( false );
+        _isDead = true;
     }
 
     private void ChangeState()
@@ -108,18 +119,21 @@ public class Character : MonoBehaviour
         //[TODO] 애니메이션 변경 (스킬사용, 평타공격, 죽는애니메이션)
     }
 
-    private void ResetState()
+    public void BindOnStatChangedEvent(Action<int, int> hpChangeCallback, Action<int, int> mpChangeCallback)
     {
-        //[TODO] 스탯리셋
+        _onChangedHp += hpChangeCallback;
+        _onChangedMp += mpChangeCallback;
     }
 
-    private void OnChangeHP(int characterHp)
+    private void ResetStateChangedEvent()
     {
-        _characterHp = characterHp;
+        _onChangedHp = null;
+        _onChangedMp = null;
     }
 
-    private void OnChangeMP(int characterMp)
+    private void InvokeStatChangedEvent()
     {
-        _characterMp = characterMp;
+        _onChangedHp?.Invoke(_characterHp, _characterMaxHp);
+        _onChangedMp?.Invoke(_characterMp, _characterMaxMp);
     }
 }
