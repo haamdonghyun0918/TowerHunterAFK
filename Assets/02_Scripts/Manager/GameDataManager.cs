@@ -1,96 +1,94 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class GameDataManager : MonoBehaviour
 {
-    public static GameDataManager Instance { get; set; }
-
-    private void Awake()
-    {
-        Instance = this;
-
-        LoadAll();  // => 추후 GameUtil에서 불러오도록 변경
-    }
-
-    [System.Serializable]
+    [Serializable]
     private class SerializationWrapper<T>
     {
-        public List<T> items;
+        public List<T> item;
     }
 
-    // -------------------------------------------------------------------
+    private Dictionary<string, object> _dataList = new Dictionary<string, object>();
 
-    public Dictionary<string, CharacterData> CharacterDataList { get; private set; } = new Dictionary<string, CharacterData>();
-    public Dictionary<string, BaseStatData> BaseStatDataList { get; private set; } = new Dictionary<string, BaseStatData>();
-
-    public Dictionary<string, MonsterData> MonsterDataList { get; private set; } = new Dictionary<string, MonsterData>();
-
-    private Dictionary<string, T> LoadData<T>(string tableName) where T : GameDataBase
+    private Dictionary<string, T> LoadJsonData<T>(string tableName) where T : GameDataBase
     {
         string resourcePath = $"JsonOutput/{tableName}";
-
+        
         TextAsset textAsset = Resources.Load<TextAsset>(resourcePath);
 
-        if (textAsset == null)
+        if(textAsset == null)
         {
-            Debug.LogError($"[Error] 리소스를 찾을 수 없습니다: Resources/{resourcePath}");
-            return new Dictionary<string, T>();
+            Debug.LogError($"GameDataManager: 리소스를 찾을 수 없습니다. Resource/{resourcePath}");
+            return new Dictionary<string, T> ();
         }
 
         try
         {
-            string jsonString = textAsset.text;
+            string JsonString = textAsset.text;
 
-            string wrappedJson = "{\"items\":" + jsonString + "}";
+            string wrappedJson = "{\"Item\":" +  JsonString +"}";
             SerializationWrapper<T> wrapper = JsonUtility.FromJson<SerializationWrapper<T>>(wrappedJson);
 
-            if (wrapper != null && wrapper.items != null)
+            if(wrapper != null && wrapper.item != null)
             {
                 Debug.Log($"{typeof(T).Name} 데이터를 {wrapper.items.Count}개 로드했습니다.");
-                // ToDictionary를 사용하려면 각 클래스(T)에 Id 필드가 있어야 합니다.
-                return wrapper.items.ToDictionary(item => item.Id.ToString());
+                return wrapper.item.ToDictionary(item => item.Id.ToString());
             }
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             Debug.LogError($"[{typeof(T).Name} JSON 로드 오류] {ex.Message}");
         }
 
-        return new Dictionary<string, T>();
+        return new Dictionary<string, T> ();
     }
 
-    public void LoadAll()
+    public void LoadData<T>() where T : GameDataBase
     {
-        CharacterDataList = LoadData<CharacterData>("Character");
-
-        BaseStatDataList = LoadData<BaseStatData>("CharacterBaseStat");
-
-        MonsterDataList = LoadData<MonsterData>("Monster");
+        string dataName = typeof(T).Name;
+        if(_dataList.ContainsKey(dataName) == false)
+        {
+            _dataList.Add(dataName, new Dictionary<string, T>());
+        }
+        _dataList[dataName] = LoadJsonData<T>(dataName);
     }
 
-    // [사용부] ===========================================================
-
-    public CharacterData GetCharacterData(string id)
+    public T GetData<T>(string id) where T : GameDataBase
     {
-        if (CharacterDataList == null || string.IsNullOrEmpty(id)) return null;
-
-        return CharacterDataList.TryGetValue(id, out var item) ? item : null;
+        string type = typeof(T).Name;
+        object dictObject = null;
+        if(_dataList.TryGetValue(type, out dictObject))
+        {
+            var dict = dictObject as Dictionary<string, T>;
+            return dict[id];
+        }
+        return null;
     }
 
-    public BaseStatData GetBaseStatData(string id)
+    public List<string> GetAllDataId<T>() where T : GameDataBase
     {
-        if (BaseStatDataList == null || string.IsNullOrEmpty(id)) return null;
-
-        return BaseStatDataList.TryGetValue(id, out var item) ? item : null;
+        string type = typeof(T).Name;
+        object dictObject = null;
+        if (_dataList.TryGetValue(type, out dictObject))
+        {
+            var dict = dictObject as Dictionary<string, T>;
+            return dict.Keys.ToList();
+        }
+        return null;
     }
-
-    public MonsterData GetMonsterData(string id)
+    
+    public List<T> GetAllData<T>() where T : GameDataBase
     {
-        if (MonsterDataList == null || string.IsNullOrEmpty(id)) return null;
-
-        return MonsterDataList.TryGetValue(id, out var item) ? item : null;
+        string type = typeof(T).Name;
+        object dictObject = null;
+        if(_dataList.TryGetValue(type,out dictObject))
+        {
+            var dict = dictObject as Dictionary<string, T>;
+            return dict.Values.ToList();
+        }
+        return null;
     }
 }
