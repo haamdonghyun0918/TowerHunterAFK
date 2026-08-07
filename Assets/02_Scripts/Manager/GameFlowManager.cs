@@ -26,15 +26,13 @@ public class GameFlowManager : MonoBehaviour
     private async UniTaskVoid StartGame()
     {
         Debug.Log("게임 시작중....=>로딩 화면");
-        SaveManager.Instance.Init();
+        await SaveManager.Instance.Init();
 
         MapManager.Instance.OnStageChanged += HandleStageChanged;
         MapManager.Instance.OnStageCleared += HandleStageCleared;
         MapManager.Instance.OnStageFailed += HandleStageFailed;
 
-        MapManager.Instance.Init();
-
-        await UniTask.Delay(500);
+        await MapManager.Instance.Init();
         Debug.Log("게임 세팅 완료 게임 화면 출력");
     }
 
@@ -57,8 +55,8 @@ public class GameFlowManager : MonoBehaviour
     private void HandleStageCleared()
     {
         Debug.Log("스테이지 클리어");
-        SaveManager.Instance.AddGold(10000);
-        Debug.Log("클리어 보상 10000골드 지급!");
+        SaveManager.Instance.AddGold(1000);
+        Debug.Log("클리어 보상 1000골드 지급!");
     }
 
     private void HandleStageFailed()
