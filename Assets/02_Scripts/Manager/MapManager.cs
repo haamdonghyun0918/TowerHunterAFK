@@ -13,9 +13,9 @@ public class MapManager : MonoBehaviour
     [SerializeField] private Transform _playerClearSpot;
 
     [Header("MonsterSpawnSpot")]
-    [SerializeField] private GameObject _monsterSpawnSpot1;
-    [SerializeField] private GameObject _monsterSpawnSpot2;
-    [SerializeField] private GameObject _monsterSpawnSpot3;
+    [SerializeField] private Transform _monsterSpawnSpot1;
+    [SerializeField] private Transform _monsterSpawnSpot2;
+    [SerializeField] private Transform _monsterSpawnSpot3;
 
     [Header("Map Addressables")]
     [SerializeField] private SpriteRenderer _mapBackGround;
