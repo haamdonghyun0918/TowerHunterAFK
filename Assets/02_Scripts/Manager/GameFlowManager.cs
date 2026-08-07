@@ -23,32 +23,30 @@ public class GameFlowManager : MonoBehaviour
         StartGame().Forget();
     }
 
-    private void OnEnable()
+    private async UniTaskVoid StartGame()
     {
-        if (MapManager.Instance != null)
-        {
-            MapManager.Instance.OnStageChanged += HandleStageChanged;
-            MapManager.Instance.OnStageCleared += HandleStageCleared;
-        }
-        // TODO: 스쿼드 전멸시 이벤트 발생하면 구독
+        Debug.Log("게임 시작중....=>로딩 화면");
+        SaveManager.Instance.Init();
+
+        MapManager.Instance.OnStageChanged += HandleStageChanged;
+        MapManager.Instance.OnStageCleared += HandleStageCleared;
+        MapManager.Instance.OnStageFailed += HandleStageFailed;
+
+        MapManager.Instance.Init();
+
+        await UniTask.Delay(500);
+        Debug.Log("게임 세팅 완료 게임 화면 출력");
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         if (MapManager.Instance != null)
         {
             MapManager.Instance.OnStageChanged -= HandleStageChanged;
             MapManager.Instance.OnStageCleared -= HandleStageCleared;
+            MapManager.Instance.OnStageFailed -= HandleStageFailed;
         }
-        //TODO: 스쿼드 전멸 이벤트 구독 해지
-    }
 
-    private async UniTaskVoid StartGame()
-    {
-        Debug.Log("게임 시작....");
-        SaveManager.Instance.Init();
-        MapManager.Instance.Init();
-        await UniTask.Delay(500);
     }
 
     private void HandleStageChanged(int stage)
@@ -63,11 +61,8 @@ public class GameFlowManager : MonoBehaviour
         Debug.Log("클리어 보상 10000골드 지급!");
     }
 
-    private void OnFailedStage() // TODO: 메서드 이름 변경할 것 이벤트 구독을 했을 때
+    private void HandleStageFailed()
     {
-        if (MapManager.Instance != null)
-        {
-            MapManager.Instance.FailedStage();
-        }
+        Debug.Log("스쿼드가 전멸하여 스테이지 실패...");
     }
 }
