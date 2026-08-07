@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class DataTest : MonoBehaviour
+public class JIDataTest : MonoBehaviour
 {
     private void Start()
     {
