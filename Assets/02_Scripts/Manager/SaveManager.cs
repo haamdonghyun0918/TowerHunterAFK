@@ -9,7 +9,7 @@ public class SaveManager : MonoBehaviour
     public SaveData CurrentSaveData { get; private set; }
     private const string SaveFileName = "GameSaveData.json";
 
-    public event Action<int> OnGoldChanged;
+    public event Action<float> OnGoldChanged;
     public event Action OnNotEnoughGold;
 
     private void Awake()
@@ -79,26 +79,26 @@ public class SaveManager : MonoBehaviour
         return CurrentSaveData.CurrentStage;
     }
 
-    public void SaveGold(int gold)
+    public void SaveGold(float gold)
     {
         CurrentSaveData.Gold = gold;
         SaveToFile(CurrentSaveData);
         OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
 
-    public void AddGold(int amount)
+    public void AddGold(float amount)
     {
         CurrentSaveData.Gold += amount;
         SaveToFile(CurrentSaveData);
         OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
 
-    public int GetGold()
+    public float GetGold()
     {
         return CurrentSaveData.Gold;
     }
 
-    public bool UseGold(int amount)
+    public bool UseGold(float amount)
     {
         if (CurrentSaveData.Gold >= amount)
         {
