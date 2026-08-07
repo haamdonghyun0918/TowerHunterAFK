@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -24,10 +25,11 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    public void Init()
+    public UniTask Init()
     {
         CurrentSaveData = LoadOrCreateData();
         Debug.Log("SaveManager 호출");
+        return UniTask.CompletedTask;
     }
 
     private SaveData LoadOrCreateData()

@@ -26,15 +26,13 @@ public class GameFlowManager : MonoBehaviour
     private async UniTaskVoid StartGame()
     {
         Debug.Log("게임 시작중....=>로딩 화면");
-        SaveManager.Instance.Init();
+        await SaveManager.Instance.Init();
 
         MapManager.Instance.OnStageChanged += HandleStageChanged;
         MapManager.Instance.OnStageCleared += HandleStageCleared;
         MapManager.Instance.OnStageFailed += HandleStageFailed;
 
-        MapManager.Instance.Init();
-
-        await UniTask.Delay(500);
+        await MapManager.Instance.Init();
         Debug.Log("게임 세팅 완료 게임 화면 출력");
     }
 

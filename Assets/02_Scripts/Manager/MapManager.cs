@@ -38,36 +38,36 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public void Init()
+    public async UniTask Init()
     {
         int savedStage = SaveManager.Instance.GetCurrentStage();
-        StartNewStage(savedStage);
+        await StartNewStage(savedStage);
         Debug.Log("MapManager 호출");
     }
 
-    private void StartNewStage(int stage)
+    private async UniTask StartNewStage(int stage)
     {
         CurrentStage = stage;
         SaveManager.Instance.SaveStage(CurrentStage);
 
-        ChangeMapBasedOnStage(CurrentStage).Forget();
+        await ChangeMapBasedOnStage(CurrentStage);
         OnStageChanged?.Invoke(CurrentStage);
     }
 
     public void ClearedCurrentStage()
     {
         OnStageCleared?.Invoke();
-        StartNewStage(CurrentStage + 1);
+        StartNewStage(CurrentStage + 1).Forget();
     }
 
-    public void FailedStage()
+    public void FailedCurrentStage()
     {
-        int rollBackStage = ((CurrentStage - 1) / 10) * 10 + 1;
-        StartNewStage(rollBackStage);
         OnStageFailed?.Invoke();
+        int rollBackStage = ((CurrentStage - 1) / 10) * 10 + 1;
+        StartNewStage(rollBackStage).Forget();
     }
 
-    private async UniTaskVoid ChangeMapBasedOnStage(int currentStage)
+    private async UniTask ChangeMapBasedOnStage(int currentStage)
     {
         int mapIndex = ((currentStage - 1) % (_mapAddressableKeys.Length * 10)) / 10;
 
