@@ -45,7 +45,7 @@ public class MapManager : MonoBehaviour
         Debug.Log("MapManager 호출");
     }
 
-    private async UniTask StartNewStage(int stage)
+    public async UniTask StartNewStage(int stage)
     {
         CurrentStage = stage;
         SaveManager.Instance.SaveStage(CurrentStage);
