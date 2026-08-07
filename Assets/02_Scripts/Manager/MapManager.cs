@@ -54,7 +54,7 @@ public class MapManager : MonoBehaviour
         OnStageChanged?.Invoke(CurrentStage);
     }
 
-    private void ClearedCurrentStage()
+    public void ClearedCurrentStage()
     {
         OnStageCleared?.Invoke();
         StartNewStage(CurrentStage + 1);
@@ -62,9 +62,9 @@ public class MapManager : MonoBehaviour
 
     public void FailedStage()
     {
-        OnStageFailed?.Invoke();
         int rollBackStage = ((CurrentStage - 1) / 10) * 10 + 1;
         StartNewStage(rollBackStage);
+        OnStageFailed?.Invoke();
     }
 
     private async UniTaskVoid ChangeMapBasedOnStage(int currentStage)
