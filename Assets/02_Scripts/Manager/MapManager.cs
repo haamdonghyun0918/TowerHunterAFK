@@ -38,10 +38,11 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void Init()
     {
         int savedStage = SaveManager.Instance.GetCurrentStage();
         StartNewStage(savedStage);
+        Debug.Log("MapManager 호출");
     }
 
     private void StartNewStage(int stage)

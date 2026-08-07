@@ -9,20 +9,25 @@ public class SaveManager : MonoBehaviour
     private const string SaveFileName = "GameSaveData.json";
 
     public event Action<int> OnGoldChanged;
+    public event Action OnNotEnoughGold;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            CurrentSaveData = LoadOrCreateData();
         }
 
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    public void Init()
+    {
+        CurrentSaveData = LoadOrCreateData();
+        Debug.Log("SaveManager 호출");
     }
 
     private SaveData LoadOrCreateData()
@@ -89,5 +94,23 @@ public class SaveManager : MonoBehaviour
     public int GetGold()
     {
         return CurrentSaveData.Gold;
+    }
+
+    public bool UseGold(int amount)
+    {
+        if (CurrentSaveData.Gold >= amount)
+        {
+            CurrentSaveData.Gold -= amount;
+            SaveToFile(CurrentSaveData);
+            OnGoldChanged?.Invoke(CurrentSaveData.Gold);
+
+            return true;
+        }
+
+        else
+        {
+            OnNotEnoughGold?.Invoke();
+            return false;
+        }
     }
 }
