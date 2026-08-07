@@ -1,0 +1,9 @@
+[
+  {
+    "Id": "monster_Test_01",
+    "Name": "테스트 몬스터",
+    "BaseAtk": 30,
+    "BaseHp": 100,
+    "BaseAtkSpeed": 10
+  }
+]
