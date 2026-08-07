@@ -1,55 +1,95 @@
-using System;
+ï»¿using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    [Header("½ºÅ³ °ü·Ã")]
+    [Header("ìŠ¤í‚¬ ê´€ë ¨")]
     [SerializeField] private Collider Collider_Skill;
     [SerializeField] private GameObject Prefab_Skill;
     [SerializeField] private Transform Root_SkillSpawn;
 
-    [Header("½ºÅÈ °ü·Ã")]
+    [Header("ìŠ¤íƒ¯ ê´€ë ¨")]
     private int _characterHp;
+    private int _characterMaxHp;
     private int _characterMp;
+    private int _characterAtk;
     private int _characterAtkSpeed;
+
+    [Header("ë°ì´í„° ê´€ë ¨")]
+    private CharacterData _characterData;
+
+    [Header("ì „íˆ¬ ê´€ë ¨")]
+    [SerializeField] private GameObject TargetMonster;
+    [SerializeField] private Monster _targetMonsterComponent;
 
     private Animator _characterAnimator;
 
     private Action<int> _onChangedHp;
     private Action<int> _onChangedMp;
 
-    private bool _isCoolTime;
+    private bool _isCoolTime = false;
 
     private void Awake()
     {
-        //[TODO] µ¥ÀÌÅÍ ºÒ·¯¿À±â
+        
     }
 
-    private void OnEnable()
+    private void Start()    // [TODO] ìš°ì„  Startë¡œ í•˜ê³  ë™ì ìƒì„±ì´ ë˜ë©´ OnEnableë¡œ ë³€ê²½
     {
-        //[TODO] Hud »ı¼º, ¿ÀºêÁ§Æ®¸Å´ÏÀú¿¡ Ä³¸¯ÅÍ µî·Ï(¼ÒÅëÈÄ)
+        //[TODO] Hud ìƒì„±, ì˜¤ë¸Œì íŠ¸ë§¤ë‹ˆì €ì— ìºë¦­í„° ë“±ë¡(ì†Œí†µí›„)
+        if (GameDataManager.Instance == null)
+        {
+            Debug.Log($"[Character] GameDataManagerê°€ NULLì…ë‹ˆë‹¤.");
+        }
+        _characterData = GameDataManager.Instance.GetCharacterData("character_Test_01");     // [TODO] í•˜ë“œì½”ë”©ì„ í•˜ì§€ì•Šê³  (ID)ë°ì´í„°ë¥¼ ë°›ì•„ì™€ì•¼í•¨
+        _targetMonsterComponent = TargetMonster.GetComponentInChildren<Monster>();    // [TODO] íƒ€ê²Ÿ ëª¬ìŠ¤í„° ì •í•˜ëŠ” ë°©ì‹ ì •í•´ì•¼í•¨
+        SetStatData();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            AtkTarget();
+        }
+    }
+
+    private void SetStatData()
+    {
+        var baseStatData = GameDataManager.Instance.GetBaseStatData(_characterData.BaseStatDataId);
+
+        _characterAtk = baseStatData.BaseAtk;
+        _characterAtkSpeed = baseStatData.BaseAtkSpeed;
+        _characterMaxHp = baseStatData.BaseHp;
+        _characterHp = baseStatData.BaseHp;
+        _characterMp = baseStatData.BaseMp;
     }
 
     private void UseSkill()
     {
-        if (_isCoolTime == false)
+        string skillId = _characterData.Skill;
+        if (_isCoolTime == false) 
         {
-            //[TODO] ½ºÅ³»ç¿ë
+            //[TODO] ìŠ¤í‚¬ì‚¬ìš©
+            //UseSkill(skillId);
         }
     }
 
     private void AtkTarget()
     {
+        _targetMonsterComponent.TakeDamage(_characterAtk);
+        Debug.Log($"íƒ€ê²Ÿì—ê²Œ {_characterAtk} ë°ë¯¸ì§€ë¥¼ ì¤ë‹ˆë‹¤.");
         if (_isCoolTime == true)
         {
-            //[TODO] ÆòÅ¸°ø°İ
+            //[TODO] í‰íƒ€ê³µê²©
         }
     }
 
-    private void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         _characterHp -= damage;
+        Debug.Log($"{_characterData.Name}ê°€ {damage} ë°ë¯¸ì§€ë¥¼ ë°›ì•˜ìŠµë‹ˆë‹¤.");
         
         if (_characterHp <= 0)
         {
@@ -59,17 +99,18 @@ public class Character : MonoBehaviour
 
     private void Die()
     {
-        //[TODO] Á×À½ ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
+        //[TODO] ì£½ìŒ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
+        Debug.Log($"{_characterData.Name}ì´ ì£½ì—ˆìŠµë‹ˆë‹¤.");
     }
 
     private void ChangeState()
     {
-        //[TODO] ¾Ö´Ï¸ŞÀÌ¼Ç º¯°æ (½ºÅ³»ç¿ë, ÆòÅ¸°ø°İ, Á×´Â¾Ö´Ï¸ŞÀÌ¼Ç)
+        //[TODO] ì• ë‹ˆë©”ì´ì…˜ ë³€ê²½ (ìŠ¤í‚¬ì‚¬ìš©, í‰íƒ€ê³µê²©, ì£½ëŠ”ì• ë‹ˆë©”ì´ì…˜)
     }
 
     private void ResetState()
     {
-        //[TODO] ½ºÅÈ¸®¼Â
+        //[TODO] ìŠ¤íƒ¯ë¦¬ì…‹
     }
 
     private void OnChangeHP(int characterHp)
