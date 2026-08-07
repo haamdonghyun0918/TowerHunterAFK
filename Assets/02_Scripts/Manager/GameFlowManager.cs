@@ -25,21 +25,30 @@ public class GameFlowManager : MonoBehaviour
 
     private void OnEnable()
     {
-        MapManager.Instance.OnStageChanged += HandleStageChanged; 
-        MapManager.Instance.OnStageCleared += HandleStageCleared;
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.OnStageChanged += HandleStageChanged;
+            MapManager.Instance.OnStageCleared += HandleStageCleared;
+        }
         // TODO: 스쿼드 전멸시 이벤트 발생하면 구독
     }
 
     private void OnDisable()
     {
-        MapManager.Instance.OnStageChanged -= HandleStageChanged;
-        MapManager.Instance.OnStageCleared -= HandleStageCleared;
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.OnStageChanged -= HandleStageChanged;
+            MapManager.Instance.OnStageCleared -= HandleStageCleared;
+        }
         //TODO: 스쿼드 전멸 이벤트 구독 해지
     }
 
     private async UniTaskVoid StartGame()
     {
-        //TODO: 게임 시작하는 내용 넣을 것
+        Debug.Log("게임 시작....");
+        SaveManager.Instance.Init();
+        MapManager.Instance.Init();
+        await UniTask.Delay(500);
     }
 
     private void HandleStageChanged(int stage)

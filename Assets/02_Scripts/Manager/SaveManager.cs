@@ -16,13 +16,18 @@ public class SaveManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            CurrentSaveData = LoadOrCreateData();
         }
 
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    public void Init()
+    {
+        CurrentSaveData = LoadOrCreateData();
+        Debug.Log("SaveManager 호출");
     }
 
     private SaveData LoadOrCreateData()
