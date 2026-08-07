@@ -6,9 +6,11 @@ public class Monster : MonoBehaviour
     [Header("스탯 관련")]
     private int _monsterMaxHp;
     private int _monsterHp;
-    private int _monsterMp;
     private int _monsterAtkSpeed;
     private int _monsterAtk;
+
+    [Header("데이터 관련")]
+    private MonsterData _monsterData;
 
     private Animator _monsterAnimator;
 
@@ -16,16 +18,26 @@ public class Monster : MonoBehaviour
 
     private void Awake()
     {
-        //[TODO] 데이터 불러오기
-        _monsterHp = 100;
-        _monsterAtkSpeed = 10;
-        _monsterAtk = 30;
         this.gameObject.SetActive(true);
     }
 
-    private void OnEnable()
+    private void Start()    // [TODO] 우선 Start로 하고 동적생성이 되면 OnEnable로 변경
     {
         //[TODO] Hud 생성, 오브젝트매니저에 캐릭터 등록(소통후)
+        if (GameDataManager.Instance == null)
+        {
+            Debug.Log("[Monster] GameDataManager가 NULL입니다.");
+        }
+        _monsterData = GameDataManager.Instance.GetMonsterData("monster_Test_01");  // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
+        SetStatData();
+    }
+
+    private void SetStatData()
+    {
+        _monsterAtk = _monsterData.BaseAtk;
+        _monsterAtkSpeed = _monsterData.BaseAtkSpeed;
+        _monsterHp = _monsterData.BaseHp;
+        _monsterMaxHp = _monsterData.BaseHp;
     }
 
     private void AtkTarget(string targetId)
@@ -39,7 +51,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    private void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         _monsterHp -= damage;
 
