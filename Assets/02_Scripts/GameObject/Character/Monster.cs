@@ -13,8 +13,10 @@ public class Monster : MonoBehaviour
     private MonsterData _monsterData;
 
     [Header("전투 관련")]
-    private GameObject TargetCharacter;
+    [SerializeField] private GameObject TargetCharacter;
     private Character _targetCharacterComponent;
+
+    private bool _isDead = false;
 
     private Animator _monsterAnimator;
 
@@ -22,6 +24,7 @@ public class Monster : MonoBehaviour
 
     private void Awake()
     {
+        _isDead = false;
         this.gameObject.SetActive(true);
         _targetCharacterComponent = TargetCharacter.GetComponentInChildren<Character>();
     }
@@ -56,6 +59,8 @@ public class Monster : MonoBehaviour
 
     private void AtkTarget(string targetId)
     {
+        if (_isDead == true) return;
+
         var data = GameDataManager.Instance.GetCharacterData(targetId);
         if (targetId == $"{data.Id}")  // 포멧으로 데이터 확인
         {
@@ -66,6 +71,8 @@ public class Monster : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (_isDead == true) return;
+
         _monsterHp -= damage;
 
         if (_monsterHp <= 0)
@@ -78,6 +85,7 @@ public class Monster : MonoBehaviour
     {
         //[TODO] 죽음 애니메이션 재생
         this.gameObject.SetActive(false);
+        _isDead = true;
     }
 
     private void ChangeState()
