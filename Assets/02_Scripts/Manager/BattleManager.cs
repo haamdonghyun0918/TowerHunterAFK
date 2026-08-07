@@ -26,7 +26,6 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-
     private void Awake()
     {
         if (Instance == null)
@@ -37,7 +36,6 @@ public class BattleManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
     }
     
     public void StartBattle(PlayerPartyController playerParty, GameObject monsterParty)
@@ -81,9 +79,7 @@ public class BattleManager : MonoBehaviour
 
         turnQueue.Sort(CompareActionOrder);
 
-        bool isHunterOrMonsterRemain = (playerParty.GetCurrentHunterCount() > 0) && (enemyParty.GetCurrentMonsterCount() > 0);
-
-        while (isHunterOrMonsterRemain)
+        while ((playerParty.GetCurrentHunterCount() > 0) && (enemyParty.GetCurrentMonsterCount() > 0))
         {
             foreach (var entity in turnQueue)
             {
@@ -94,12 +90,14 @@ public class BattleManager : MonoBehaviour
 
                 //공격을 하는 aud령을 배틀 매니저가 내리느냐, 캐릭터/몬스터가 내리느냐 하는 생각이 필요하다. 
                 //어차피 공격 메서드를 캐릭터에서 사용해도 배틀매니저에 공격 요청을 보내니까 그냥 여기서 처리하면 되는거 아닌가?
+                //상의하고 배틀 매니저에서 처리할지, 캐닉터/몬트서에서 처리할지(타깃 정보를 넘겨줌) 결정필요.
+                //일단은 그냥 객체를 던지는 것으로 구현(
                 if (entity.IsPlayer == true)
                 {
                     Monster target = FindMonsterTarget(entity.Index, enemyParty);
                     if (target != null)
                     {
-                        entity.Hunter.AtkTarget();
+                        entity.Hunter.AtkTarget(target);
                     }
                 }
                 else
@@ -107,7 +105,7 @@ public class BattleManager : MonoBehaviour
                     Character target = FindHunterTarget(entity.Index, playerParty);
                     if (target != null)
                     {
-                        entity.Mob.AtkTarget();
+                        entity.Mob.AtkTarget(target);
                     }
                 }
 
@@ -120,6 +118,16 @@ public class BattleManager : MonoBehaviour
 
                 await UniTask.Delay(500);
             }
+        }
+
+        if (playerParty.GetCurrentHunterCount() == 0)
+        {
+            Debug.Log("헌터 파티가 모두 리타이어 했습니다. 안전지대로 돌아갑니다.");
+            MapManager.Instance.FailedCurrentStage();
+        }
+        else if (enemyParty.GetCurrentMonsterCount() == 0)
+        {
+            Debug.Log("헌터 파티 승리!");
         }
 
         EndBattle(playerParty, enemyParty.gameObject);

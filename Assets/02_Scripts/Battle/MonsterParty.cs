@@ -70,11 +70,5 @@ public class MonsterParty : MonoBehaviour
                 break;
             }
         }
-
-        if (GetCurrentMonsterCount() == 0)
-        {
-            Debug.Log("모든 몬스터가 리타이어했습니다. 전투에서 승리했습니다.");
-            BattleManager.Instance.EndBattle(BattleManager.Instance._playerParty, this.gameObject);
-        }
     }
 }

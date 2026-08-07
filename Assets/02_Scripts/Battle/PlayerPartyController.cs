@@ -84,12 +84,6 @@ public class PlayerPartyController : MonoBehaviour
                 break;
             }
         }
-
-        if (GetCurrentHunterCount() == 0)
-        {
-            Debug.Log("모든 헌터가 리타이어했습니다. 안전지대로 돌아갑니다.");
-            MapManager.Instance.FailedCurrentStage();
-        }
     }
 
     private void OnTriggerEnter(Collider other)
