@@ -10,7 +10,6 @@ public class GameFlowManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         else
