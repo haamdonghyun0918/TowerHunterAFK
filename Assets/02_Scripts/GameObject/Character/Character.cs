@@ -83,6 +83,10 @@ public class Character : MonoBehaviour
     {
         if (_isDead == true) return;
 
+        if (_targetMonsterComponent == null)
+        {
+            Debug.Log("타겟 몬스터의 컴포넌트를 받아오지 못했습니다.");
+        }
         _targetMonsterComponent.TakeDamage(_characterAtk);
         Debug.Log($"타겟에게 {_characterAtk} 데미지를 줍니다.");
         if (_isCoolTime == true)
