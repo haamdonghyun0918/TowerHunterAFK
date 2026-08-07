@@ -1,8 +1,31 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using NUnit.Framework;
+using UnityEngine;
+using System.Collections.Generic;
 
 public class BattleManager : MonoBehaviour
 {
+    public PlayerPartyController _playerParty;
+
     public static BattleManager Instance { get; private set; }
+
+    private class BattleEntity
+    {
+        public Character Hunter;
+        public Monster Mob;
+        public bool IsPlayer;
+        public int Speed;
+        public int Index;
+
+        public bool IsDead
+        {
+            get
+            {
+                return IsPlayer ? Hunter._isDead : Mob._isDead;
+            }
+        }
+    }
+
 
     private void Awake()
     {
@@ -16,20 +39,154 @@ public class BattleManager : MonoBehaviour
         }
 
     }
-    public void StartBattle(PlayerParty playerParty, GameObject monsterParty)
+    
+    public void StartBattle(PlayerPartyController playerParty, GameObject monsterParty)
     {
         Debug.Log("전투 시작!");
+        MonsterParty enemyParty = monsterParty.GetComponent<MonsterParty>();
 
-        //TODO: 전투 로직 구현
-
-        EndBattle(playerParty, monsterParty);
+        AutoBattleRoutine(playerParty, enemyParty).Forget();
     }
 
-    public void EndBattle(PlayerParty playerParty, GameObject monsterParty)
+    private async UniTaskVoid AutoBattleRoutine(PlayerPartyController playerParty, MonsterParty enemyParty)
     {
-        monsterParty.SetActive(false);
-        Debug.Log("전투 종료!");
+        List<BattleEntity> turnQueue = new List<BattleEntity>();
 
-        playerParty.isBattling = false;
+        for(int i = 0; i < 3; i++)
+        {
+            Character hunter = playerParty.GetHunter(i);
+            if((hunter != null) && (hunter._isDead == false))
+            {
+                turnQueue.Add(new BattleEntity
+                {
+                    Hunter = hunter,
+                    IsPlayer = true,
+                    Speed = hunter._characterAtkSpeed,
+                    Index = i
+                });
+            }
+
+            Monster monster = enemyParty.GetMonster(i);
+            if((monster != null) && (monster._isDead == false))
+            {
+                turnQueue.Add(new BattleEntity
+                {
+                    Mob = monster,
+                    IsPlayer = false,
+                    Speed = monster._monsterAtkSpeed,
+                    Index = i
+                });
+            }
+        }
+
+        turnQueue.Sort(CompareActionOrder);
+
+        bool isHunterOrMonsterRemain = (playerParty.GetCurrentHunterCount() > 0) && (enemyParty.GetCurrentMonsterCount() > 0);
+
+        while (isHunterOrMonsterRemain)
+        {
+            foreach (var entity in turnQueue)
+            {
+                if (entity.IsDead == true)
+                {
+                    continue;
+                }
+
+                //공격을 하는 aud령을 배틀 매니저가 내리느냐, 캐릭터/몬스터가 내리느냐 하는 생각이 필요하다. 
+                //어차피 공격 메서드를 캐릭터에서 사용해도 배틀매니저에 공격 요청을 보내니까 그냥 여기서 처리하면 되는거 아닌가?
+                if (entity.IsPlayer == true)
+                {
+                    Monster target = FindMonsterTarget(entity.Index, enemyParty);
+                    if (target != null)
+                    {
+                        entity.Hunter.AtkTarget();
+                    }
+                }
+                else
+                {
+                    Character target = FindHunterTarget(entity.Index, playerParty);
+                    if (target != null)
+                    {
+                        entity.Mob.AtkTarget();
+                    }
+                }
+
+                bool isHunterOrMonsterWipeOut = (playerParty.GetCurrentHunterCount() == 0) || (enemyParty.GetCurrentMonsterCount() == 0);
+                
+                if (isHunterOrMonsterWipeOut)
+                {
+                    break;
+                }
+
+                await UniTask.Delay(500);
+            }
+        }
+
+        EndBattle(playerParty, enemyParty.gameObject);
     }
+
+    private int CompareActionOrder(BattleEntity a, BattleEntity b)
+    {
+        if (a.Speed != b.Speed)
+        {
+            return b.Speed.CompareTo(a.Speed);
+        }
+        
+        if (a.IsPlayer != b.IsPlayer)
+        {
+            return a.IsPlayer ? -1 : 1;
+        }
+
+        return a.Index.CompareTo(b.Index);
+    }
+
+    private Monster FindMonsterTarget(int attackerIndex, MonsterParty enemyParty)
+    {
+        Monster mainTarget = enemyParty.GetMonster(attackerIndex);
+        if ((mainTarget != null) && (mainTarget._isDead == false))
+        {
+            return mainTarget;
+        }
+
+        for (int i = 0; i < 3;  i++)
+        {
+            Monster subTarget = enemyParty.GetMonster(i);
+            if ((subTarget != null) && (subTarget._isDead == false))
+            {
+                return subTarget;
+            }
+        }
+
+        return null;
+    }
+
+    private Character FindHunterTarget(int attackerIndex, PlayerPartyController playerParty)
+    {
+        Character mainTarget = playerParty.GetHunter(attackerIndex);
+        if ((mainTarget != null) && (mainTarget._isDead == false))
+        {
+            return mainTarget;
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            Character subTarget = playerParty.GetHunter(i);
+            if ((subTarget != null) && (subTarget._isDead == false))
+            {
+                return subTarget;
+            }
+        }
+
+        return null;
+    }
+
+    //헌터 파티 승리/패배로 나누는게 좋을 듯.
+    public void EndBattle(PlayerPartyController playerParty, GameObject monsterParty)
+    {
+        Debug.Log("전투 종료!");
+        monsterParty.SetActive(false);
+        playerParty._isBattling = false;
+        playerParty._isMovable = true;
+    }
+
 }
