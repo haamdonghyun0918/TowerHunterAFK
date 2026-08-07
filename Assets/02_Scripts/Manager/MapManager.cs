@@ -97,4 +97,19 @@ public class MapManager : MonoBehaviour
             Debug.LogError("맵 이미지를 불러기 실패");
         }
     }
+
+    public Transform GetPlayerSpawnSpot()
+    {
+        return _playerSpawnSpot;
+    }
+
+    public Transform GetPlayerClearSpot()
+    {
+        return _playerClearSpot;
+    }
+
+    public Transform[] GetMonsterSpawnSpot()
+    {
+        return new Transform[] { _monsterSpawnSpot1, _monsterSpawnSpot2, _monsterSpawnSpot3 };
+    }
 }
