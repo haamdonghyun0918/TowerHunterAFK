@@ -44,7 +44,8 @@ public class Character : MonoBehaviour
         {
             Debug.Log($"[Character] GameDataManager가 NULL입니다.");
         }
-        _characterData = GameDataManager.Instance.GetCharacterData("character_Test_01");     // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
+        //_characterData = GameDataManager.Instance.GetCharacterData("character_Test_01");     // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
+        _characterData = GameDataManager.Instance.GetData<CharacterData>("character_Test_01");
         _targetMonsterComponent = TargetMonster.GetComponentInChildren<Monster>();    // [TODO] 타겟 몬스터 정하는 방식 정해야함
         SetStatData();
     }
@@ -59,7 +60,8 @@ public class Character : MonoBehaviour
 
     private void SetStatData()
     {
-        var baseStatData = GameDataManager.Instance.GetBaseStatData(_characterData.BaseStatDataId);
+        var baseStatData = GameDataManager.Instance.GetData<BaseStatData>(_characterData.BaseStatDataId);
+        //var baseStatData = GameDataManager.Instance.GetBaseStatData(_characterData.BaseStatDataId);
 
         _characterAtk = baseStatData.BaseAtk;
         _characterAtkSpeed = baseStatData.BaseAtkSpeed;

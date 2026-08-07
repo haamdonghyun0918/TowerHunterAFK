@@ -36,7 +36,9 @@ public class Monster : MonoBehaviour
         {
             Debug.Log("[Monster] GameDataManager가 NULL입니다.");
         }
-        _monsterData = GameDataManager.Instance.GetMonsterData("monster_Test_01");  // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
+
+        //_monsterData = GameDataManager.Instance.GetMonsterData("monster_Test_01");  // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
+        _monsterData = GameDataManager.Instance.GetData<MonsterData>("monster_Test_01");
         SetStatData();
     }
 
@@ -61,7 +63,8 @@ public class Monster : MonoBehaviour
     {
         if (_isDead == true) return;
 
-        var data = GameDataManager.Instance.GetCharacterData(targetId);
+        //var data = GameDataManager.Instance.GetCharacterData(targetId);
+        var data = GameDataManager.Instance.GetData<CharacterData>(targetId);
         if (targetId == $"{data.Id}")  // 포멧으로 데이터 확인
         {
             //[TODO] 오브젝트 매니저에서 타겟 받아오기
