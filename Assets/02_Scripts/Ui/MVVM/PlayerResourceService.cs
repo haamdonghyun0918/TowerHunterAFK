@@ -37,5 +37,7 @@
         var resourceViewModel = GetPlayerResourceViewModel();
 
         resourceViewModel.Gold += addGold;
+
+        SaveManager.Instance.SaveGold(resourceViewModel.Gold);
     }
 }
