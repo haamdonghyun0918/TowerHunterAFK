@@ -8,7 +8,7 @@ public class ExpeditionData
     public string expeditionId;
     public string expeditionName;
     public float maxDurationHours;
-    public int goldPerHour;
+    public long goldPerHour;
 }
 
 public class ExpeditionManager : MonoBehaviour
@@ -23,13 +23,13 @@ public class ExpeditionManager : MonoBehaviour
     [SerializeField] private bool _expeditionStart = false;
     [SerializeField] private bool _isCompleted = false;
     [SerializeField] private DateTime _startTime;
-    [SerializeField] private float _savedGold = 0;
+    [SerializeField] private long _savedGold = 0;
 
     //TODO: 헌터들의 데이터를 가져와야 함 + 헌터들을 통하여 스쿼드 짜는 로직 추가할 것
     public event Action<ExpeditionData> OnExpeditionSelected;
     public event Action OnExpeditionStarted;
     public event Action OnExpeditionCompleted;
-    public event Action<float> OnRewardClaimed;
+    public event Action<long> OnRewardClaimed;
 
     private void Awake()
     {
@@ -91,7 +91,7 @@ public class ExpeditionManager : MonoBehaviour
         {
             passedHours = _selectedExpedition.maxDurationHours;
             _isCompleted = true;
-            _savedGold = passedHours * (_selectedExpedition.goldPerHour);
+            _savedGold = (long)(passedHours * _selectedExpedition.goldPerHour);
 
             Debug.Log("원정 시간이 모두 끝났습니다!");
             OnExpeditionCompleted?.Invoke();
@@ -133,7 +133,7 @@ public class ExpeditionManager : MonoBehaviour
         }
     }
 
-    public float GetSavedGold()
+    public long GetSavedGold()
     {
         // 쌓인 재화 확인용 Get함수
         return _savedGold;
