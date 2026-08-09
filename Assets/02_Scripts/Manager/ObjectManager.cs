@@ -12,7 +12,7 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private GameObject Prefab_TestDefaultMonsterParty;
 
     private PlayerPartyController _currentPlayerParty;
-    private MonsterParty _currentMonsterParty;
+    private List<MonsterParty> _currentMonsterParty = new List<MonsterParty>();
 
     public static ObjectManager Instance { get; set; }
 
@@ -41,6 +41,7 @@ public class ObjectManager : MonoBehaviour
             _currentPlayerParty = gObj_PlayerParty.GetComponent<PlayerPartyController>();
 
             //[TODO] : 나중에는 덱 편성/세이브데이터를 받아와서 세팅해줄것.
+            //테스트용 하드코딩
             string[] testHunterIds = { "character_Test_01" };
 
             foreach (string hunterId in testHunterIds)
@@ -49,17 +50,26 @@ public class ObjectManager : MonoBehaviour
             }
         }
 
+        //[TODO] : 나중에는 Stage 숫자를 기반으로 맵 데이터에서 등장 몬스터 Id를 가져오거나 할 것.
         if ((Prefab_MonsterParty != null) && (monsterSpawnSpots != null))
         {
-            GameObject gObj_MonsterParty = Instantiate(Prefab_MonsterParty, monsterSpawnSpots[0].position, Quaternion.identity);
-            _currentMonsterParty = gObj_MonsterParty.GetComponent<MonsterParty>();
-
-            //[TODO] : 나중에는 Stage 숫자를 기반으로 맵 데이터에서 등장 몬스터 Id를 가져오거나 할 것.
-            string[] testMonsterIds = { "monster_Test_01", "monster_Test_01" };
-
-            foreach (string monsterId in testMonsterIds)
+            foreach (Transform spot in monsterSpawnSpots)
             {
-                SpawnMonster(monsterId);
+                if (spot == null)
+                {
+                    continue;
+                }
+
+                GameObject gObj_MonsterParty = Instantiate(Prefab_MonsterParty, monsterSpawnSpots[0].position, Quaternion.identity);
+                MonsterParty newMonsterParty = gObj_MonsterParty.GetComponent<MonsterParty>();
+                
+                string[] testMonsterIds = { "monster_Test_01", "monster_Test_01" };
+                foreach (string monsterId in testMonsterIds)
+                {
+                    SpawnMonster(monsterId, newMonsterParty);
+                }
+
+                _currentMonsterParty.Add(newMonsterParty);
             }
         }
 
@@ -103,7 +113,7 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    private void SpawnMonster(string monsterId)
+    private void SpawnMonster(string monsterId, MonsterParty targetMonsterParty)
     {
         var data = GameDataManager.Instance.GetData<MonsterData>(monsterId);
         if (data == null)
@@ -125,11 +135,11 @@ public class ObjectManager : MonoBehaviour
         {
             GameObject mobObj = Instantiate(prefabToSpawn);
             Monster newMonster = mobObj.GetComponent<Monster>();
-            
+
             //상동.
             //newMonster.Init(monsterId);
 
-            _currentMonsterParty.AddMonster(newMonster);
+            targetMonsterParty.AddMonster(newMonster);
         }
     }
 
@@ -141,13 +151,14 @@ public class ObjectManager : MonoBehaviour
             _currentPlayerParty = null;
         }
 
-        if (_currentMonsterParty != null)
+        foreach (var monsterParty in _currentMonsterParty)
         {
-            Destroy(_currentMonsterParty.gameObject);
-            _currentMonsterParty = null;
+            if (monsterParty != null)
+            {
+                Destroy(monsterParty.gameObject);
+            }
         }
+        
+        _currentMonsterParty.Clear();
     }
-
-
-
 }
