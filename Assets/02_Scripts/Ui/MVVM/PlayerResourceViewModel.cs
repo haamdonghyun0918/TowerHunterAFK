@@ -1,5 +1,11 @@
 ﻿public class PlayerResourceViewModel : ViewModelBase
 {
+
+    public void InvokeOnceOnInit()
+    {
+        OnPropertyChanged(nameof(Gold));
+    }
+
     private long _gold;
     public long Gold
     {
