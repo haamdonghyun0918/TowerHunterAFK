@@ -1,5 +1,7 @@
 ﻿public class PlayerResourceService 
 {
+    private PlayerResourceModel _playerResourceModel;
+
     private PlayerResourceViewModel _playerResourceViewModel;
 
     public PlayerResourceViewModel GetPlayerResourceViewModel()
@@ -11,13 +13,14 @@
         return _playerResourceViewModel;
     }
 
-    private PlayerResourceViewModel CreatePlayerResourceViewModel()
+    private void CreatePlayerResourceViewModel()
     {
-        var resourceViewModel = new PlayerResourceViewModel();
+        var resourceModel = new PlayerResourceModel();
 
+        var resourceViewModel = new PlayerResourceViewModel(resourceModel);
+
+        _playerResourceModel = resourceModel;
         _playerResourceViewModel = resourceViewModel;
-
-        return resourceViewModel;
     }
 
     public void SetGoldOnLoad(long gold)
@@ -38,6 +41,24 @@
 
         resourceViewModel.Gold += addGold;
 
-        SaveManager.Instance.SaveGold(resourceViewModel.Gold);
+    }
+
+    public bool RequestUseGold(long useGold)
+    {
+        if(useGold <= 0)
+        {
+            return false;
+        }
+
+        var resourceViewModel = GetPlayerResourceViewModel();
+
+        if(resourceViewModel.Gold  < useGold)
+        {
+            return false;
+        }
+
+        resourceViewModel.Gold -= useGold;
+
+        return true;
     }
 }
