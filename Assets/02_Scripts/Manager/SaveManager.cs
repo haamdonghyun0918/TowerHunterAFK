@@ -9,6 +9,7 @@ public class SaveManager : MonoBehaviour
     public SaveData CurrentSaveData { get; private set; }
     private const string SaveFileName = "GameSaveData.json";
 
+    //방치형은 재화 단위가 커질 수 있어 long으로 데이터 타입 변경 - 이에 맞춰 밑에도 다 반영함.
     public event Action<long> OnGoldChanged;
     public event Action OnNotEnoughGold;
 
@@ -79,13 +80,15 @@ public class SaveManager : MonoBehaviour
         return CurrentSaveData.CurrentStage;
     }
 
+    //골드 데이터 타입 변경
     public void SaveGold(long gold)
     {
         CurrentSaveData.Gold = gold;
         SaveToFile(CurrentSaveData);
         OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
-
+    
+    //골드 데이터 타입 변경
     public void AddGold(long amount)
     {
         CurrentSaveData.Gold += amount;
@@ -98,6 +101,7 @@ public class SaveManager : MonoBehaviour
         return CurrentSaveData.Gold;
     }
 
+    //골드 데이터 타입 변경
     public bool UseGold(long amount)
     {
         if (CurrentSaveData.Gold >= amount)

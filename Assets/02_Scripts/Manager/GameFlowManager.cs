@@ -55,7 +55,7 @@ public class GameFlowManager : MonoBehaviour
     private void HandleStageCleared()
     {
         Debug.Log("스테이지 클리어");
-        SaveManager.Instance.AddGold(1000);
+        NetworkManager.Instance.PlayerResourceService.RequestAddGold(1000);
         Debug.Log("클리어 보상 1000골드 지급!");
     }
 
