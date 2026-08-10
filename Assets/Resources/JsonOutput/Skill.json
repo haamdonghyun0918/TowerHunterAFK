@@ -1,0 +1,9 @@
+[
+  {
+    "Id": "skill_dragonPunch_01",
+    "Name": "드래곤펀치",
+    "RequiredCost": 2,
+    "SkillDamage": 30,
+    "SkillType": "SingleTarget"
+  }
+]

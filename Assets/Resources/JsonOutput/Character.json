@@ -3,7 +3,7 @@
     "Id": "character_Test_01",
     "Name": "테스트캐릭",
     "Description": "테스트캐릭터",
-    "Skill": null,
+    "Skill": "skill_dragonPunch_01",
     "Rarity": "Normal",
     "StarLevel": 1,
     "BaseStatDataId": "stat_test_01",
