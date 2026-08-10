@@ -1,14 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-public class Monster : MonoBehaviour
+public class Monster : BattleCharacter
 {
-    [Header("스탯 관련")]
-    private int _monsterMaxHp;
-    private int _monsterHp;
-    private int _monsterAtkSpeed;
-    private int _monsterAtk;
-
     [Header("데이터 관련")]
     private MonsterData _monsterData;
 
@@ -44,26 +38,26 @@ public class Monster : MonoBehaviour
 
     private void SetStatData()
     {
-        _monsterAtk = _monsterData.BaseAtk;
-        _monsterAtkSpeed = _monsterData.BaseAtkSpeed;
-        _monsterHp = _monsterData.BaseHp;
-        _monsterMaxHp = _monsterData.BaseHp;
+        _characterAtk = _monsterData.BaseAtk;
+        _characterAtkSpeed = _monsterData.BaseAtkSpeed;
+        _characterHp = _monsterData.BaseHp;
+        _characterMaxHp = _monsterData.BaseHp;
     }
 
     public void AtkTarget(Character TargetCharacter)
     {
         if (TargetCharacter._isDead == true) return;
 
-        TargetCharacter.TakeDamage(_monsterAtk);
+        TargetCharacter.TakeDamage(_characterAtk);
     }
 
     public void TakeDamage(int damage)
     {
         if (_isDead == true) return;
 
-        _monsterHp -= damage;
+        _characterHp -= damage;
 
-        if (_monsterHp <= 0)
+        if (_characterHp <= 0)
         {
             Die();
         }
@@ -93,6 +87,6 @@ public class Monster : MonoBehaviour
 
     private void InvokeStatChangedEvent()
     {
-        _onChangedHp?.Invoke(_monsterHp, _monsterMaxHp);
+        _onChangedHp?.Invoke(_characterHp, _characterMaxHp);
     }
 }
