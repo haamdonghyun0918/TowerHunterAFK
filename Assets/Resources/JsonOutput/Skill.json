@@ -4,6 +4,7 @@
     "Name": "드래곤펀치",
     "RequiredCost": 2,
     "SkillDamage": 30,
-    "SkillType": "SingleTarget"
+    "SkillType": "SingleTarget",
+	"PrefabPath": null
   }
 ]
