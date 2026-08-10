@@ -10,7 +10,6 @@ public class Monster : BattleCharacter
     [SerializeField] private GameObject TargetCharacter;
     private Character _targetCharacterComponent;
 
-    public bool _isDead { get; private set; }
 
     private Animator _monsterAnimator;
 
@@ -24,7 +23,6 @@ public class Monster : BattleCharacter
 
     private void OnEnable()
     {
-        _isDead = false;
 
         //[TODO] Hud 생성, 오브젝트매니저에 캐릭터 등록(소통후)
         if (GameDataManager.Instance == null)
@@ -48,45 +46,8 @@ public class Monster : BattleCharacter
     {
         if (TargetCharacter._isDead == true) return;
 
+        Debug.Log($"타겟{TargetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
+        //[TODO] 평타공격 모션
         TargetCharacter.TakeDamage(_characterAtk);
-    }
-
-    public void TakeDamage(int damage)
-    {
-        if (_isDead == true) return;
-
-        _characterHp -= damage;
-
-        if (_characterHp <= 0)
-        {
-            Die();
-        }
-    }
-
-    private void Die()
-    {
-        //[TODO] 죽음 애니메이션 재생
-        this.gameObject.SetActive(false);
-        _isDead = true;
-    }
-
-    private void ChangeState()
-    {
-        //[TODO] 애니메이션 변경 (평타공격, 죽는애니메이션)
-    }
-
-    public void BindOnStatChangedEvent(Action<int, int> hpChangeCallback)
-    {
-        _onChangedHp += hpChangeCallback;
-    }
-
-    private void ResetStateChangedEvent()
-    {
-        _onChangedHp = null;
-    }
-
-    private void InvokeStatChangedEvent()
-    {
-        _onChangedHp?.Invoke(_characterHp, _characterMaxHp);
     }
 }
