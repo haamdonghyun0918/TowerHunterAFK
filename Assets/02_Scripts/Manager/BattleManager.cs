@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -88,27 +87,60 @@ public class BattleManager : MonoBehaviour
                     continue;
                 }
 
-                //공격을 하는 명령을 배틀 매니저가 내리느냐, 캐릭터/몬스터가 내리느냐 하는 생각이 필요하다. 
-                //어차피 공격 메서드를 캐릭터에서 사용해도 배틀매니저에 공격 요청을 보내니까 그냥 여기서 처리하면 되는거 아닌가?
-                //상의하고 배틀 매니저에서 처리할지, 캐닉터/몬트서에서 처리할지(타깃 정보를 넘겨줌) 결정필요.
-                //일단은 그냥 객체를 던지는 것으로 구현(인스턴스 아이디 변수가 없어서 같은 종류의 몬스터가 2기 나오면 동시에 공격당함.)
-                //캐릭터, 몬스터에 인스턴스 아이디 변수 추가하면 그거 넘겨주면 될 듯.
+                // 이하 전투 연출과 데미지 로직
+                Transform attackerTransform = null;
+                Transform targetTransform = null;
+                bool isSkill = false;
+
                 if (entity.IsPlayer == true)
                 {
                     Monster target = FindMonsterTarget(entity.Index, enemyParty);
-                    if (target != null)
+                    if ((target == null) || (target._isDead == true))
                     {
-                        entity.Hunter.AtkTarget(target);
+                        continue;
                     }
+
+                    attackerTransform = entity.Hunter.transform;
+                    targetTransform = target.transform;
                 }
                 else
                 {
                     Character target = FindHunterTarget(entity.Index, playerParty);
-                    if (target != null)
+                    if ((target == null) || (target._isDead == true))
                     {
-                        entity.Mob.AtkTarget(target);
+                        continue;
                     }
+
+                    attackerTransform = entity.Mob.transform;
+                    targetTransform = target.transform;
                 }
+
+                Vector3 originPos = attackerTransform.position;
+                Vector3 movePos = (originPos + targetTransform.position) / 2f;
+
+                attackerTransform.position = movePos;
+
+                if (isSkill)
+                {
+                    await UniTask.Delay(1000);
+                }
+                else
+                {
+                    await UniTask.Delay(500);
+                }
+
+                if (entity.IsPlayer == true)
+                {
+                    targetTransform.GetComponent<Monster>().TakeDamage(entity.Hunter._characterAtk);
+                }
+                else
+                {
+                    targetTransform.GetComponent<Character>().TakeDamage(entity.Mob._monsterAtk);
+                }
+
+                await UniTask.Delay(500);
+
+                attackerTransform.position = originPos;
 
                 bool isHunterOrMonsterWipeOut = (playerParty.GetCurrentHunterCount() == 0) || (enemyParty.GetCurrentMonsterCount() == 0);
                 
@@ -189,7 +221,6 @@ public class BattleManager : MonoBehaviour
         return null;
     }
 
-    //헌터 파티 승리/패배로 나누는게 좋을 듯.
     public void EndBattle(PlayerPartyController playerParty, GameObject monsterParty)
     {
         Debug.Log("전투 종료!");
@@ -197,5 +228,4 @@ public class BattleManager : MonoBehaviour
         playerParty._isBattling = false;
         playerParty._isMovable = true;
     }
-
 }
