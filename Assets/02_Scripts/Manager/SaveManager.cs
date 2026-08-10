@@ -89,6 +89,7 @@ public class SaveManager : MonoBehaviour
     }
     
     //골드 데이터 타입 변경
+    //MVVM구조에 맞게 삭제해야 할지도?
     public void AddGold(long amount)
     {
         CurrentSaveData.Gold += amount;
