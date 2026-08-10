@@ -56,16 +56,17 @@ public class Character : BattleCharacter
         _characterHp = baseStatData.BaseHp;
     }
 
-    private void UseSkill()
+    private void UseSkill(Monster targetMonster)
     {
         string skillId = _characterData.SkillId;
         _skill.SetSkillId(skillId);
-
+        int currentDamage = _characterAtk * _skill.GetSkillDamage();
 
         if (_isSkillUsable == true)
         {
             //[TODO] 스킬사용 모션
             _skill.UseSkill();
+            targetMonster.TakeDamage(currentDamage);
         }
     }
 
@@ -82,7 +83,7 @@ public class Character : BattleCharacter
         else if (_isSkillUsable == true && _RequiredSkillCost <= _currentSkillCost)
         {
             UseSkillCost(_skill.GetRequiredSkillCost());
-            UseSkill();
+            UseSkill(targetMonster);
         }
     }
 

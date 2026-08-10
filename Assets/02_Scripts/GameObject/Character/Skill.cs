@@ -5,6 +5,7 @@ public class Skill : MonoBehaviour
 {
     private string _skillId;
     private string _skillPrefabPath;
+    private int _skillDamage;
     private int _RequiredSkillCost;
     private SkillData _skillData;
     private Transform _targetTransform;
@@ -14,6 +15,7 @@ public class Skill : MonoBehaviour
         _skillData = GameDataManager.Instance.GetData<SkillData>(_skillId);
         SetPrefabPath();
         SetRequiredSkillCost();
+        SetSkillDamage();
     }
 
     public void SetSkillId(string skillId)
@@ -41,6 +43,17 @@ public class Skill : MonoBehaviour
     {
         if (_skillData == null) return;
         _skillPrefabPath = _skillData.PrefabPath;
+    }
+
+    private void SetSkillDamage()
+    {
+        if (_skillData == null) return;
+        _skillDamage = _skillData.SkillDamage;
+    }
+
+    public int GetSkillDamage()
+    {
+        return _skillDamage;
     }
 
     public string GetSkillType()
