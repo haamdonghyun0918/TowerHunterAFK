@@ -71,4 +71,23 @@
 
         return true;
     }
+
+    public void RequestAddItem(string[] items)
+    {
+        if (items == null || items.Length == 0)
+        {
+            return;
+        }
+
+    }
+
+    public bool RequestUseItem(string item)
+    {
+        if(string.IsNullOrEmpty(item))
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
