@@ -2,7 +2,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public class Character : BattleCharacter
 {
     [Header("스킬 관련")]
     [SerializeField] private Collider Collider_Skill;
@@ -10,12 +10,8 @@ public class Character : MonoBehaviour
     [SerializeField] private Transform Root_SkillSpawn;
 
     [Header("스탯 관련")]
-    private int _characterHp;
-    private int _characterMaxHp;
     private int _characterMp;
     private int _characterMaxMp;
-    private int _characterAtk;
-    private int _characterAtkSpeed;
 
     [Header("데이터 관련")]
     private CharacterData _characterData;
@@ -73,7 +69,7 @@ public class Character : MonoBehaviour
 
     private void UseSkill()
     {
-        string skillId = _characterData.Skill;
+        string skillId = _characterData.SkillId;
         if (_isSkillUsable == true)
         {
             //[TODO] 스킬사용 모션
