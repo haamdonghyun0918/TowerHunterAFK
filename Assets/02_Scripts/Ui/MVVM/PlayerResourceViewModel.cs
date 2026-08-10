@@ -22,6 +22,21 @@
         }
     }
 
+    public long EXP
+    {
+        get => _playerResourceModel.EXP;
+
+        set
+        {
+            if( _playerResourceModel.EXP != value)
+            {
+                _playerResourceModel.EXP = value;
+
+                OnPropertyChanged(nameof(EXP));
+            }
+        }
+    }
+
     public void InvokeOnceOnInit()
     {
         OnPropertyChanged(nameof(Gold));

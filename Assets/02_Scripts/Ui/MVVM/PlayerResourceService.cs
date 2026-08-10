@@ -13,6 +13,16 @@
         return _playerResourceViewModel;
     }
 
+    public PlayerResourceModel GetPlayerResourceModel()
+    {
+        if(_playerResourceModel == null)
+        {
+            CreatePlayerResourceViewModel();
+        }
+
+        return _playerResourceModel;
+    }
+
     private void CreatePlayerResourceViewModel()
     {
         var resourceModel = new PlayerResourceModel();
