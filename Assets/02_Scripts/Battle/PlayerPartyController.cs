@@ -39,7 +39,7 @@ public class PlayerPartyController : MonoBehaviour
 
         foreach (var hunter in _hunters)
         {
-            if (hunter != null)
+            if ((hunter != null) && (hunter._isDead == false))
             {
                 count++;
             }

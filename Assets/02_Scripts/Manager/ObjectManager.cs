@@ -8,8 +8,8 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private GameObject Prefab_PlayerParty;
     [SerializeField] private GameObject Prefab_MonsterParty;
 
-    [SerializeField] private GameObject Prefab_TestDefaultPlayerParty;
-    [SerializeField] private GameObject Prefab_TestDefaultMonsterParty;
+    [SerializeField] private GameObject Prefab_TestDefaultPlayer;
+    [SerializeField] private GameObject Prefab_TestDefaultMonster;
 
     private PlayerPartyController _currentPlayerParty;
     private List<MonsterParty> _currentMonsterParty = new List<MonsterParty>();
@@ -60,7 +60,7 @@ public class ObjectManager : MonoBehaviour
                     continue;
                 }
 
-                GameObject gObj_MonsterParty = Instantiate(Prefab_MonsterParty, monsterSpawnSpots[0].position, Quaternion.identity);
+                GameObject gObj_MonsterParty = Instantiate(Prefab_MonsterParty, spot.position, Quaternion.identity);
                 MonsterParty newMonsterParty = gObj_MonsterParty.GetComponent<MonsterParty>();
                 
                 string[] testMonsterIds = { "monster_Test_01", "monster_Test_01" };
@@ -76,6 +76,11 @@ public class ObjectManager : MonoBehaviour
         if (_currentPlayerParty != null)
         {
             _currentPlayerParty._isMovable = true;
+
+            if (BattleManager.Instance != null)
+            {
+                BattleManager.Instance._playerParty = _currentPlayerParty;
+            }
         }
     }
 
@@ -88,7 +93,7 @@ public class ObjectManager : MonoBehaviour
             return;
         }
 
-        GameObject hunterPrefab = Prefab_TestDefaultPlayerParty;
+        GameObject hunterPrefab = Prefab_TestDefaultPlayer;
         if (string.IsNullOrEmpty(data.PrefabPath) == false)
         {
             GameObject loadedPrefab = Resources.Load<GameObject>(data.PrefabPath);
@@ -107,8 +112,6 @@ public class ObjectManager : MonoBehaviour
             GameObject hunterObj = Instantiate(hunterPrefab);
             Character newHunter = hunterObj.GetComponent<Character>();
 
-            //기존의 Character, Monster의 Start부분에서 있었던 데이터 초기화를 Init(string id)로 뺴주시면 됩니다!
-            //newHunter.Init(characterId); 
             _currentPlayerParty.AddHunter(newHunter);
         }
     }
@@ -122,7 +125,7 @@ public class ObjectManager : MonoBehaviour
             return;
         }
 
-        GameObject prefabToSpawn = Prefab_TestDefaultMonsterParty;
+        GameObject prefabToSpawn = Prefab_TestDefaultMonster;
 
         //Monster에는 프리팹 경로가 없네용
         //if (!string.IsNullOrEmpty(data.PrefabPath))
@@ -136,10 +139,11 @@ public class ObjectManager : MonoBehaviour
             GameObject mobObj = Instantiate(prefabToSpawn);
             Monster newMonster = mobObj.GetComponent<Monster>();
 
-            //상동.
-            //newMonster.Init(monsterId);
-
             targetMonsterParty.AddMonster(newMonster);
+        }
+        else
+        {
+            Debug.LogError($"[ObjectManager] SpawnMonster: {monsterId}를 생성할 프리팹이 할당되지 않았습니다!");
         }
     }
 

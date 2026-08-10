@@ -70,7 +70,7 @@ public class BattleManager : MonoBehaviour
                 {
                     Mob = monster,
                     IsPlayer = false,
-                    Speed = monster._monsterAtkSpeed,
+                    Speed = monster._characterAtkSpeed,
                     Index = i
                 });
             }
@@ -120,27 +120,30 @@ public class BattleManager : MonoBehaviour
 
                 attackerTransform.position = movePos;
 
-                if (isSkill)
+                await UniTask.Delay(isSkill ? 1000 : 500);
+
+                if (entity.IsDead)
                 {
-                    await UniTask.Delay(1000);
-                }
-                else
-                {
-                    await UniTask.Delay(500);
+                    continue;
                 }
 
                 if (entity.IsPlayer == true)
                 {
-                    targetTransform.GetComponent<Monster>().TakeDamage(entity.Hunter._characterAtk);
+                    Monster targetMonster = targetTransform.GetComponent<Monster>();
+                    entity.Hunter.AtkTarget(targetMonster);
                 }
                 else
                 {
-                    targetTransform.GetComponent<Character>().TakeDamage(entity.Mob._monsterAtk);
+                    Character targetHunter = targetTransform.GetComponent<Character>();
+                    entity.Mob.AtkTarget(targetHunter);
                 }
 
                 await UniTask.Delay(500);
 
-                attackerTransform.position = originPos;
+                if (entity.IsDead == false)
+                {
+                    attackerTransform.position = originPos;
+                }
 
                 bool isHunterOrMonsterWipeOut = (playerParty.GetCurrentHunterCount() == 0) || (enemyParty.GetCurrentMonsterCount() == 0);
                 

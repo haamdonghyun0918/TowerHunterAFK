@@ -2,8 +2,8 @@
   {
     "Id": "stat_test_01",
     "Comment": "캐릭터 기본 스탯",
-    "BaseAtk": 30,
-    "BaseHp": 100,
+    "BaseAtk": 300,
+    "BaseHp": 1000,
     "BaseMp": 100,
     "BaseAtkSpeed": 10,
 	"BaseDefense": 10

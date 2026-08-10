@@ -25,7 +25,7 @@ public class MonsterParty : MonoBehaviour
 
         foreach (var monster in _monsters)
         {
-            if (monster != null)
+            if ((monster != null) && (monster._isDead == false))
             {
                 count++;
             }
