@@ -81,7 +81,7 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void AtkTarget(Monster targetMonster)
+    public void AtkTarget(Monster targetMonster)
     {
         if (targetMonster._isDead == true) return;
 
