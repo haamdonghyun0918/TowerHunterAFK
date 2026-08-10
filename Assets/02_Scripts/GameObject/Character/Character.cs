@@ -15,7 +15,7 @@ public class Character : MonoBehaviour
     private int _characterMp;
     private int _characterMaxMp;
     private int _characterAtk;
-    private int _characterAtkSpeed;
+    public int _characterAtkSpeed { get; private set; }
 
     [Header("데이터 관련")]
     private CharacterData _characterData;
@@ -73,7 +73,7 @@ public class Character : MonoBehaviour
 
     private void UseSkill()
     {
-        string skillId = _characterData.Skill;
+        string skillId = _characterData.SkillId;
         if (_isSkillUsable == true)
         {
             //[TODO] 스킬사용 모션
