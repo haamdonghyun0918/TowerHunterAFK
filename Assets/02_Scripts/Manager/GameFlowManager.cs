@@ -31,13 +31,17 @@ public class GameFlowManager : MonoBehaviour
         if (ExpeditionManager.Instance != null)
         {
             ExpeditionManager.Instance.OnRewardClaimed += HandleExpeditionRewardClaimed;
+            await ExpeditionManager.Instance.Init();
         }
 
-        MapManager.Instance.OnStageChanged += HandleStageChanged;
-        MapManager.Instance.OnStageCleared += HandleStageCleared;
-        MapManager.Instance.OnStageFailed += HandleStageFailed;
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.OnStageChanged += HandleStageChanged;
+            MapManager.Instance.OnStageCleared += HandleStageCleared;
+            MapManager.Instance.OnStageFailed += HandleStageFailed;
+            await MapManager.Instance.Init();
+        }
 
-        await MapManager.Instance.Init();
         Debug.Log("게임 세팅 완료 게임 화면 출력");
     }
 

@@ -124,4 +124,30 @@ public class SaveManager : MonoBehaviour
     {
         return CurrentSaveData.Exp;
     }
+
+    public void SaveExpeditionStart(string expeditionId, string startTime)
+    {
+        CurrentSaveData.OngoingExpeditionId = expeditionId;
+        CurrentSaveData.ExpeditionStartTime = startTime;
+        SaveToFile(CurrentSaveData);
+        Debug.Log($"[SaveManager] 원정 시스템 저장 완료- ID: {expeditionId}, 시작시간: {startTime}");
+    }
+
+    public void ClearExpedition()
+    {
+        CurrentSaveData.OngoingExpeditionId = "";
+        CurrentSaveData.ExpeditionStartTime = "";
+        SaveToFile(CurrentSaveData);
+        Debug.Log("[SaveManager] 원정 상태 초기화");
+    }
+
+    public string GetOngoingExpeditionId()
+    {
+        return CurrentSaveData.OngoingExpeditionId;
+    }
+
+    public string GetExpeditionStartTime()
+    {
+        return CurrentSaveData.ExpeditionStartTime;
+    }
 }
