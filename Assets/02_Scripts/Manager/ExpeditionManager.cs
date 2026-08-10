@@ -8,7 +8,7 @@ public class ExpeditionData
     public string expeditionId;
     public string expeditionName;
     public float maxDurationHours;
-    public int goldPerHour;
+    public long goldPerHour;
 }
 
 public class ExpeditionManager : MonoBehaviour
@@ -23,13 +23,14 @@ public class ExpeditionManager : MonoBehaviour
     [SerializeField] private bool _expeditionStart = false;
     [SerializeField] private bool _isCompleted = false;
     [SerializeField] private DateTime _startTime;
-    [SerializeField] private float _savedGold = 0;
+    //savedGold를 이름 바꿈 - 헷갈림
+    [SerializeField] private long _claimableGold = 0;
 
     //TODO: 헌터들의 데이터를 가져와야 함 + 헌터들을 통하여 스쿼드 짜는 로직 추가할 것
     public event Action<ExpeditionData> OnExpeditionSelected;
     public event Action OnExpeditionStarted;
     public event Action OnExpeditionCompleted;
-    public event Action<float> OnRewardClaimed;
+    public event Action<long> OnRewardClaimed;
 
     private void Awake()
     {
@@ -70,7 +71,7 @@ public class ExpeditionManager : MonoBehaviour
         }
         _expeditionStart = true;
         _startTime = DateTime.Now;
-        _savedGold = 0;
+        _claimableGold = 0;
 
         Debug.Log("원정을 보냈습니다.");
         OnExpeditionStarted?.Invoke();
@@ -91,7 +92,7 @@ public class ExpeditionManager : MonoBehaviour
         {
             passedHours = _selectedExpedition.maxDurationHours;
             _isCompleted = true;
-            _savedGold = passedHours * (_selectedExpedition.goldPerHour);
+            _claimableGold = (long)(passedHours * _selectedExpedition.goldPerHour);
 
             Debug.Log("원정 시간이 모두 끝났습니다!");
             OnExpeditionCompleted?.Invoke();
@@ -116,13 +117,14 @@ public class ExpeditionManager : MonoBehaviour
         return remainTime;
     }
 
+    //역할이 뭐지? 왜 골드를 추가하고 왜 _saveGold가 추가되지? - 원정 보상 골드구나...
     public void ClaimReward()
     {
-        if (_savedGold > 0)
+        if (_claimableGold > 0)
         {
-            SaveManager.Instance.AddGold(_savedGold);
-            OnRewardClaimed?.Invoke(_savedGold);
-            _savedGold = 0;
+            NetworkManager.Instance.PlayerResourceService.RequestAddGold(_claimableGold);
+            OnRewardClaimed?.Invoke(_claimableGold);
+            _claimableGold = 0;
             _expeditionStart = false;
             _isCompleted = false;
         }
@@ -133,10 +135,10 @@ public class ExpeditionManager : MonoBehaviour
         }
     }
 
-    public float GetSavedGold()
+    public long GetSavedGold()
     {
         // 쌓인 재화 확인용 Get함수
-        return _savedGold;
+        return _claimableGold;
     }
 
     public string GetRemainTimeString()

@@ -9,7 +9,8 @@ public class SaveManager : MonoBehaviour
     public SaveData CurrentSaveData { get; private set; }
     private const string SaveFileName = "GameSaveData.json";
 
-    public event Action<float> OnGoldChanged;
+    //방치형은 재화 단위가 커질 수 있어 long으로 데이터 타입 변경 - 이에 맞춰 밑에도 다 반영함.
+    public event Action<long> OnGoldChanged;
     public event Action OnNotEnoughGold;
 
     private void Awake()
@@ -79,26 +80,30 @@ public class SaveManager : MonoBehaviour
         return CurrentSaveData.CurrentStage;
     }
 
-    public void SaveGold(float gold)
+    //골드 데이터 타입 변경
+    public void SaveGold(long gold)
     {
         CurrentSaveData.Gold = gold;
         SaveToFile(CurrentSaveData);
         OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
-
-    public void AddGold(float amount)
+    
+    //골드 데이터 타입 변경
+    //MVVM구조에 맞게 삭제해야 할지도?
+    public void AddGold(long amount)
     {
         CurrentSaveData.Gold += amount;
         SaveToFile(CurrentSaveData);
         OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
 
-    public float GetGold()
+    public long GetGold()
     {
         return CurrentSaveData.Gold;
     }
 
-    public bool UseGold(float amount)
+    //골드 데이터 타입 변경
+    public bool UseGold(long amount)
     {
         if (CurrentSaveData.Gold >= amount)
         {
