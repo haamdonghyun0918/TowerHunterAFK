@@ -2,15 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-[Serializable]
-public class ExpeditionData
-{
-    public string expeditionId;
-    public string expeditionName;
-    public float maxDurationHours;
-    public long goldPerHour;
-}
-
 public class ExpeditionManager : MonoBehaviour
 {
     public static ExpeditionManager Instance { get; private set; }
@@ -45,6 +36,11 @@ public class ExpeditionManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        _expeditionsList = GameDataManager.Instance.GetAllData<ExpeditionData>();
+    }
+
     private void Update()
     {
         if (_expeditionStart && (_isCompleted == false))
@@ -58,7 +54,7 @@ public class ExpeditionManager : MonoBehaviour
         if (index >= 0 && index < _expeditionsList.Count)
         {
             _selectedExpedition = _expeditionsList[index];
-            Debug.Log($"{_selectedExpedition.expeditionName}을 선택하였습니다.");
+            Debug.Log($"{_selectedExpedition.ExpeditionName}을 선택하였습니다.");
             OnExpeditionSelected?.Invoke(_selectedExpedition);
         }
     }
@@ -88,11 +84,10 @@ public class ExpeditionManager : MonoBehaviour
         TimeSpan passedTime = currentTime - _startTime;
         float passedHours = (float)passedTime.TotalHours;
 
-        if (passedHours >= _selectedExpedition.maxDurationHours)
+        if (passedHours >= _selectedExpedition.DurationHours)
         {
-            passedHours = _selectedExpedition.maxDurationHours;
             _isCompleted = true;
-            _claimableGold = (long)(passedHours * _selectedExpedition.goldPerHour);
+            _claimableGold = _selectedExpedition.RewardGold;
 
             Debug.Log("원정 시간이 모두 끝났습니다!");
             OnExpeditionCompleted?.Invoke();
@@ -106,7 +101,7 @@ public class ExpeditionManager : MonoBehaviour
             return TimeSpan.Zero;
         }
 
-        DateTime endTime = _startTime.AddHours(_selectedExpedition.maxDurationHours);
+        DateTime endTime = _startTime.AddHours(_selectedExpedition.DurationHours);
         TimeSpan remainTime = endTime - DateTime.Now;
 
         if (remainTime.TotalSeconds < 0)
@@ -117,16 +112,17 @@ public class ExpeditionManager : MonoBehaviour
         return remainTime;
     }
 
-    //역할이 뭐지? 왜 골드를 추가하고 왜 _saveGold가 추가되지? - 원정 보상 골드구나...
     public void ClaimReward()
     {
         if (_claimableGold > 0)
         {
             NetworkManager.Instance.PlayerResourceService.RequestAddGold(_claimableGold);
             OnRewardClaimed?.Invoke(_claimableGold);
+            
             _claimableGold = 0;
             _expeditionStart = false;
             _isCompleted = false;
+            _selectedExpedition = null;
         }
 
         else
