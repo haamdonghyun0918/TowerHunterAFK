@@ -14,14 +14,12 @@ public class ExpeditionManager : MonoBehaviour
     [SerializeField] private bool _expeditionStart = false;
     [SerializeField] private bool _isCompleted = false;
     [SerializeField] private DateTime _startTime;
-    //savedGold를 이름 바꿈 - 헷갈림
-    [SerializeField] private long _claimableGold = 0;
 
     //TODO: 헌터들의 데이터를 가져와야 함 + 헌터들을 통하여 스쿼드 짜는 로직 추가할 것
     public event Action<ExpeditionData> OnExpeditionSelected;
     public event Action OnExpeditionStarted;
     public event Action OnExpeditionCompleted;
-    public event Action<long> OnRewardClaimed;
+    public event Action<long, string[]> OnRewardClaimed;
 
     private void Awake()
     {
@@ -45,7 +43,7 @@ public class ExpeditionManager : MonoBehaviour
     {
         if (_expeditionStart && (_isCompleted == false))
         {
-            CalculateReward();
+            CheckExpeditionCompletion();
         }
     }
 
@@ -67,28 +65,24 @@ public class ExpeditionManager : MonoBehaviour
         }
         _expeditionStart = true;
         _startTime = DateTime.Now;
-        _claimableGold = 0;
 
         Debug.Log("원정을 보냈습니다.");
         OnExpeditionStarted?.Invoke();
     }
 
-    private void CalculateReward()
+    private void CheckExpeditionCompletion()
     {
-        if ((_expeditionStart == false) || (_selectedExpedition == null))
+        if (_selectedExpedition == null)
         {
             return;
         }
 
         DateTime currentTime = DateTime.Now;
-        TimeSpan passedTime = currentTime - _startTime;
-        float passedHours = (float)passedTime.TotalHours;
+        TimeSpan passedHours = currentTime - _startTime;
 
-        if (passedHours >= _selectedExpedition.DurationHours)
+        if (passedHours.TotalHours >= _selectedExpedition.DurationHours)
         {
             _isCompleted = true;
-            _claimableGold = _selectedExpedition.RewardGold;
-
             Debug.Log("원정 시간이 모두 끝났습니다!");
             OnExpeditionCompleted?.Invoke();
         }
@@ -114,12 +108,23 @@ public class ExpeditionManager : MonoBehaviour
 
     public void ClaimReward()
     {
-        if (_claimableGold > 0)
+        if (_isCompleted && _selectedExpedition != null)
         {
-            NetworkManager.Instance.PlayerResourceService.RequestAddGold(_claimableGold);
-            OnRewardClaimed?.Invoke(_claimableGold);
-            
-            _claimableGold = 0;
+            long rewardGold = _selectedExpedition.RewardGold;
+            string[] rewardItems = _selectedExpedition.RewardItems;
+
+            if (rewardGold > 0)
+            {
+                NetworkManager.Instance.PlayerResourceService.RequestAddGold(rewardGold);
+            }
+
+            if (rewardItems != null && rewardItems.Length > 0)
+            {
+                NetworkManager.Instance.PlayerResourceService.RequestAddItem(rewardItems);
+            }
+
+            OnRewardClaimed?.Invoke(rewardGold, rewardItems);
+
             _expeditionStart = false;
             _isCompleted = false;
             _selectedExpedition = null;
@@ -129,12 +134,6 @@ public class ExpeditionManager : MonoBehaviour
         {
             Debug.Log("수령할 보상이 존재하지 않습니다.");
         }
-    }
-
-    public long GetSavedGold()
-    {
-        // 쌓인 재화 확인용 Get함수
-        return _claimableGold;
     }
 
     public string GetRemainTimeString()
