@@ -2,5 +2,5 @@
 {
     public long Gold {  get; set; }
 
-    public long EXP { get; set; }
+    public long Exp { get; set; }
 }
