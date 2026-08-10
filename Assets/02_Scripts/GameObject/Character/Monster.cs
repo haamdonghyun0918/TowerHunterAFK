@@ -16,7 +16,7 @@ public class Monster : MonoBehaviour
     [SerializeField] private GameObject TargetCharacter;
     private Character _targetCharacterComponent;
 
-    private bool _isDead = false;
+    public bool _isDead { get; private set; }
 
     private Animator _monsterAnimator;
 
@@ -24,31 +24,22 @@ public class Monster : MonoBehaviour
 
     private void Awake()
     {
-        _isDead = false;
         this.gameObject.SetActive(true);
         _targetCharacterComponent = TargetCharacter.GetComponentInChildren<Character>();
     }
 
-    private void Start()    // [TODO] 우선 Start로 하고 동적생성이 되면 OnEnable로 변경
+    private void OnEnable()
     {
+        _isDead = false;
+
         //[TODO] Hud 생성, 오브젝트매니저에 캐릭터 등록(소통후)
         if (GameDataManager.Instance == null)
         {
             Debug.Log("[Monster] GameDataManager가 NULL입니다.");
         }
 
-        //_monsterData = GameDataManager.Instance.GetMonsterData("monster_Test_01");  // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
-        _monsterData = GameDataManager.Instance.GetData<MonsterData>("monster_Test_01");
+        _monsterData = GameDataManager.Instance.GetData<MonsterData>("monster_Test_01");    // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
         SetStatData();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            //[TODO] 타겟Id 받아와서 공격
-            AtkTarget("character_Test_01");
-        }
     }
 
     private void SetStatData()
@@ -59,17 +50,11 @@ public class Monster : MonoBehaviour
         _monsterMaxHp = _monsterData.BaseHp;
     }
 
-    private void AtkTarget(string targetId)
+    public void AtkTarget(Character TargetCharacter)
     {
-        if (_isDead == true) return;
+        if (TargetCharacter._isDead == true) return;
 
-        //var data = GameDataManager.Instance.GetCharacterData(targetId);
-        var data = GameDataManager.Instance.GetData<CharacterData>(targetId);
-        if (targetId == $"{data.Id}")  // 포멧으로 데이터 확인
-        {
-            //[TODO] 오브젝트 매니저에서 타겟 받아오기
-            _targetCharacterComponent.TakeDamage(_monsterAtk);
-        }
+        TargetCharacter.TakeDamage(_monsterAtk);
     }
 
     public void TakeDamage(int damage)

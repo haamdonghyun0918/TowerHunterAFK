@@ -4,6 +4,8 @@
     "Name": "테스트 몬스터",
     "BaseAtk": 30,
     "BaseHp": 100,
-    "BaseAtkSpeed": 10
+    "BaseAtkSpeed": 10,
+	"BaseDefense": 10,
+	"PrefabPath": null
   }
 ]

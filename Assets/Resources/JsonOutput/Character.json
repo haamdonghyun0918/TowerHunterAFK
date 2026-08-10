@@ -3,11 +3,16 @@
     "Id": "character_Test_01",
     "Name": "테스트캐릭",
     "Description": "테스트캐릭터",
-    "Skill": null,
+    "SkillId": "skill_dragonPunch_01",
     "Rarity": "Normal",
     "StarLevel": 1,
     "BaseStatDataId": "stat_test_01",
     "Exp": 0,
-    "PrefabPath": null
+    "PrefabPath": null,
+	"MaxSkillCost": 3,
+	"SkillCostRegenRate": 1,
+	"AtkPerLevel": 10,
+	"HpPerLevel": 10,
+	"DefPerLevel": 10
   }
 ]
