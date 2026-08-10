@@ -8,6 +8,8 @@
     "StarLevel": 1,
     "BaseStatDataId": "stat_test_01",
     "Exp": 0,
-    "PrefabPath": null
+    "PrefabPath": null,
+	"MaxSkillCost": 3,
+	"SkillCostRegenRate": 1
   }
 ]
