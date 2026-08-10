@@ -20,6 +20,7 @@ public class ExpeditionManager : MonoBehaviour
     public event Action OnExpeditionStarted;
     public event Action OnExpeditionCompleted;
     public event Action<long, string[]> OnRewardClaimed;
+    public event Action<int> OnExpeditionLevelNotEnough;
 
     private void Awake()
     {
@@ -51,7 +52,18 @@ public class ExpeditionManager : MonoBehaviour
     {
         if (index >= 0 && index < _expeditionsList.Count)
         {
-            _selectedExpedition = _expeditionsList[index];
+            ExpeditionData targetExpedition = _expeditionsList[index];
+            //TODO: 현재는 플레이어의 레벨을 하드코딩했지만, 플레이어의 경험치와 레벨 로직 구성시 변경할 것
+            int currentPlayerLevel = 1;
+
+            if (currentPlayerLevel < targetExpedition.LimitLevel)
+            {
+                Debug.Log("제한 레벨을 만족하지 못합니다");
+                OnExpeditionLevelNotEnough?.Invoke(targetExpedition.LimitLevel);
+                return;
+            }
+
+            _selectedExpedition = targetExpedition;
             Debug.Log($"{_selectedExpedition.ExpeditionName}을 선택하였습니다.");
             OnExpeditionSelected?.Invoke(_selectedExpedition);
         }
