@@ -15,6 +15,7 @@ public class Character : BattleCharacter
 
     [Header("전투 관련")]
     [SerializeField] private GameObject TargetMonster;
+    private Skill _skill;
 
     private Animator _characterAnimator;
 
@@ -58,10 +59,12 @@ public class Character : BattleCharacter
     private void UseSkill()
     {
         string skillId = _characterData.SkillId;
+        _skill.SetSkillId(skillId);
+
+
         if (_isSkillUsable == true)
         {
-            //[TODO] 스킬사용 모션
-            //UseSkill(skillId);
+            _skill.UseSkill();
         }
     }
 
