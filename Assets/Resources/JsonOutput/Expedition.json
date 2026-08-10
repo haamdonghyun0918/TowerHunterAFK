@@ -1,0 +1,66 @@
+﻿[
+  {
+    "Id": "Expedition_1",
+    "ExpeditionName": "BasicExpedition",
+    "DurationHours": 1,
+	"LimitLevel": 1,
+	"RewardGold": 5000,
+	"RewardItems": ""
+  },
+  {
+    "Id": "Expedition_2",
+    "ExpeditionName": "TermExpedition",
+    "DurationHours": 3,
+	"LimitLevel": 1,
+	"RewardGold": 2000,
+	"RewardItems": ""
+  },
+  {
+    "Id": "Expedition_3",
+    "ExpeditionName": "HighExpedition",
+    "DurationHours": 6,
+	"LimitLevel": 1,
+	"RewardGold": 7500,
+	"RewardItems": ""
+  },
+  {
+    "Id": "Expedition_4",
+    "ExpeditionName": "ItemExpedition",
+    "DurationHours": 4,
+	"LimitLevel": 1,
+	"RewardGold": 2000,
+	"RewardItems": ""
+  },
+  {
+    "Id": "Expedition_5",
+    "ExpeditionName": "QualityExpedition",
+    "DurationHours": 1.5,
+	"LimitLevel": 10,
+	"RewardGold": 4000,
+	"RewardItems": ""
+  },
+  {
+    "Id": "Expedition_6",
+    "ExpeditionName": "MidleExpedition",
+    "DurationHours": 3,
+	"LimitLevel": 15,
+	"RewardGold": 4500,
+	"RewardItems": ""
+  },
+  {
+    "Id": "Expedition_7",
+    "ExpeditionName": "MainQuestExpedition",
+    "DurationHours": 5,
+	"LimitLevel": 20,
+	"RewardGold": 12500,
+	"RewardItems": ""
+  },
+  {
+    "Id": "Expedition_8",
+    "ExpeditionName": "HighRiskExpedition",
+    "DurationHours": 7.5,
+	"LimitLevel": 50,
+	"RewardGold": 250000,
+	"RewardItems": ""
+  }
+]

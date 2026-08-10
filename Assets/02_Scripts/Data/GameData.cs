@@ -37,3 +37,13 @@ public class MonsterData : GameDataBase
     public int BaseHp;
     public int BaseAtkSpeed;
 }
+
+[System.Serializable]
+public class ExpeditionData : GameDataBase
+{
+    public string ExpeditionName;
+    public int DurationHours;
+    public int LimitLevel;
+    public long RewardGold;
+    public string[] RewardItems;
+}
