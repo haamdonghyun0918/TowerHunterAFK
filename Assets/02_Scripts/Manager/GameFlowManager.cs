@@ -28,6 +28,11 @@ public class GameFlowManager : MonoBehaviour
         Debug.Log("게임 시작중....=>로딩 화면");
         await SaveManager.Instance.Init();
 
+        if (ExpeditionManager.Instance != null)
+        {
+            ExpeditionManager.Instance.OnRewardClaimed += HandleExpeditionRewardClaimed;
+        }
+
         MapManager.Instance.OnStageChanged += HandleStageChanged;
         MapManager.Instance.OnStageCleared += HandleStageCleared;
         MapManager.Instance.OnStageFailed += HandleStageFailed;
@@ -38,6 +43,11 @@ public class GameFlowManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (ExpeditionManager.Instance != null)
+        {
+            ExpeditionManager.Instance.OnRewardClaimed -= HandleExpeditionRewardClaimed;
+        }
+
         if (MapManager.Instance != null)
         {
             MapManager.Instance.OnStageChanged -= HandleStageChanged;
@@ -56,11 +66,29 @@ public class GameFlowManager : MonoBehaviour
     {
         Debug.Log("스테이지 클리어");
         NetworkManager.Instance.PlayerResourceService.RequestAddGold(1000);
+        
+        long totalGold = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel().Gold;
+        SaveManager.Instance.SaveGold(totalGold);
         Debug.Log("클리어 보상 1000골드 지급!");
     }
 
     private void HandleStageFailed()
     {
         Debug.Log("스쿼드가 전멸하여 스테이지 실패...");
+    }
+
+    private void HandleExpeditionRewardClaimed(long addedGold, string[] items)
+    {
+        if (items != null && items.Length > 0)
+        {
+            SaveManager.Instance.SaveItem(items);
+        }
+
+        if (addedGold > 0)
+        {
+            long totalGold = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel().Gold;
+            SaveManager.Instance.SaveGold(totalGold);
+        }
+
     }
 }

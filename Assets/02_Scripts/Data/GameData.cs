@@ -42,7 +42,7 @@ public class MonsterData : GameDataBase
 public class ExpeditionData : GameDataBase
 {
     public string ExpeditionName;
-    public int DurationHours;
+    public float DurationHours;
     public int LimitLevel;
     public long RewardGold;
     public string[] RewardItems;
