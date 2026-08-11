@@ -5,6 +5,6 @@
     "RequiredCost": 2,
     "SkillDamage": 30,
     "SkillType": "SingleTarget",
-	"PrefabPath": null
+	"PrefabPath": "DragonPunch"
   }
 ]
