@@ -45,12 +45,26 @@ public class Character : BattleCharacter
         _characterData = GameDataManager.Instance.GetData<CharacterData>("character_Test_01");
         _characterId = _characterData.Id;
         _MaxSkillCost = _characterData.MaxSkillCost;
+        InitializeSkill();
         SetStatData();
     }
 
     public string GetCharacterId()
     {
         return _characterId;
+    }
+
+    private void InitializeSkill()
+    {
+        string skillId = _characterData.SkillId;
+
+        if (_skill == null)
+        {
+            Debug.LogError($"[Character] 스킬 데이터를 불러오지 못했습니다.");
+            return;
+        }
+
+        _skill.InitializeSkill(skillId);
     }
 
     private void SetStatData()
@@ -72,8 +86,9 @@ public class Character : BattleCharacter
         if (_isSkillUsable == true)
         {
             //[TODO] 스킬사용 모션
-            _skill.UseSkill();
+            _skill.UseSkillAsync().Forget();
             targetMonster.TakeDamage(currentDamage);
+            Debug.Log($"[스킬공격] 타겟{targetMonster.name}에게 {currentDamage} 데미지를 줍니다.");
         }
     }
 
@@ -84,7 +99,7 @@ public class Character : BattleCharacter
         if (_isSkillUsable == false)
         {
             UseNormalAttack(targetMonster);
-            Debug.Log($"타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
+            Debug.Log($"[일반공격] 타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
             return;
         }
         else if (_isSkillUsable == true && _RequiredSkillCost <= _currentSkillCost)
