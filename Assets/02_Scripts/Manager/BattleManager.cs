@@ -8,23 +8,6 @@ public class BattleManager : MonoBehaviour
 
     public static BattleManager Instance { get; private set; }
 
-    private class BattleEntity
-    {
-        public Character Hunter;
-        public Monster Mob;
-        public bool IsPlayer;
-        public int Speed;
-        public int Index;
-
-        public bool IsDead
-        {
-            get
-            {
-                return IsPlayer ? Hunter._isDead : Mob._isDead;
-            }
-        }
-    }
-
     private void Awake()
     {
         if (Instance == null)
@@ -47,32 +30,20 @@ public class BattleManager : MonoBehaviour
 
     private async UniTaskVoid AutoBattleRoutine(PlayerPartyController playerParty, MonsterParty enemyParty)
     {
-        List<BattleEntity> turnQueue = new List<BattleEntity>();
+        List<BattleCharacter> turnQueue = new List<BattleCharacter>();
 
         for(int i = 0; i < 3; i++)
         {
             Character hunter = playerParty.GetHunter(i);
             if((hunter != null) && (hunter._isDead == false))
             {
-                turnQueue.Add(new BattleEntity
-                {
-                    Hunter = hunter,
-                    IsPlayer = true,
-                    Speed = hunter._characterAtkSpeed,
-                    Index = i
-                });
+                turnQueue.Add(hunter);
             }
 
             Monster monster = enemyParty.GetMonster(i);
             if((monster != null) && (monster._isDead == false))
             {
-                turnQueue.Add(new BattleEntity
-                {
-                    Mob = monster,
-                    IsPlayer = false,
-                    Speed = monster._characterAtkSpeed,
-                    Index = i
-                });
+                turnQueue.Add(monster);
             }
         }
 
@@ -80,68 +51,69 @@ public class BattleManager : MonoBehaviour
 
         while ((playerParty.GetCurrentHunterCount() > 0) && (enemyParty.GetCurrentMonsterCount() > 0))
         {
-            foreach (var entity in turnQueue)
+            foreach (BattleCharacter curUnit in turnQueue)
             {
-                if (entity.IsDead == true)
+                if (curUnit._isDead == true)
                 {
                     continue;
                 }
 
-                Transform attackerTransform = null;
+                Transform attackerTransform = curUnit.transform;
                 Transform targetTransform = null;
                 bool isSkill = false;
 
-                if (entity.IsPlayer == true)
+                if (curUnit is Character hunter)
                 {
-                    Monster target = FindMonsterTarget(entity.Index, enemyParty);
-                    if ((target == null) || (target._isDead == true))
+                    Monster target = FindMonsterTarget(enemyParty);
+                    if (target == null)
                     {
                         continue;
                     }
 
-                    attackerTransform = entity.Hunter.transform;
                     targetTransform = target.transform;
-                }
-                else
-                {
-                    Character target = FindHunterTarget(entity.Index, playerParty);
-                    if ((target == null) || (target._isDead == true))
+
+                    Vector3 originPos = attackerTransform.position;
+                    attackerTransform.position = (originPos + targetTransform.position) / 2f;
+                    await UniTask.Delay(isSkill ? 1000 : 500);
+
+                    if (hunter._isDead == true)
                     {
                         continue;
                     }
 
-                    attackerTransform = entity.Mob.transform;
+                    hunter.AtkTarget(target);
+                    await UniTask.Delay(500);
+
+                    if (hunter._isDead == false)
+                    {
+                        attackerTransform.position = originPos;
+                    }
+                }
+                else if (curUnit is Monster monster)
+                {
+                    Character target = FindHunterTarget(playerParty);
+                    if (target == null)
+                    {
+                        continue;
+                    }
+
                     targetTransform = target.transform;
-                }
+                    Vector3 originPos = attackerTransform.position;
+                    attackerTransform.position = (originPos + targetTransform.position) / 2f;
+                    await UniTask.Delay(500);
 
-                Vector3 originPos = attackerTransform.position;
-                Vector3 movePos = (originPos + targetTransform.position) / 2f;
+                    if (monster._isDead == true)
+                    {
+                        continue;
+                    }
 
-                attackerTransform.position = movePos;
+                    monster.AtkTarget(target);
+                    await UniTask.Delay(500);
 
-                await UniTask.Delay(isSkill ? 1000 : 500);
-
-                if (entity.IsDead)
-                {
-                    continue;
-                }
-
-                if (entity.IsPlayer == true)
-                {
-                    Monster targetMonster = targetTransform.GetComponent<Monster>();
-                    entity.Hunter.AtkTarget(targetMonster);
-                }
-                else
-                {
-                    Character targetHunter = targetTransform.GetComponent<Character>();
-                    entity.Mob.AtkTarget(targetHunter);
-                }
-
-                await UniTask.Delay(500);
-
-                if (entity.IsDead == false)
-                {
-                    attackerTransform.position = originPos;
+                    if (monster._isDead == false)
+                    {
+                        attackerTransform.position = originPos;
+                    }
                 }
 
                 bool isHunterOrMonsterWipeOut = (playerParty.GetCurrentHunterCount() == 0) || (enemyParty.GetCurrentMonsterCount() == 0);
@@ -150,8 +122,6 @@ public class BattleManager : MonoBehaviour
                 {
                     break;
                 }
-
-                await UniTask.Delay(500);
             }
         }
 
@@ -168,55 +138,51 @@ public class BattleManager : MonoBehaviour
         EndBattle(playerParty, enemyParty.gameObject);
     }
 
-    private int CompareActionOrder(BattleEntity a, BattleEntity b)
+    private int CompareActionOrder(BattleCharacter a, BattleCharacter b)
     {
-        if (a.Speed != b.Speed)
+        if (a._characterAtkSpeed != b._characterAtkSpeed)
         {
-            return b.Speed.CompareTo(a.Speed);
-        }
-        
-        if (a.IsPlayer != b.IsPlayer)
-        {
-            return a.IsPlayer ? -1 : 1;
+            return b._characterAtkSpeed.CompareTo(a._characterAtkSpeed);
         }
 
-        return a.Index.CompareTo(b.Index);
+        bool aIsPlayer = a is Character;
+        bool bIsPlayer = b is Character;
+
+        if ((aIsPlayer == true) && (bIsPlayer == false))
+        {
+            return -1;
+        }
+
+        if ((aIsPlayer == false) && (bIsPlayer == true))
+        {
+            return 1;
+        }
+
+        return 0;
     }
 
-    private Monster FindMonsterTarget(int attackerIndex, MonsterParty enemyParty)
+    private Monster FindMonsterTarget(MonsterParty enemyParty)
     {
-        Monster mainTarget = enemyParty.GetMonster(attackerIndex);
-        if ((mainTarget != null) && (mainTarget._isDead == false))
-        {
-            return mainTarget;
-        }
-
         for (int i = 0; i < 3;  i++)
         {
-            Monster subTarget = enemyParty.GetMonster(i);
-            if ((subTarget != null) && (subTarget._isDead == false))
+            Monster target = enemyParty.GetMonster(i);
+            if ((target != null) && (target._isDead == false))
             {
-                return subTarget;
+                return target;
             }
         }
 
         return null;
     }
 
-    private Character FindHunterTarget(int attackerIndex, PlayerPartyController playerParty)
+    private Character FindHunterTarget(PlayerPartyController playerParty)
     {
-        Character mainTarget = playerParty.GetHunter(attackerIndex);
-        if ((mainTarget != null) && (mainTarget._isDead == false))
-        {
-            return mainTarget;
-        }
-
         for (int i = 0; i < 3; i++)
         {
-            Character subTarget = playerParty.GetHunter(i);
-            if ((subTarget != null) && (subTarget._isDead == false))
+            Character target = playerParty.GetHunter(i);
+            if ((target != null) && (target._isDead == false))
             {
-                return subTarget;
+                return target;
             }
         }
 
