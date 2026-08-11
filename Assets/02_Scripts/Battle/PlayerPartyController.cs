@@ -73,6 +73,18 @@ public class PlayerPartyController : MonoBehaviour
         return false;
     }
 
+    public void MakeFullHPAllHunters()
+    {
+        foreach (var hunter in _hunters)
+        {
+            if (hunter != null)
+            {
+                Debug.Log($"[PlayerPartyController] MakeFullHPAllHunters: {hunter.name}의 HP를 회복합니다.");
+                //hunter._characterHp = hunter._characterMaxHp;
+            }
+        }
+    }
+
     public void HandleHunterDeath(Character deadHunter)
     {
         for (int i = 0; i < _hunters.Length; i++)

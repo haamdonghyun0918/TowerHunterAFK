@@ -35,41 +35,69 @@ public class ObjectManager : MonoBehaviour
         Transform playerSpawnSpot = MapManager.Instance.GetPlayerSpawnSpot();
         Transform[] monsterSpawnSpots = MapManager.Instance.GetMonsterSpawnSpot();
 
-        if ((Prefab_PlayerParty != null) && (playerSpawnSpot != null))
+        if (playerSpawnSpot != null)
         {
-            GameObject gObj_PlayerParty = Instantiate(Prefab_PlayerParty, playerSpawnSpot.position, Quaternion.identity);
-            _currentPlayerParty = gObj_PlayerParty.GetComponent<PlayerPartyController>();
-
-            //[TODO] : 나중에는 덱 편성/세이브데이터를 받아와서 세팅해줄것.
-            //테스트용 하드코딩
-            string[] testHunterIds = { "character_Test_01" };
-
-            foreach (string hunterId in testHunterIds)
+            if (_currentPlayerParty == null)
             {
-                SpawnHunter(hunterId);
+                if (Prefab_PlayerParty != null)
+                {
+                    GameObject gObj_PlayerParty = Instantiate(Prefab_PlayerParty, playerSpawnSpot.position, Quaternion.identity);
+                    _currentPlayerParty = gObj_PlayerParty.GetComponent<PlayerPartyController>();
+
+                    //[TODO] : 나중에는 덱 편성/세이브데이터를 받아와서 세팅해줄것.
+                    //테스트용 하드코딩
+                    string[] testHunterIds = { "character_Test_01" };
+
+                    foreach (string hunterId in testHunterIds)
+                    {
+                        SpawnHunter(hunterId);
+                    }
+                }
+            }
+            else
+            {
+                _currentPlayerParty.transform.position = playerSpawnSpot.position;
+                _currentPlayerParty._isBattling = false;
+            }
+
+            if (_currentPlayerParty.GetCurrentHunterCount() == 0)
+            {
+                _currentPlayerParty.MakeFullHPAllHunters();
             }
         }
 
-        //[TODO] : 나중에는 Stage 숫자를 기반으로 맵 데이터에서 등장 몬스터 Id를 가져오거나 할 것.
-        if ((Prefab_MonsterParty != null) && (monsterSpawnSpots != null))
+        bool isRestArea = (stage % 10 == 0);
+
+        if (isRestArea)
         {
-            foreach (Transform spot in monsterSpawnSpots)
+            if (_currentPlayerParty != null)
             {
-                if (spot == null)
+                _currentPlayerParty.MakeFullHPAllHunters();
+            }
+        }
+        else
+        {
+            //[TODO] : 나중에는 Stage 숫자를 기반으로 맵 데이터에서 등장 몬스터 Id를 가져오거나 할 것.
+            if ((Prefab_MonsterParty != null) && (monsterSpawnSpots != null))
+            {
+                foreach (Transform spot in monsterSpawnSpots)
                 {
-                    continue;
-                }
+                    if (spot == null)
+                    {
+                        continue;
+                    }
 
-                GameObject gObj_MonsterParty = Instantiate(Prefab_MonsterParty, spot.position, Quaternion.identity);
-                MonsterParty newMonsterParty = gObj_MonsterParty.GetComponent<MonsterParty>();
-                
-                string[] testMonsterIds = { "monster_Test_01", "monster_Test_01" };
-                foreach (string monsterId in testMonsterIds)
-                {
-                    SpawnMonster(monsterId, newMonsterParty);
-                }
+                    GameObject gObj_MonsterParty = Instantiate(Prefab_MonsterParty, spot.position, Quaternion.identity);
+                    MonsterParty newMonsterParty = gObj_MonsterParty.GetComponent<MonsterParty>();
 
-                _currentMonsterParty.Add(newMonsterParty);
+                    string[] testMonsterIds = { "monster_Test_01", "monster_Test_01" };
+                    foreach (string monsterId in testMonsterIds)
+                    {
+                        SpawnMonster(monsterId, newMonsterParty);
+                    }
+
+                    _currentMonsterParty.Add(newMonsterParty);
+                }
             }
         }
 
@@ -149,12 +177,6 @@ public class ObjectManager : MonoBehaviour
 
     private void ClearCurrentEntities()
     {
-        if (_currentPlayerParty != null)
-        {
-            Destroy(_currentPlayerParty.gameObject);
-            _currentPlayerParty = null;
-        }
-
         foreach (var monsterParty in _currentMonsterParty)
         {
             if (monsterParty != null)

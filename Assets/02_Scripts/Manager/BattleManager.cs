@@ -87,7 +87,6 @@ public class BattleManager : MonoBehaviour
                     continue;
                 }
 
-                // 이하 전투 연출과 데미지 로직
                 Transform attackerTransform = null;
                 Transform targetTransform = null;
                 bool isSkill = false;
