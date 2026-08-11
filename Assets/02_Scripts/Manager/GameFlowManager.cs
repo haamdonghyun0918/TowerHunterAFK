@@ -64,6 +64,10 @@ public class GameFlowManager : MonoBehaviour
     private void HandleStageChanged(int stage)
     {
         Debug.Log($"{stage} 스테이지입니다.");
+        if (ObjectManager.Instance != null)
+        {
+            ObjectManager.Instance.SpawnEntities(stage);
+        }
     }
 
     private void HandleStageCleared()

@@ -205,9 +205,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
   _playerSpawnSpot: {fileID: 5854807008796774494}
   _playerClearSpot: {fileID: 1623910584566201234}
-  _monsterSpawnSpot1: {fileID: 3047196628895472564}
-  _monsterSpawnSpot2: {fileID: 7035995303465366460}
-  _monsterSpawnSpot3: {fileID: 3051840139055448444}
+  _monsterSpawnSpot1: {fileID: 752588058644150535}
+  _monsterSpawnSpot2: {fileID: 6826127423834835046}
+  _monsterSpawnSpot3: {fileID: 2809516604212700222}
   _mapBackGround: {fileID: 7388458170876776421}
   _mapAddressableKeys:
   - Map1
@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 6828806270023499532}
   m_Layer: 0
   m_Name: PlayerClearSpot
-  m_TagString: Untagged
+  m_TagString: ClearSpot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

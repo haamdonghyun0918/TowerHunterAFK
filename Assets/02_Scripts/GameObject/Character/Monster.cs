@@ -7,8 +7,8 @@ public class Monster : BattleCharacter
     private MonsterData _monsterData;
 
     [Header("전투 관련")]
-    [SerializeField] private GameObject TargetCharacter;
-    private Character _targetCharacterComponent;
+    //[SerializeField] private GameObject TargetCharacter;
+    //private Character _targetCharacterComponent;
 
 
     private Animator _monsterAnimator;
@@ -18,7 +18,7 @@ public class Monster : BattleCharacter
     private void Awake()
     {
         this.gameObject.SetActive(true);
-        _targetCharacterComponent = TargetCharacter.GetComponentInChildren<Character>();
+        //_targetCharacterComponent = TargetCharacter.GetComponentInChildren<Character>();
     }
 
     private void OnEnable()
