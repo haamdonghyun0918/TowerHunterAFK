@@ -7,8 +7,8 @@ public class Monster : BattleCharacter
     private MonsterData _monsterData;
 
     [Header("전투 관련")]
-    [SerializeField] private GameObject TargetCharacter;
-    private Character _targetCharacterComponent;
+    //[SerializeField] private GameObject TargetCharacter;
+    //private Character _targetCharacterComponent;
 
 
     private Animator _monsterAnimator;
@@ -18,11 +18,12 @@ public class Monster : BattleCharacter
     private void Awake()
     {
         this.gameObject.SetActive(true);
-        TestGetTargetCharacterComponent(TargetCharacter);
+        //_targetCharacterComponent = TargetCharacter.GetComponentInChildren<Character>();
     }
 
     private void OnEnable()
     {
+
         //[TODO] Hud 생성, 오브젝트매니저에 캐릭터 등록(소통후)
         if (GameDataManager.Instance == null)
         {
@@ -48,21 +49,5 @@ public class Monster : BattleCharacter
         Debug.Log($"타겟{TargetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
         //[TODO] 평타공격 모션
         TargetCharacter.TakeDamage(_characterAtk);
-    }
-
-
-    // 테스트용 치트 함수 =======================================================
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            AtkTarget(_targetCharacterComponent);
-        }
-    }
-
-    private void TestGetTargetCharacterComponent(GameObject targetCharacter)
-    {
-        _targetCharacterComponent = targetCharacter.GetComponentInChildren<Character>();
     }
 }
