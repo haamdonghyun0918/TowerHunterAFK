@@ -2,43 +2,33 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public class Character : BattleCharacter
 {
     [Header("스킬 관련")]
-    [SerializeField] private Collider Collider_Skill;
-    [SerializeField] private GameObject Prefab_Skill;
-    [SerializeField] private Transform Root_SkillSpawn;
-
-    [Header("스탯 관련")]
-    private int _characterHp;
-    private int _characterMaxHp;
-    private int _characterMp;
-    private int _characterMaxMp;
-    private int _characterAtk;
-    private int _characterAtkSpeed;
+    private int _RequiredSkillCost;
+    private int _currentSkillCost;
+    private int _MaxSkillCost;
 
     [Header("데이터 관련")]
     private CharacterData _characterData;
+    private string _characterId;
 
     [Header("전투 관련")]
     [SerializeField] private GameObject TargetMonster;
-    [SerializeField] private Monster _targetMonsterComponent;
+    private Skill _skill;
 
     private Animator _characterAnimator;
 
-    private Action<int, int> _onChangedHp;
-    private Action<int, int> _onChangedMp;
-
-    private bool _isCoolTime = false;
-    private bool _isDead = false;
-
+    private bool _isSkillUsable = false;
     private void Awake()
     {
-        _isDead = false;
+
     }
 
-    private void Start()    // [TODO] 우선 Start로 하고 동적생성이 되면 OnEnable로 변경
+    private void OnEnable()    // [TODO] 우선 Start로 하고 동적생성이 되면 OnEnable로 변경
     {
+        _currentSkillCost = 0;
+
         //[TODO] Hud 생성, 오브젝트매니저에 캐릭터 등록(소통후)
         if (GameDataManager.Instance == null)
         {
@@ -46,100 +36,78 @@ public class Character : MonoBehaviour
         }
         //_characterData = GameDataManager.Instance.GetCharacterData("character_Test_01");     // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
         _characterData = GameDataManager.Instance.GetData<CharacterData>("character_Test_01");
-        _targetMonsterComponent = TargetMonster.GetComponentInChildren<Monster>();    // [TODO] 타겟 몬스터 정하는 방식 정해야함
+        _characterId = _characterData.Id;
+        _MaxSkillCost = _characterData.MaxSkillCost;
         SetStatData();
     }
 
-    private void Update()
+    public string GetCharacterId()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            AtkTarget();
-        }
+        return _characterId;
     }
 
     private void SetStatData()
     {
         var baseStatData = GameDataManager.Instance.GetData<BaseStatData>(_characterData.BaseStatDataId);
-        //var baseStatData = GameDataManager.Instance.GetBaseStatData(_characterData.BaseStatDataId);
 
         _characterAtk = baseStatData.BaseAtk;
         _characterAtkSpeed = baseStatData.BaseAtkSpeed;
         _characterMaxHp = baseStatData.BaseHp;
         _characterHp = baseStatData.BaseHp;
-        _characterMaxMp = baseStatData.BaseMp;
-        _characterMp = baseStatData.BaseMp;
     }
 
-    private void UseSkill()
+    private void UseSkill(Monster targetMonster)
     {
-        string skillId = _characterData.Skill;
-        if (_isCoolTime == false) 
+        string skillId = _characterData.SkillId;
+        _skill.SetSkillId(skillId);
+        int currentDamage = _characterAtk * _skill.GetSkillDamage();
+
+        if (_isSkillUsable == true)
         {
-            //[TODO] 스킬사용
-            //UseSkill(skillId);
+            //[TODO] 스킬사용 모션
+            _skill.UseSkill();
+            targetMonster.TakeDamage(currentDamage);
         }
     }
 
-    private void AtkTarget()
+    public void AtkTarget(Monster targetMonster)
     {
-        if (_isDead == true) return;
+        if (targetMonster._isDead == true) return;
 
-        if (_targetMonsterComponent == null)
+        if (_isSkillUsable == false)
         {
-            Debug.Log("타겟 몬스터의 컴포넌트를 받아오지 못했습니다.");
+            UseNormalAttack(targetMonster);
+            Debug.Log($"타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
+            return;
         }
-        _targetMonsterComponent.TakeDamage(_characterAtk);
-        Debug.Log($"타겟에게 {_characterAtk} 데미지를 줍니다.");
-        if (_isCoolTime == true)
+        else if (_isSkillUsable == true && _RequiredSkillCost <= _currentSkillCost)
         {
-            //[TODO] 평타공격
-        }
-    }
-
-    public void TakeDamage(int damage)
-    {
-        if (_isDead == true) return;
-
-        _characterHp -= damage;
-        InvokeStatChangedEvent();
-        Debug.Log($"{_characterData.Name}가 {damage} 데미지를 받았습니다.");
-        
-        if (_characterHp <= 0)
-        {
-            Die();
+            UseSkillCost(_skill.GetRequiredSkillCost());
+            UseSkill(targetMonster);
         }
     }
 
-    private void Die()
+    private void UseNormalAttack(Monster targetMonster)
     {
-        //[TODO] 죽음 애니메이션 재생
-        Debug.Log($"{_characterData.Name}이 죽었습니다.");
-        ResetStateChangedEvent();
-        this.gameObject.SetActive( false );
-        _isDead = true;
+        //[TODO] 평타공격 모션
+        targetMonster.TakeDamage(_characterAtk);
     }
 
-    private void ChangeState()
+    public void IncreaseCurrentSkillCost(int amount)
     {
-        //[TODO] 애니메이션 변경 (스킬사용, 평타공격, 죽는애니메이션)
+        _currentSkillCost += amount;
+        if (_currentSkillCost > _MaxSkillCost)
+        {
+            _currentSkillCost = _MaxSkillCost;
+        }
     }
 
-    public void BindOnStatChangedEvent(Action<int, int> hpChangeCallback, Action<int, int> mpChangeCallback)
+    public void UseSkillCost(int amount)
     {
-        _onChangedHp += hpChangeCallback;
-        _onChangedMp += mpChangeCallback;
-    }
-
-    private void ResetStateChangedEvent()
-    {
-        _onChangedHp = null;
-        _onChangedMp = null;
-    }
-
-    private void InvokeStatChangedEvent()
-    {
-        _onChangedHp?.Invoke(_characterHp, _characterMaxHp);
-        _onChangedMp?.Invoke(_characterMp, _characterMaxMp);
+        if (_currentSkillCost < amount)
+        {
+            Debug.Log("스킬 코스트가 부족합니다!");
+        }
+        _currentSkillCost -= amount;
     }
 }

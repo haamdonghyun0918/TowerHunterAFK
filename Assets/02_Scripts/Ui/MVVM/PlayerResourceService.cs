@@ -72,41 +72,21 @@
         return true;
     }
 
-    public void SetEXPOnLoad(long exp)
+    public void RequestAddItem(string[] items)
     {
-        var resourceViewModel = GetPlayerResourceViewModel();
-
-        resourceViewModel.Exp = exp;
-    }
-
-    public void RequestAddEXP(long addExp)
-    {
-        if (addExp <= 0)
+        if (items == null || items.Length == 0)
         {
             return;
         }
 
-        var resourceViewModel = GetPlayerResourceViewModel();
-
-        resourceViewModel.Gold += addExp;
-
     }
 
-    public bool RequestUseExp(long useExp)
+    public bool RequestUseItem(string item)
     {
-        if (useExp <= 0)
+        if(string.IsNullOrEmpty(item))
         {
             return false;
         }
-
-        var resourceViewModel = GetPlayerResourceViewModel();
-
-        if (resourceViewModel.Gold < useExp)
-        {
-            return false;
-        }
-
-        resourceViewModel.Gold -= useExp;
 
         return true;
     }

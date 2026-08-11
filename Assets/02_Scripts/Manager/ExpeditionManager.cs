@@ -1,15 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-
-[Serializable]
-public class ExpeditionData
-{
-    public string expeditionId;
-    public string expeditionName;
-    public float maxDurationHours;
-    public long goldPerHour;
-}
+using Cysharp.Threading.Tasks;
 
 public class ExpeditionManager : MonoBehaviour
 {
@@ -23,14 +15,13 @@ public class ExpeditionManager : MonoBehaviour
     [SerializeField] private bool _expeditionStart = false;
     [SerializeField] private bool _isCompleted = false;
     [SerializeField] private DateTime _startTime;
-    //savedGold를 이름 바꿈 - 헷갈림
-    [SerializeField] private long _claimableGold = 0;
 
     //TODO: 헌터들의 데이터를 가져와야 함 + 헌터들을 통하여 스쿼드 짜는 로직 추가할 것
     public event Action<ExpeditionData> OnExpeditionSelected;
     public event Action OnExpeditionStarted;
     public event Action OnExpeditionCompleted;
-    public event Action<long> OnRewardClaimed;
+    public event Action<long, string[]> OnRewardClaimed;
+    public event Action<int> OnExpeditionLevelNotEnough;
 
     private void Awake()
     {
@@ -45,11 +36,48 @@ public class ExpeditionManager : MonoBehaviour
         }
     }
 
+    public UniTask Init()
+    {
+        _expeditionsList = GameDataManager.Instance.GetAllData<ExpeditionData>();
+        LoadExpeditionList();
+
+        Debug.Log("ExpeditionManager 호출");
+        return UniTask.CompletedTask;
+    }
+
+    private void LoadExpeditionList()
+    {
+        string savedId = SaveManager.Instance.GetOngoingExpeditionId();
+        string savedTime = SaveManager.Instance.GetExpeditionStartTime();
+
+        if ((string.IsNullOrEmpty(savedId) == false) && (string.IsNullOrEmpty(savedTime) == false))
+        {
+            _selectedExpedition = null;
+            foreach (ExpeditionData data in _expeditionsList)
+            {
+                if (data.Id == savedId)
+                {
+                    _selectedExpedition = data;
+                    break;
+                }
+            }
+
+            if (_selectedExpedition != null)
+            {
+                if (DateTime.TryParse(savedTime, out DateTime parsedTime))
+                {
+                    _startTime = parsedTime;
+                    _expeditionStart = true;
+                    CheckExpeditionCompletion();
+                }
+            }
+        }
+    }
     private void Update()
     {
         if (_expeditionStart && (_isCompleted == false))
         {
-            CalculateReward();
+            CheckExpeditionCompletion();
         }
     }
 
@@ -57,8 +85,19 @@ public class ExpeditionManager : MonoBehaviour
     {
         if (index >= 0 && index < _expeditionsList.Count)
         {
-            _selectedExpedition = _expeditionsList[index];
-            Debug.Log($"{_selectedExpedition.expeditionName}을 선택하였습니다.");
+            ExpeditionData targetExpedition = _expeditionsList[index];
+            //TODO: 현재는 플레이어의 레벨을 하드코딩했지만, 플레이어의 경험치와 레벨 로직 구성시 변경할 것
+            int currentPlayerLevel = 1;
+
+            if (currentPlayerLevel < targetExpedition.LimitLevel)
+            {
+                Debug.Log("제한 레벨을 만족하지 못합니다");
+                OnExpeditionLevelNotEnough?.Invoke(targetExpedition.LimitLevel);
+                return;
+            }
+
+            _selectedExpedition = targetExpedition;
+            Debug.Log($"{_selectedExpedition.ExpeditionName}을 선택하였습니다.");
             OnExpeditionSelected?.Invoke(_selectedExpedition);
         }
     }
@@ -71,29 +110,27 @@ public class ExpeditionManager : MonoBehaviour
         }
         _expeditionStart = true;
         _startTime = DateTime.Now;
-        _claimableGold = 0;
+
+        string timeStr = _startTime.ToString("O");
+        SaveManager.Instance.SaveExpeditionStart(_selectedExpedition.Id, timeStr);
 
         Debug.Log("원정을 보냈습니다.");
         OnExpeditionStarted?.Invoke();
     }
 
-    private void CalculateReward()
+    private void CheckExpeditionCompletion()
     {
-        if ((_expeditionStart == false) || (_selectedExpedition == null))
+        if (_selectedExpedition == null)
         {
             return;
         }
 
         DateTime currentTime = DateTime.Now;
-        TimeSpan passedTime = currentTime - _startTime;
-        float passedHours = (float)passedTime.TotalHours;
+        TimeSpan passedHours = currentTime - _startTime;
 
-        if (passedHours >= _selectedExpedition.maxDurationHours)
+        if (passedHours.TotalHours >= _selectedExpedition.DurationHours)
         {
-            passedHours = _selectedExpedition.maxDurationHours;
             _isCompleted = true;
-            _claimableGold = (long)(passedHours * _selectedExpedition.goldPerHour);
-
             Debug.Log("원정 시간이 모두 끝났습니다!");
             OnExpeditionCompleted?.Invoke();
         }
@@ -106,7 +143,7 @@ public class ExpeditionManager : MonoBehaviour
             return TimeSpan.Zero;
         }
 
-        DateTime endTime = _startTime.AddHours(_selectedExpedition.maxDurationHours);
+        DateTime endTime = _startTime.AddHours(_selectedExpedition.DurationHours);
         TimeSpan remainTime = endTime - DateTime.Now;
 
         if (remainTime.TotalSeconds < 0)
@@ -117,28 +154,35 @@ public class ExpeditionManager : MonoBehaviour
         return remainTime;
     }
 
-    //역할이 뭐지? 왜 골드를 추가하고 왜 _saveGold가 추가되지? - 원정 보상 골드구나...
     public void ClaimReward()
     {
-        if (_claimableGold > 0)
+        if (_isCompleted && _selectedExpedition != null)
         {
-            NetworkManager.Instance.PlayerResourceService.RequestAddGold(_claimableGold);
-            OnRewardClaimed?.Invoke(_claimableGold);
-            _claimableGold = 0;
+            long rewardGold = _selectedExpedition.RewardGold;
+            string[] rewardItems = _selectedExpedition.RewardItems;
+
+            if (rewardGold > 0)
+            {
+                NetworkManager.Instance.PlayerResourceService.RequestAddGold(rewardGold);
+            }
+
+            if (rewardItems != null && rewardItems.Length > 0)
+            {
+                NetworkManager.Instance.PlayerResourceService.RequestAddItem(rewardItems);
+            }
+
+            OnRewardClaimed?.Invoke(rewardGold, rewardItems);
+            SaveManager.Instance.ClearExpedition();
+
             _expeditionStart = false;
             _isCompleted = false;
+            _selectedExpedition = null;
         }
 
         else
         {
             Debug.Log("수령할 보상이 존재하지 않습니다.");
         }
-    }
-
-    public long GetSavedGold()
-    {
-        // 쌓인 재화 확인용 Get함수
-        return _claimableGold;
     }
 
     public string GetRemainTimeString()
