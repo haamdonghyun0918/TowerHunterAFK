@@ -22,17 +22,17 @@
         }
     }
 
-    public long EXP
+    public long Exp
     {
-        get => _playerResourceModel.EXP;
+        get => _playerResourceModel.Exp;
 
         set
         {
-            if( _playerResourceModel.EXP != value)
+            if( _playerResourceModel.Exp != value)
             {
-                _playerResourceModel.EXP = value;
+                _playerResourceModel.Exp = value;
 
-                OnPropertyChanged(nameof(EXP));
+                OnPropertyChanged(nameof(Exp));
             }
         }
     }

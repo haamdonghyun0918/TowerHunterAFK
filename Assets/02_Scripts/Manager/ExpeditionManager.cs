@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 public class ExpeditionManager : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class ExpeditionManager : MonoBehaviour
     public event Action OnExpeditionStarted;
     public event Action OnExpeditionCompleted;
     public event Action<long, string[]> OnRewardClaimed;
+    public event Action<int> OnExpeditionLevelNotEnough;
 
     private void Awake()
     {
@@ -34,11 +36,43 @@ public class ExpeditionManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public UniTask Init()
     {
         _expeditionsList = GameDataManager.Instance.GetAllData<ExpeditionData>();
+        LoadExpeditionList();
+
+        Debug.Log("ExpeditionManager 호출");
+        return UniTask.CompletedTask;
     }
 
+    private void LoadExpeditionList()
+    {
+        string savedId = SaveManager.Instance.GetOngoingExpeditionId();
+        string savedTime = SaveManager.Instance.GetExpeditionStartTime();
+
+        if ((string.IsNullOrEmpty(savedId) == false) && (string.IsNullOrEmpty(savedTime) == false))
+        {
+            _selectedExpedition = null;
+            foreach (ExpeditionData data in _expeditionsList)
+            {
+                if (data.Id == savedId)
+                {
+                    _selectedExpedition = data;
+                    break;
+                }
+            }
+
+            if (_selectedExpedition != null)
+            {
+                if (DateTime.TryParse(savedTime, out DateTime parsedTime))
+                {
+                    _startTime = parsedTime;
+                    _expeditionStart = true;
+                    CheckExpeditionCompletion();
+                }
+            }
+        }
+    }
     private void Update()
     {
         if (_expeditionStart && (_isCompleted == false))
@@ -51,7 +85,18 @@ public class ExpeditionManager : MonoBehaviour
     {
         if (index >= 0 && index < _expeditionsList.Count)
         {
-            _selectedExpedition = _expeditionsList[index];
+            ExpeditionData targetExpedition = _expeditionsList[index];
+            //TODO: 현재는 플레이어의 레벨을 하드코딩했지만, 플레이어의 경험치와 레벨 로직 구성시 변경할 것
+            int currentPlayerLevel = 1;
+
+            if (currentPlayerLevel < targetExpedition.LimitLevel)
+            {
+                Debug.Log("제한 레벨을 만족하지 못합니다");
+                OnExpeditionLevelNotEnough?.Invoke(targetExpedition.LimitLevel);
+                return;
+            }
+
+            _selectedExpedition = targetExpedition;
             Debug.Log($"{_selectedExpedition.ExpeditionName}을 선택하였습니다.");
             OnExpeditionSelected?.Invoke(_selectedExpedition);
         }
@@ -65,6 +110,9 @@ public class ExpeditionManager : MonoBehaviour
         }
         _expeditionStart = true;
         _startTime = DateTime.Now;
+
+        string timeStr = _startTime.ToString("O");
+        SaveManager.Instance.SaveExpeditionStart(_selectedExpedition.Id, timeStr);
 
         Debug.Log("원정을 보냈습니다.");
         OnExpeditionStarted?.Invoke();
@@ -124,6 +172,7 @@ public class ExpeditionManager : MonoBehaviour
             }
 
             OnRewardClaimed?.Invoke(rewardGold, rewardItems);
+            SaveManager.Instance.ClearExpedition();
 
             _expeditionStart = false;
             _isCompleted = false;

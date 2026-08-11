@@ -11,6 +11,8 @@ public class SaveManager : MonoBehaviour
 
     public event Action<long> OnGoldChanged;
     public event Action OnNotEnoughGold;
+    public event Action<int> OnLevelChanged;
+    public event Action<long> OnExpChanged;
 
     private void Awake()
     {
@@ -97,5 +99,55 @@ public class SaveManager : MonoBehaviour
         CurrentSaveData.InventoryItems.AddRange(items);
         SaveToFile(CurrentSaveData);
         Debug.Log("[SaveManager] 아이템을 획득하여 저장하였습니다.");
+    }
+
+    public void SavePlayerLevel(int level)
+    {
+        CurrentSaveData.PlayerLevel = level;
+        SaveToFile(CurrentSaveData);
+        OnLevelChanged?.Invoke(CurrentSaveData.PlayerLevel);
+    }
+
+    public int GetPlayerLevel()
+    {
+        return CurrentSaveData.PlayerLevel;
+    }
+
+    public void SavePlayerExp(long exp)
+    {
+        CurrentSaveData.Exp = exp;
+        SaveToFile(CurrentSaveData);
+        OnExpChanged?.Invoke(CurrentSaveData.Exp);
+    }
+
+    public long GetPlayerExp()
+    {
+        return CurrentSaveData.Exp;
+    }
+
+    public void SaveExpeditionStart(string expeditionId, string startTime)
+    {
+        CurrentSaveData.OngoingExpeditionId = expeditionId;
+        CurrentSaveData.ExpeditionStartTime = startTime;
+        SaveToFile(CurrentSaveData);
+        Debug.Log($"[SaveManager] 원정 시스템 저장 완료- ID: {expeditionId}, 시작시간: {startTime}");
+    }
+
+    public void ClearExpedition()
+    {
+        CurrentSaveData.OngoingExpeditionId = "";
+        CurrentSaveData.ExpeditionStartTime = "";
+        SaveToFile(CurrentSaveData);
+        Debug.Log("[SaveManager] 원정 상태 초기화");
+    }
+
+    public string GetOngoingExpeditionId()
+    {
+        return CurrentSaveData.OngoingExpeditionId;
+    }
+
+    public string GetExpeditionStartTime()
+    {
+        return CurrentSaveData.ExpeditionStartTime;
     }
 }
