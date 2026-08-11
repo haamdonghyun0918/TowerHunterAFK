@@ -28,16 +28,30 @@ public class GameFlowManager : MonoBehaviour
         Debug.Log("게임 시작중....=>로딩 화면");
         await SaveManager.Instance.Init();
 
-        MapManager.Instance.OnStageChanged += HandleStageChanged;
-        MapManager.Instance.OnStageCleared += HandleStageCleared;
-        MapManager.Instance.OnStageFailed += HandleStageFailed;
+        if (ExpeditionManager.Instance != null)
+        {
+            ExpeditionManager.Instance.OnRewardClaimed += HandleExpeditionRewardClaimed;
+            await ExpeditionManager.Instance.Init();
+        }
 
-        await MapManager.Instance.Init();
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.OnStageChanged += HandleStageChanged;
+            MapManager.Instance.OnStageCleared += HandleStageCleared;
+            MapManager.Instance.OnStageFailed += HandleStageFailed;
+            await MapManager.Instance.Init();
+        }
+
         Debug.Log("게임 세팅 완료 게임 화면 출력");
     }
 
     private void OnDestroy()
     {
+        if (ExpeditionManager.Instance != null)
+        {
+            ExpeditionManager.Instance.OnRewardClaimed -= HandleExpeditionRewardClaimed;
+        }
+
         if (MapManager.Instance != null)
         {
             MapManager.Instance.OnStageChanged -= HandleStageChanged;
@@ -50,17 +64,45 @@ public class GameFlowManager : MonoBehaviour
     private void HandleStageChanged(int stage)
     {
         Debug.Log($"{stage} 스테이지입니다.");
+        if (ObjectManager.Instance != null)
+        {
+            ObjectManager.Instance.SpawnEntities(stage);
+        }
     }
 
     private void HandleStageCleared()
     {
         Debug.Log("스테이지 클리어");
         NetworkManager.Instance.PlayerResourceService.RequestAddGold(1000);
+        long totalGold = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel().Gold;
+        SaveManager.Instance.SaveGold(totalGold);
         Debug.Log("클리어 보상 1000골드 지급!");
+
+        int nextStage = MapManager.Instance.CurrentStage + 1;
+        MapManager.Instance.StartNewStage(nextStage).Forget();
     }
 
     private void HandleStageFailed()
     {
         Debug.Log("스쿼드가 전멸하여 스테이지 실패...");
+        int currentStage = MapManager.Instance.CurrentStage;
+        int rollBackStage = ((currentStage - 1) / 10) * 10 + 1;
+        Debug.Log($"실패로 인해 {rollBackStage} 스테이지로 돌아갑니다...");
+        MapManager.Instance.StartNewStage(rollBackStage).Forget();
+    }
+
+    private void HandleExpeditionRewardClaimed(long addedGold, string[] items)
+    {
+        if (items != null && items.Length > 0)
+        {
+            SaveManager.Instance.SaveItem(items);
+        }
+
+        if (addedGold > 0)
+        {
+            long totalGold = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel().Gold;
+            SaveManager.Instance.SaveGold(totalGold);
+        }
+
     }
 }

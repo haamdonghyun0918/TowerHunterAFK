@@ -9,9 +9,10 @@ public class SaveManager : MonoBehaviour
     public SaveData CurrentSaveData { get; private set; }
     private const string SaveFileName = "GameSaveData.json";
 
-    //방치형은 재화 단위가 커질 수 있어 long으로 데이터 타입 변경 - 이에 맞춰 밑에도 다 반영함.
     public event Action<long> OnGoldChanged;
     public event Action OnNotEnoughGold;
+    public event Action<int> OnLevelChanged;
+    public event Action<long> OnExpChanged;
 
     private void Awake()
     {
@@ -80,44 +81,73 @@ public class SaveManager : MonoBehaviour
         return CurrentSaveData.CurrentStage;
     }
 
-    //골드 데이터 타입 변경
     public void SaveGold(long gold)
     {
         CurrentSaveData.Gold = gold;
         SaveToFile(CurrentSaveData);
         OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
-    
-    //골드 데이터 타입 변경
-    //MVVM구조에 맞게 삭제해야 할지도?
-    public void AddGold(long amount)
+
+    public void SaveItem(string[] items)
     {
-        CurrentSaveData.Gold += amount;
+        if (items == null || items.Length == 0)
+        {
+            return;
+        }
+
+        //TODO: 인벤토리(창고) 시스템 구현시 실제 그 위치에 저장되게 하기
+        CurrentSaveData.InventoryItems.AddRange(items);
         SaveToFile(CurrentSaveData);
-        OnGoldChanged?.Invoke(CurrentSaveData.Gold);
+        Debug.Log("[SaveManager] 아이템을 획득하여 저장하였습니다.");
     }
 
-    public long GetGold()
+    public void SavePlayerLevel(int level)
     {
-        return CurrentSaveData.Gold;
+        CurrentSaveData.PlayerLevel = level;
+        SaveToFile(CurrentSaveData);
+        OnLevelChanged?.Invoke(CurrentSaveData.PlayerLevel);
     }
 
-    //골드 데이터 타입 변경
-    public bool UseGold(long amount)
+    public int GetPlayerLevel()
     {
-        if (CurrentSaveData.Gold >= amount)
-        {
-            CurrentSaveData.Gold -= amount;
-            SaveToFile(CurrentSaveData);
-            OnGoldChanged?.Invoke(CurrentSaveData.Gold);
+        return CurrentSaveData.PlayerLevel;
+    }
 
-            return true;
-        }
+    public void SavePlayerExp(long exp)
+    {
+        CurrentSaveData.Exp = exp;
+        SaveToFile(CurrentSaveData);
+        OnExpChanged?.Invoke(CurrentSaveData.Exp);
+    }
 
-        else
-        {
-            OnNotEnoughGold?.Invoke();
-            return false;
-        }
+    public long GetPlayerExp()
+    {
+        return CurrentSaveData.Exp;
+    }
+
+    public void SaveExpeditionStart(string expeditionId, string startTime)
+    {
+        CurrentSaveData.OngoingExpeditionId = expeditionId;
+        CurrentSaveData.ExpeditionStartTime = startTime;
+        SaveToFile(CurrentSaveData);
+        Debug.Log($"[SaveManager] 원정 시스템 저장 완료- ID: {expeditionId}, 시작시간: {startTime}");
+    }
+
+    public void ClearExpedition()
+    {
+        CurrentSaveData.OngoingExpeditionId = "";
+        CurrentSaveData.ExpeditionStartTime = "";
+        SaveToFile(CurrentSaveData);
+        Debug.Log("[SaveManager] 원정 상태 초기화");
+    }
+
+    public string GetOngoingExpeditionId()
+    {
+        return CurrentSaveData.OngoingExpeditionId;
+    }
+
+    public string GetExpeditionStartTime()
+    {
+        return CurrentSaveData.ExpeditionStartTime;
     }
 }
