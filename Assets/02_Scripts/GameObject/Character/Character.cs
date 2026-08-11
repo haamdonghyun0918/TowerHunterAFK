@@ -22,7 +22,14 @@ public class Character : BattleCharacter
     private bool _isSkillUsable = false;
     private void Awake()
     {
-
+        if (_skill == null)
+        {
+            _skill = GetComponent<Skill>();
+            if (_skill == null)
+            {
+                Debug.LogError("[Character] 스킬 컴포넌트를 가져오지 못했습니다.");
+            }
+        }
     }
 
     private void OnEnable()    // [TODO] 우선 Start로 하고 동적생성이 되면 OnEnable로 변경
