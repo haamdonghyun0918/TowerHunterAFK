@@ -39,8 +39,8 @@ public class Skill : MonoBehaviour
         SetBaseSkillDamage();
         SetPrefabPath();
         SetRequiredSkillCost();
-        TestSetTargetTransform();
         SetSkillType();
+        TestSetTargetTransform();
     }
 
     private void SetSkillId(string skillId)
