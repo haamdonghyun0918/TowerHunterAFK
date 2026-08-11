@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerPartyController : MonoBehaviour
 {
-    private float moveSpeed = 5.0f;
+    private float moveSpeed = 10.0f;
 
     public bool _isBattling = false;
     public bool _isMovable = false;
