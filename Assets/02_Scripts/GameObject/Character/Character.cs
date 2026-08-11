@@ -14,7 +14,7 @@ public class Character : BattleCharacter
     private string _characterId;
 
     [Header("전투 관련")]
-    [SerializeField] private GameObject TargetMonster;
+    [SerializeField] private Monster TargetMonster;
     private Skill _skill;
 
     private Animator _characterAnimator;
@@ -79,8 +79,6 @@ public class Character : BattleCharacter
 
     private void UseSkill(Monster targetMonster)
     {
-        string skillId = _characterData.SkillId;
-        _skill.SetSkillId(skillId);
         int currentDamage = _characterAtk * _skill.GetSkillDamage();
 
         if (_isSkillUsable == true)
@@ -131,5 +129,25 @@ public class Character : BattleCharacter
             Debug.Log("스킬 코스트가 부족합니다!");
         }
         _currentSkillCost -= amount;
+    }
+
+    // 테스트용 치트 함수 =======================================================
+
+    private void Update()   // 테스트용으로만 업데이트 사용
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            TestGetMaxSkillCost();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            AtkTarget(TargetMonster);
+        }
+    }
+
+    private void TestGetMaxSkillCost()
+    {
+        _currentSkillCost = _MaxSkillCost;
     }
 }
