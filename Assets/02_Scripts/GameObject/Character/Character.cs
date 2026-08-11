@@ -1,6 +1,7 @@
 ﻿using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class Character : BattleCharacter
 {
@@ -89,6 +90,7 @@ public class Character : BattleCharacter
             targetMonster.TakeDamage(currentDamage);
             Debug.Log($"[스킬공격] 타겟{targetMonster.name}에게 {currentDamage} 데미지를 줍니다.");
         }
+        CheckSkillUsable();
         InvokeCostChangedEvent();
     }
 
@@ -136,7 +138,6 @@ public class Character : BattleCharacter
             Debug.Log("스킬 코스트가 부족합니다!");
         }
         _currentSkillCost -= amount;
-        CheckSkillUsable();
     }
 
     private void CheckSkillUsable()
@@ -167,6 +168,11 @@ public class Character : BattleCharacter
     {
         _currentSkillCost = _maxSkillCost;
         CheckSkillUsable();
+    }
+
+    public void MakeFullHp()
+    {
+        _characterHp = _characterMaxHp;
     }
 
 
