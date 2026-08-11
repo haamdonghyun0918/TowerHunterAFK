@@ -8,6 +8,7 @@ public class Character : BattleCharacter
     private int _RequiredSkillCost;
     private int _currentSkillCost;
     private int _MaxSkillCost;
+    private event Action _onSkillCostChange;
 
     [Header("데이터 관련")]
     private CharacterData _characterData;
@@ -30,6 +31,7 @@ public class Character : BattleCharacter
                 Debug.LogError("[Character] 스킬 컴포넌트를 가져오지 못했습니다.");
             }
         }
+        BindOnSkillCostChanged(ConsoleOnSkillCostChanged);
     }
 
     private void OnEnable()    // [TODO] 우선 Start로 하고 동적생성이 되면 OnEnable로 변경
@@ -88,6 +90,7 @@ public class Character : BattleCharacter
             targetMonster.TakeDamage(currentDamage);
             Debug.Log($"[스킬공격] 타겟{targetMonster.name}에게 {currentDamage} 데미지를 줍니다.");
         }
+        InvokeCostChangedEvent();
     }
 
     public void AtkTarget(Monster targetMonster)
@@ -120,6 +123,7 @@ public class Character : BattleCharacter
         {
             _currentSkillCost = _MaxSkillCost;
         }
+        InvokeCostChangedEvent();
     }
 
     public void UseSkillCost(int amount)
@@ -139,15 +143,30 @@ public class Character : BattleCharacter
         {
             TestGetMaxSkillCost();
         }
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            AtkTarget(TargetMonster);
-        }
     }
 
     private void TestGetMaxSkillCost()
     {
         _currentSkillCost = _MaxSkillCost;
+    }
+
+
+    // 콘솔 띄우기용 이벤트 =========================================
+
+
+
+    private void ConsoleOnSkillCostChanged()
+    {
+        Debug.Log($"현재 스킬 코스트: {_currentSkillCost}");
+    }
+
+    private void BindOnSkillCostChanged(Action skillCostChangedCallback)
+    {
+        _onSkillCostChange += skillCostChangedCallback;
+    }
+
+    private void InvokeCostChangedEvent()
+    {
+        _onSkillCostChange?.Invoke();
     }
 }
