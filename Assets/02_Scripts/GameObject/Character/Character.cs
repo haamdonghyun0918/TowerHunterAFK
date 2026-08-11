@@ -5,9 +5,8 @@ using UnityEngine;
 public class Character : BattleCharacter
 {
     [Header("스킬 관련")]
-    private int _RequiredSkillCost;
     private int _currentSkillCost;
-    private int _MaxSkillCost;
+    private int _maxSkillCost;
     private event Action _onSkillCostChange;
 
     [Header("데이터 관련")]
@@ -46,7 +45,7 @@ public class Character : BattleCharacter
         //_characterData = GameDataManager.Instance.GetCharacterData("character_Test_01");     // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
         _characterData = GameDataManager.Instance.GetData<CharacterData>("character_Test_01");
         _characterId = _characterData.Id;
-        _MaxSkillCost = _characterData.MaxSkillCost;
+        _maxSkillCost = _characterData.MaxSkillCost;
         InitializeSkill();
         SetStatData();
     }
@@ -97,13 +96,15 @@ public class Character : BattleCharacter
     {
         if (targetMonster._isDead == true) return;
 
+        IncreaseCurrentSkillCost(1);
+
         if (_isSkillUsable == false)
         {
             UseNormalAttack(targetMonster);
             Debug.Log($"[일반공격] 타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
             return;
         }
-        else if (_isSkillUsable == true && _RequiredSkillCost <= _currentSkillCost)
+        else if (_isSkillUsable == true)
         {
             UseSkillCost(_skill.GetRequiredSkillCost());
             UseSkill(targetMonster);
@@ -119,11 +120,13 @@ public class Character : BattleCharacter
     public void IncreaseCurrentSkillCost(int amount)
     {
         _currentSkillCost += amount;
-        if (_currentSkillCost > _MaxSkillCost)
+        if (_currentSkillCost > _maxSkillCost)
         {
-            _currentSkillCost = _MaxSkillCost;
+            _currentSkillCost = _maxSkillCost;
         }
+
         InvokeCostChangedEvent();
+        CheckSkillUsable();
     }
 
     public void UseSkillCost(int amount)
@@ -133,6 +136,21 @@ public class Character : BattleCharacter
             Debug.Log("스킬 코스트가 부족합니다!");
         }
         _currentSkillCost -= amount;
+        CheckSkillUsable();
+    }
+
+    private void CheckSkillUsable()
+    {
+        int requiredSkillCost = _skill.GetRequiredSkillCost();
+
+        if (requiredSkillCost <= _currentSkillCost)
+        {
+            _isSkillUsable = true;
+        }
+        else
+        {
+            _isSkillUsable = false;
+        }
     }
 
     // 테스트용 치트 함수 =======================================================
@@ -147,7 +165,8 @@ public class Character : BattleCharacter
 
     private void TestGetMaxSkillCost()
     {
-        _currentSkillCost = _MaxSkillCost;
+        _currentSkillCost = _maxSkillCost;
+        CheckSkillUsable();
     }
 
 
