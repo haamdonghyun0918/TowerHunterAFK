@@ -55,6 +55,14 @@ public class Character : BattleCharacter
         return _characterId;
     }
 
+    public int GetSkillDuration()
+    {
+        string skillId = _characterData.SkillId;
+        var skillData = GameDataManager.Instance.GetData<SkillData>(skillId);
+        int skillDuration = skillData.SkillDuration;
+        return skillDuration;
+    }
+
     private void InitializeSkill()
     {
         string skillId = _characterData.SkillId;
