@@ -8,8 +8,7 @@ public enum SkillType
     None,
     SingleTarget,
     MultiTarget,
-    SelfTarget,
-    TeamTarget
+    SelfTarget
 }
 
 public class Skill : MonoBehaviour
