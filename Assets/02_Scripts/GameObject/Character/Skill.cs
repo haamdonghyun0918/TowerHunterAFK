@@ -161,6 +161,7 @@ public class Skill : MonoBehaviour
         else if (skillType == SkillType.SingleTarget)
         {
             //targetTransform = _monsterParty.GetTargetMonster().transform;
+            targetTransform = this.gameObject.transform;
         }
 
         else if (skillType == SkillType.SelfTarget)
@@ -185,17 +186,17 @@ public class Skill : MonoBehaviour
                 break;
             case SkillType.SingleTarget:
                 {
-                    GetTargetTransform(SkillType.SingleTarget);
+                    _targetTransform = GetTargetTransform(SkillType.SingleTarget);
                 }
                 break;
             case SkillType.SelfTarget:
                 {
-                    GetTargetTransform(SkillType.SelfTarget);
+                    _targetTransform = GetTargetTransform(SkillType.SelfTarget);
                 }
                 break;
             case SkillType.MultiTarget:
                 {
-                    GetTargetTransform(SkillType.MultiTarget);
+                    _targetTransform = GetTargetTransform(SkillType.MultiTarget);
                 }
                 break;
         }
