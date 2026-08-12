@@ -81,6 +81,25 @@ public class SaveManager : MonoBehaviour
         return CurrentSaveData.CurrentStage;
     }
 
+    public void UpdateMaxClearedStage(int clearedStage)
+    {
+        if (clearedStage > CurrentSaveData.MaxClearedStage)
+        {
+            CurrentSaveData.MaxClearedStage = clearedStage;
+
+            int newLevel = Mathf.Max(1, CurrentSaveData.MaxClearedStage);
+
+            if (newLevel > CurrentSaveData.PlayerLevel)
+            {
+                CurrentSaveData.PlayerLevel = newLevel;
+                OnLevelChanged?.Invoke(CurrentSaveData.PlayerLevel);
+                Debug.Log($"[SaveManager] 레벨 업! 현재 플레이어 레벨: {CurrentSaveData.PlayerLevel}");
+            }
+
+            SaveToFile(CurrentSaveData);
+        }
+    }
+
     public void SaveGold(long gold)
     {
         CurrentSaveData.Gold = gold;
