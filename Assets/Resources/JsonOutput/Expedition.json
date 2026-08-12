@@ -5,7 +5,7 @@
     "DurationHours": 1,
 	"LimitLevel": 1,
 	"RewardGold": 5000,
-	"RewardItems": ""
+    "RewardItems": []
   },
   {
     "Id": "Expedition_2",
@@ -13,7 +13,7 @@
     "DurationHours": 3,
 	"LimitLevel": 1,
 	"RewardGold": 2000,
-	"RewardItems": ""
+    "RewardItems": ["weapon_1"]
   },
   {
     "Id": "Expedition_3",
@@ -21,7 +21,7 @@
     "DurationHours": 6,
 	"LimitLevel": 1,
 	"RewardGold": 7500,
-	"RewardItems": ""
+    "RewardItems": ["weapon_2", "armor_1"]
   },
   {
     "Id": "Expedition_4",
@@ -29,7 +29,7 @@
     "DurationHours": 4,
 	"LimitLevel": 1,
 	"RewardGold": 2000,
-	"RewardItems": ""
+    "RewardItems": [ "weapon_3", "accessories_2", "armor_2" ]
   },
   {
     "Id": "Expedition_5",
@@ -37,7 +37,7 @@
     "DurationHours": 1.5,
 	"LimitLevel": 10,
 	"RewardGold": 4000,
-	"RewardItems": ""
+    "RewardItems": [ "weapon_6", "accessories_3", "armor_3" ]
   },
   {
     "Id": "Expedition_6",
@@ -45,7 +45,7 @@
     "DurationHours": 3,
 	"LimitLevel": 15,
 	"RewardGold": 4500,
-	"RewardItems": ""
+    "RewardItems": [ "accessories_5", "weapon_7", "armor_3" ]
   },
   {
     "Id": "Expedition_7",
@@ -53,7 +53,7 @@
     "DurationHours": 5,
 	"LimitLevel": 20,
 	"RewardGold": 12500,
-	"RewardItems": ""
+    "RewardItems": []
   },
   {
     "Id": "Expedition_8",
@@ -61,6 +61,6 @@
     "DurationHours": 7.5,
 	"LimitLevel": 50,
 	"RewardGold": 250000,
-	"RewardItems": ""
+    "RewardItems": []
   }
 ]

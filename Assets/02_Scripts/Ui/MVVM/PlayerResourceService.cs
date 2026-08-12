@@ -72,18 +72,18 @@
         return true;
     }
 
-    public void RequestAddItem(string[] items)
+    public void RequestAddEquipment(string[] equipments)
     {
-        if (items == null || items.Length == 0)
+        if (equipments == null || equipments.Length == 0)
         {
             return;
         }
 
     }
 
-    public bool RequestUseItem(string item)
+    public bool RequestUseEquipments(string equipmentId)
     {
-        if(string.IsNullOrEmpty(item))
+        if(string.IsNullOrEmpty(equipmentId))
         {
             return false;
         }
