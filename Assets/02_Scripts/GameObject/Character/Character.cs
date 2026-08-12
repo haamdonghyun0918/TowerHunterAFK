@@ -11,7 +11,6 @@ public class Character : BattleCharacter
     private int _currentSkillCost;
     private int _maxSkillCost;
     private event Action _onSkillCostChange;
-    public Transform _targetMonsterTransform { get; private set; }
 
     [Header("데이터 관련")]
     private CharacterData _characterData;
@@ -58,7 +57,7 @@ public class Character : BattleCharacter
         return _characterId;
     }
 
-    public int GetSkillDuration()
+    private int GetSkillDuration()
     {
         string skillId = _characterData.SkillId;
         var skillData = GameDataManager.Instance.GetData<SkillData>(skillId);
@@ -118,12 +117,14 @@ public class Character : BattleCharacter
     {
         if (targetMonster._isDead == true) return 0;
 
+        var targetMonsterTransform = targetMonster.gameObject.transform;
+        _skill.SetSingleTargetTransform(targetMonsterTransform);
+
         IncreaseCurrentSkillCost(1);
 
         if (_isSkillUsable == false)
         {
             UseNormalAttack(targetMonster);
-            Debug.Log($"[일반공격] 타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
             return 1;
         }
         else
@@ -138,6 +139,7 @@ public class Character : BattleCharacter
     {
         //[TODO] 평타공격 모션
         targetMonster.TakeDamage(_characterAtk);
+        Debug.Log($"[일반공격] 타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
     }
 
     public void IncreaseCurrentSkillCost(int amount)
