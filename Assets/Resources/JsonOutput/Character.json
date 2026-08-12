@@ -14,5 +14,37 @@
 	"AtkPerLevel": 10,
 	"HpPerLevel": 10,
 	"DefPerLevel": 10
+  },
+  {
+    "Id": "character_Test_02",
+    "Name": "테스트캐릭_칼날비",
+    "Description": "칼날비 테스트캐릭터",
+    "SkillId": "skill_knives_01",
+    "Rarity": "Rare",
+    "StarLevel": 1,
+    "BaseStatDataId": "stat_test_01",
+    "Exp": 0,
+    "PrefabPath": null,
+	"MaxSkillCost": 3,
+	"SkillCostRegenRate": 1,
+	"AtkPerLevel": 10,
+	"HpPerLevel": 10,
+	"DefPerLevel": 10
+  },
+  {
+    "Id": "character_Test_03",
+    "Name": "테스트캐릭_메테오샤워",
+    "Description": "메테오샤워 테스트캐릭터",
+    "SkillId": "skill_meteorshower_01",
+    "Rarity": "Legend",
+    "StarLevel": 1,
+    "BaseStatDataId": "stat_test_01",
+    "Exp": 0,
+    "PrefabPath": null,
+	"MaxSkillCost": 3,
+	"SkillCostRegenRate": 1,
+	"AtkPerLevel": 10,
+	"HpPerLevel": 10,
+	"DefPerLevel": 10
   }
 ]
