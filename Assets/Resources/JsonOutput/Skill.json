@@ -3,8 +3,27 @@
     "Id": "skill_dragonPunch_01",
     "Name": "드래곤펀치",
     "RequiredCost": 2,
-    "SkillDamage": 30,
+    "SkillDamage": 2,
+    "SkillType": "SelfTarget",
+	"PrefabPath": "DragonPunch",
+	"SkillDuration": 2000
+  },
+  {
+    "Id": "skill_knives_01",
+    "Name": "칼날비",
+    "RequiredCost": 2,
+    "SkillDamage": 5,
     "SkillType": "SingleTarget",
-	"PrefabPath": "DragonPunch"
+	"PrefabPath": "Knives",
+	"SkillDuration": 4000
+  },
+  {
+    "Id": "skill_meteorshower_01",
+    "Name": "메테오샤워",
+    "RequiredCost": 2,
+    "SkillDamage": 10,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "MeteorShower",
+	"SkillDuration": 5000
   }
 ]
