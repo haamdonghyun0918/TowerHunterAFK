@@ -67,6 +67,7 @@ public class SkillData : GameDataBase
     public string PrefabPath;
     public int SkillDuration;
 }
+
 [System.Serializable]
 public class EquipMentData: GameDataBase
 {

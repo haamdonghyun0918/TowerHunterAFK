@@ -189,6 +189,8 @@ public class Character : BattleCharacter
     public void MakeFullHp()
     {
         _characterHp = _characterMaxHp;
+        _isDead = false;
+        gameObject.SetActive(true);
     }
 
 

@@ -4,7 +4,7 @@
     "Name": "드래곤펀치",
     "RequiredCost": 2,
     "SkillDamage": 2,
-    "SkillType": "SelfTarget",
+    "SkillType": "SingleTarget",
 	"PrefabPath": "DragonPunch",
 	"SkillDuration": 2000
   },
