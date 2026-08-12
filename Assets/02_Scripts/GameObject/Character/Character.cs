@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
@@ -9,6 +11,7 @@ public class Character : BattleCharacter
     private int _currentSkillCost;
     private int _maxSkillCost;
     private event Action _onSkillCostChange;
+    public Transform _targetMonsterTransform { get; private set; }
 
     [Header("데이터 관련")]
     private CharacterData _characterData;
@@ -87,7 +90,7 @@ public class Character : BattleCharacter
         _characterDefense = baseStatData.BaseDef;
     }
 
-    private void UseSkill(Monster targetMonster)
+    private async UniTaskVoid UseSkill(Monster targetMonster)
     {
         int currentDamage = _characterAtk * _skill.GetSkillDamage();
 
@@ -95,6 +98,7 @@ public class Character : BattleCharacter
         {
             //[TODO] 스킬사용 모션
             _skill.UseSkillAsync().Forget();
+            await UniTask.Delay(GetSkillDuration());
             if (_skill.GetSkillType() == SkillType.SelfTarget)
             {
                 this.TakeDamage(currentDamage);
