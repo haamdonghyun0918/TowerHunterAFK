@@ -87,6 +87,7 @@ public class BattleManager : MonoBehaviour
                     if (hunter._isDead == false)
                     {
                         attackerTransform.position = originPos;
+                        await UniTask.Delay(500);
                     }
                 }
                 else if (curUnit is Monster monster)
@@ -113,6 +114,7 @@ public class BattleManager : MonoBehaviour
                     if (monster._isDead == false)
                     {
                         attackerTransform.position = originPos;
+                        await UniTask.Delay(500);
                     }
                 }
 
