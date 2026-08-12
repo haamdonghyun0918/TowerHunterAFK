@@ -95,8 +95,16 @@ public class Character : BattleCharacter
         {
             //[TODO] 스킬사용 모션
             _skill.UseSkillAsync().Forget();
-            targetMonster.TakeDamage(currentDamage);
-            Debug.Log($"[스킬공격] 타겟{targetMonster.name}에게 {currentDamage} 데미지를 줍니다.");
+            if (_skill.GetSkillType() == SkillType.SelfTarget)
+            {
+                this.TakeDamage(currentDamage);
+                Debug.Log($"[힐스킬] 타겟{this.name}에게 {-currentDamage} 힐을 줍니다.");
+            }
+            else
+            {
+                targetMonster.TakeDamage(currentDamage);
+                Debug.Log($"[스킬공격] 타겟{targetMonster.name}에게 {currentDamage} 데미지를 줍니다.");
+            }
         }
         CheckSkillUsable();
         InvokeCostChangedEvent();
