@@ -15,7 +15,6 @@ public class Character : BattleCharacter
     private string _characterId;
 
     [Header("전투 관련")]
-    [SerializeField] private Monster TargetMonster;
     private Skill _skill;
 
     private Animator _characterAnimator;
