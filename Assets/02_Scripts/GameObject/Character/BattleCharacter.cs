@@ -7,6 +7,7 @@ public class BattleCharacter : MonoBehaviour
     protected int _characterHp;
     protected int _characterMaxHp;
     protected int _characterAtk;
+    protected int _characterDefense;
     public int _characterAtkSpeed { get; protected set; }
     public bool _isDead { get; protected set; }
     public string _instanceId { get; set; }
@@ -27,13 +28,27 @@ public class BattleCharacter : MonoBehaviour
     {
         if (_isDead == true) return;
 
-        _characterHp -= damage;
+        int currentDamage = ApplyDefenseDamage(damage);
+
+        _characterHp -= currentDamage;
         InvokeStatChangedEvent();
 
         if (_characterHp <= 0)
         {
             Die();
         }
+    }
+
+    private int ApplyDefenseDamage(int damage)
+    {
+        int currentDamage = 0;
+
+        if (_characterDefense < damage)
+        {
+            currentDamage = damage - _characterDefense;
+        }
+
+        return currentDamage;
     }
 
     private void Die()

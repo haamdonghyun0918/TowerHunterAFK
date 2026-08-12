@@ -84,6 +84,7 @@ public class Character : BattleCharacter
         _characterAtkSpeed = baseStatData.BaseAtkSpeed;
         _characterMaxHp = baseStatData.BaseHp;
         _characterHp = baseStatData.BaseHp;
+        _characterDefense = baseStatData.BaseDefense;
     }
 
     private void UseSkill(Monster targetMonster)
