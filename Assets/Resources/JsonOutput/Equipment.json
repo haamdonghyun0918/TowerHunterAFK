@@ -168,7 +168,7 @@
 	"Price": 1500
   },
   {
-    "Id": "weapon_6",
+    "Id": "weapon_7",
     "Name": "쇠창살 곡궁",
     "Position": "weapon",
     "Tier": 2,
@@ -182,7 +182,7 @@
 	"Price": 3500
   },
   {
-    "Id": "accessories_3",
+    "Id": "accessories_4",
     "Name": "얼음 반지",
     "Position": "accessories",
     "Tier": 1,
@@ -196,7 +196,7 @@
 	"Price": 1300
   },
   {
-    "Id": "accessories_4",
+    "Id": "accessories_5",
     "Name": "신비한 망토",
     "Position": "accessories",
     "Tier": 1,
@@ -224,7 +224,7 @@
 	"Price": 10000
   },
   {
-    "Id": "weapon_7",
+    "Id": "weapon_8",
     "Name": "드레이크 너클",
     "Position": "weapon",
     "Tier": 3,

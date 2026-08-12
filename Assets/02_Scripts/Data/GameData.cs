@@ -54,7 +54,7 @@ public class ExpeditionData : GameDataBase
     public float DurationHours;
     public int LimitLevel;
     public long RewardGold;
-    public string[] RewardItems;
+    public string[] RewardEquipments;
 }
 
 [System.Serializable]

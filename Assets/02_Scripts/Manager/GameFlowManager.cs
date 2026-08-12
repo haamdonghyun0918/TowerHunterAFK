@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class GameFlowManager : MonoBehaviour
 {
@@ -26,7 +27,15 @@ public class GameFlowManager : MonoBehaviour
     private async UniTaskVoid StartGame()
     {
         Debug.Log("게임 시작중....=>로딩 화면");
-        await SaveManager.Instance.Init();
+        if (SaveManager.Instance == null)
+        {
+            await SaveManager.Instance.Init();
+        }
+
+        if (EquipmentInventory.Instance != null)
+        {
+            await EquipmentInventory.Instance.Init();
+        }
 
         if (ExpeditionManager.Instance != null)
         {
@@ -98,11 +107,14 @@ public class GameFlowManager : MonoBehaviour
         MapManager.Instance.StartNewStage(rollBackStage).Forget();
     }
 
-    private void HandleExpeditionRewardClaimed(long addedGold, string[] items)
+    private void HandleExpeditionRewardClaimed(long addedGold, string[] equipments)
     {
-        if (items != null && items.Length > 0)
+        if (equipments != null && equipments.Length > 0)
         {
-            SaveManager.Instance.SaveItem(items);
+            // Service와 ViewModel 완료되면 EquipmentManager에 있는 Add메서드 삭제해야 함
+            EquipmentInventory.Instance.AddEquipments(equipments);
+            List<string> currentEquipments = EquipmentInventory.Instance.GetOwnedEquipments();
+            SaveManager.Instance.SaveEquipments(currentEquipments);
         }
 
         if (addedGold > 0)

@@ -1,7 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
+using NUnit.Framework;
 using System;
 using System.IO;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SaveManager : MonoBehaviour
 {
@@ -107,15 +109,15 @@ public class SaveManager : MonoBehaviour
         OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
 
-    public void SaveItem(string[] items)
+    public void SaveEquipments(List<string> equipments)
     {
-        if (items == null || items.Length == 0)
+        if (equipments == null)
         {
             return;
         }
 
         //TODO: 인벤토리(창고) 시스템 구현시 실제 그 위치에 저장되게 하기
-        CurrentSaveData.InventoryItems.AddRange(items);
+        CurrentSaveData.OwnedEquipments = new List<string>(equipments);
         SaveToFile(CurrentSaveData);
         Debug.Log("[SaveManager] 아이템을 획득하여 저장하였습니다.");
     }

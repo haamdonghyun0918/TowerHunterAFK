@@ -86,12 +86,11 @@ public class ExpeditionManager : MonoBehaviour
         if (index >= 0 && index < _expeditionsList.Count)
         {
             ExpeditionData targetExpedition = _expeditionsList[index];
-            //TODO: 현재는 플레이어의 레벨을 하드코딩했지만, 플레이어의 경험치와 레벨 로직 구성시 변경할 것
-            int currentPlayerLevel = 1;
+            int currentPlayerLevel = SaveManager.Instance.GetPlayerLevel();
 
             if (currentPlayerLevel < targetExpedition.LimitLevel)
             {
-                Debug.Log("제한 레벨을 만족하지 못합니다");
+                Debug.Log($"제한 레벨을 만족하지 못합니다. 현재 레벨: {currentPlayerLevel} , 필요레벨: {targetExpedition.LimitLevel}");
                 OnExpeditionLevelNotEnough?.Invoke(targetExpedition.LimitLevel);
                 return;
             }
@@ -159,19 +158,19 @@ public class ExpeditionManager : MonoBehaviour
         if (_isCompleted && _selectedExpedition != null)
         {
             long rewardGold = _selectedExpedition.RewardGold;
-            string[] rewardItems = _selectedExpedition.RewardItems;
+            string[] rewardEquipments = _selectedExpedition.RewardEquipments;
 
             if (rewardGold > 0)
             {
                 NetworkManager.Instance.PlayerResourceService.RequestAddGold(rewardGold);
             }
 
-            if (rewardItems != null && rewardItems.Length > 0)
+            if (rewardEquipments != null && rewardEquipments.Length > 0)
             {
-                NetworkManager.Instance.PlayerResourceService.RequestAddItem(rewardItems);
+                NetworkManager.Instance.PlayerResourceService.RequestAddEquipment(rewardEquipments);
             }
 
-            OnRewardClaimed?.Invoke(rewardGold, rewardItems);
+            OnRewardClaimed?.Invoke(rewardGold, rewardEquipments);
             SaveManager.Instance.ClearExpedition();
 
             _expeditionStart = false;
