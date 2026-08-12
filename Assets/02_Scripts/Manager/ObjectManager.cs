@@ -66,7 +66,8 @@ public class ObjectManager : MonoBehaviour
             }
         }
 
-        bool isRestArea = (stage % 10 == 0);
+        int maxCleared = SaveManager.Instance.CurrentSaveData.MaxClearedStage;
+        bool isRestArea = (stage % 10 == 0) && (maxCleared >= stage);
 
         if (isRestArea)
         {
