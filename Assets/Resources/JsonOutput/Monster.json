@@ -5,7 +5,25 @@
     "BaseAtk": 30,
     "BaseHp": 100,
     "BaseAtkSpeed": 10,
-	"BaseDefense": 10,
-	"PrefabPath": null
+	"BaseDef": 10,
+	"PrefabPath": "TestMonster1"
+  },
+  {
+    "Id": "monster_Test_02",
+    "Name": "테스트 몬스터",
+    "BaseAtk": 40,
+    "BaseHp": 150,
+    "BaseAtkSpeed": 11,
+	"BaseDef": 15,
+	"PrefabPath": "TestMonster2"
+  },
+  {
+    "Id": "monster_Test_03",
+    "Name": "테스트 몬스터",
+    "BaseAtk": 50,
+    "BaseHp": 200,
+    "BaseAtkSpeed": 12,
+	"BaseDef": 20,
+	"PrefabPath": "TestMonster3"
   }
 ]
