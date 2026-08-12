@@ -20,10 +20,46 @@
   {
     "Id": "skill_meteorshower_01",
     "Name": "메테오샤워",
-    "RequiredCost": 2,
+    "RequiredCost": 3,
     "SkillDamage": 10,
     "SkillType": "MultiTarget",
 	"PrefabPath": "MeteorShower",
 	"SkillDuration": 5000
+  },
+  {
+    "Id": "skill_energyexplosion_01",
+    "Name": "에너지익스플로젼",
+    "RequiredCost": 2,
+    "SkillDamage": 4,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "EnergyExplosion",
+	"SkillDuration": 2000
+  },
+  {
+    "Id": "skill_flowerslash_01",
+    "Name": "플라워슬래쉬",
+    "RequiredCost": 2,
+    "SkillDamage": 5,
+    "SkillType": "SelfTarget",
+	"PrefabPath": "FlowerSlash",
+	"SkillDuration": 3000
+  },
+  {
+    "Id": "skill_frontspikesattack_01",
+    "Name": "전방스파이크어택",
+    "RequiredCost": 2,
+    "SkillDamage": 4,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "FrontSpikesAttack",
+	"SkillDuration": 2000
+  },
+  {
+    "Id": "skill_heal_01",
+    "Name": "힐",
+    "RequiredCost": 2,
+    "SkillDamage": -5,
+    "SkillType": "SelfTarget",
+	"PrefabPath": "Heal",
+	"SkillDuration": 2000
   }
 ]
