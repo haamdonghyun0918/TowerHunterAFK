@@ -31,6 +31,12 @@ public class BattleCharacter : MonoBehaviour
         int currentDamage = ApplyDefenseDamage(damage);
 
         _characterHp -= currentDamage;
+        
+        if (_characterHp <= 0)
+        {
+            _characterHp = 0;
+        }
+
         InvokeStatChangedEvent();
 
         if (_characterHp <= 0)
