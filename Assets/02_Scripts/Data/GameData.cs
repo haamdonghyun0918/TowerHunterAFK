@@ -64,4 +64,5 @@ public class SkillData : GameDataBase
     public int SkillDamage;
     public string SkillType;
     public string PrefabPath;
+    public int SkillDuration;
 }
