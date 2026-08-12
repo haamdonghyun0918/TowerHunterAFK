@@ -40,7 +40,7 @@ public class Monster : BattleCharacter
         _characterAtkSpeed = _monsterData.BaseAtkSpeed;
         _characterHp = _monsterData.BaseHp;
         _characterMaxHp = _monsterData.BaseHp;
-        _characterDefense = _monsterData.BaseDefense;
+        _characterDefense = _monsterData.BaseDef;
     }
 
     public void AtkTarget(Character TargetCharacter)
