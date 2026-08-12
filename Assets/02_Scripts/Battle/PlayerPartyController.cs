@@ -80,7 +80,7 @@ public class PlayerPartyController : MonoBehaviour
             if (hunter != null)
             {
                 Debug.Log($"[PlayerPartyController] MakeFullHPAllHunters: {hunter.name}의 HP를 회복합니다.");
-                //hunter._characterHp = hunter._characterMaxHp;
+                hunter.MakeFullHp();
             }
         }
     }

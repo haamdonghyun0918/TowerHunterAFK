@@ -84,7 +84,7 @@ public class Character : BattleCharacter
         _characterAtkSpeed = baseStatData.BaseAtkSpeed;
         _characterMaxHp = baseStatData.BaseHp;
         _characterHp = baseStatData.BaseHp;
-        _characterDefense = baseStatData.BaseDefense;
+        _characterDefense = baseStatData.BaseDef;
     }
 
     private void UseSkill(Monster targetMonster)
@@ -189,6 +189,8 @@ public class Character : BattleCharacter
     public void MakeFullHp()
     {
         _characterHp = _characterMaxHp;
+        _isDead = false;
+        gameObject.SetActive(true);
     }
 
 
