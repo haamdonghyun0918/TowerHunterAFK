@@ -20,6 +20,7 @@ public class Skill : MonoBehaviour
     private int _requiredSkillCost;
     private SkillData _skillData;
     private Transform _targetTransform;
+    private MonsterParty _monsterParty;
 
     private void OnEnable()
     {
@@ -39,7 +40,7 @@ public class Skill : MonoBehaviour
         SetPrefabPath();
         SetRequiredSkillCost();
         SetSkillType();
-        TestSetTargetTransform();
+        SetTargetTransform();
     }
 
     private void SetSkillId(string skillId)
@@ -149,36 +150,60 @@ public class Skill : MonoBehaviour
         }
     }
 
-    public Transform SetTargetTransform(Transform targetTransform)
+    private Transform GetTargetTransform(SkillType skillType)
     {
-        _targetTransform = targetTransform;
-        return _targetTransform;
+        Transform targetTransform = null;
+        if (skillType == SkillType.MultiTarget)
+        {
+            targetTransform = _monsterParty.GetMonster(1).transform;
+        }
+
+        else if (skillType == SkillType.SingleTarget)
+        {
+            //targetTransform = _monsterParty.GetTargetMonster().transform;
+        }
+
+        else if (skillType == SkillType.SelfTarget)
+        {
+            targetTransform = this.gameObject.transform;
+        }
+
+        return targetTransform;
     }
 
-
-    // 테스트용 함수 ==================================================
-
-    private Transform TestSetTargetTransform()
+    private Transform SetTargetTransform()
     {
         if (_skillData == null) return null;
 
         var skillType = GetSkillType();
         switch (skillType)
         {
-            case SkillType.SelfTarget:
+            case SkillType.None:
                 {
-                    _targetTransform = this.gameObject.transform;
-                    return _targetTransform;
+                    _targetTransform = null;
                 }
+                break;
             case SkillType.SingleTarget:
                 {
-                    _targetTransform = this.gameObject.transform;
-                    return _targetTransform;
+                    GetTargetTransform(SkillType.SingleTarget);
                 }
-            default:
+                break;
+            case SkillType.SelfTarget:
                 {
-                    return null;
+                    GetTargetTransform(SkillType.SelfTarget);
                 }
+                break;
+            case SkillType.MultiTarget:
+                {
+                    GetTargetTransform(SkillType.MultiTarget);
+                }
+                break;
         }
+        return _targetTransform;
     }
+
+
+    // 테스트용 함수 ==================================================
+
+    
 }
