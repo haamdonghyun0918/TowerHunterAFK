@@ -33,7 +33,7 @@ public class BaseStatData : GameDataBase
     public int BaseHp;
     public int BaseMp;
     public int BaseAtkSpeed;
-    public int BaseDefense;
+    public int BaseDef;
 }
 
 [System.Serializable]
@@ -43,7 +43,8 @@ public class MonsterData : GameDataBase
     public int BaseAtk;
     public int BaseHp;
     public int BaseAtkSpeed;
-    public int BaseDefense;
+    public int BaseDef;
+    public string PrefabPath;
 }
 
 [System.Serializable]
@@ -65,4 +66,19 @@ public class SkillData : GameDataBase
     public string SkillType;
     public string PrefabPath;
     public int SkillDuration;
+}
+[System.Serializable]
+public class EquipMentData: GameDataBase
+{
+    public string Name;
+    public string Position;
+    public int Tier;
+    public int Rank;
+    public int Range;
+    public int BuffAtk;
+    public int BuffHp;
+    public int BuffAtkSpeed;
+    public int BuffDef;
+    public string IconAddress;
+    public int Price;
 }
