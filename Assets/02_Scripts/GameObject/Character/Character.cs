@@ -110,9 +110,9 @@ public class Character : BattleCharacter
         InvokeCostChangedEvent();
     }
 
-    public void AtkTarget(Monster targetMonster)
+    public int AtkTarget(Monster targetMonster)
     {
-        if (targetMonster._isDead == true) return;
+        if (targetMonster._isDead == true) return 0;
 
         IncreaseCurrentSkillCost(1);
 
@@ -120,12 +120,13 @@ public class Character : BattleCharacter
         {
             UseNormalAttack(targetMonster);
             Debug.Log($"[일반공격] 타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
-            return;
+            return 1;
         }
-        else if (_isSkillUsable == true)
+        else
         {
             UseSkillCost(_skill.GetRequiredSkillCost());
-            UseSkill(targetMonster);
+            UseSkill(targetMonster).Forget();
+            return 2;
         }
     }
 
