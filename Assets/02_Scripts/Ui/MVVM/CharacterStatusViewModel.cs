@@ -47,6 +47,7 @@ public class CharacterStatusViewModel : ViewModelBase
             {
                 _characterStatusModel.CurrentHp = value;
                 OnPropertyChanged(nameof(CurrentHp));
+                OnPropertyChanged(nameof(HpRatio));
             }
         }
     }
@@ -61,6 +62,7 @@ public class CharacterStatusViewModel : ViewModelBase
             {
                 _characterStatusModel.MaxHp = value;
                 OnPropertyChanged(nameof(MaxHp));
+                OnPropertyChanged(nameof(HpRatio));
             }
         }
     }
@@ -88,7 +90,6 @@ public class CharacterStatusViewModel : ViewModelBase
             {
                 _characterStatusModel.CurrentSkillCost = value;
                 OnPropertyChanged(nameof(CurrentSkillCost));
-                OnPropertyChanged(nameof(SkillCostRatio));
             }
         }
     }
@@ -103,23 +104,10 @@ public class CharacterStatusViewModel : ViewModelBase
             {
                 _characterStatusModel.MaxSkillCost = value;
                 OnPropertyChanged(nameof(MaxSkillCost));
-                OnPropertyChanged(nameof(SkillCostRatio));
             }
         }
     }
 
-    public float SkillCostRatio
-    {
-        get
-        {
-            if(MaxSkillCost <= 0)
-            {
-                return 0f;
-            }
-
-            return (float)CurrentSkillCost / MaxSkillCost;
-        }
-    }
 
     public bool IsActive
     {
@@ -153,5 +141,12 @@ public class CharacterStatusViewModel : ViewModelBase
     {
         OnPropertyChanged(nameof(SlotIndex));
         OnPropertyChanged(nameof(CharacterId));
+        OnPropertyChanged(nameof(CurrentHp));
+        OnPropertyChanged(nameof(MaxHp));
+        OnPropertyChanged(nameof(HpRatio));
+        OnPropertyChanged(nameof(CurrentSkillCost));
+        OnPropertyChanged(nameof(MaxSkillCost));
+        OnPropertyChanged(nameof(IsActive));
+        OnPropertyChanged(nameof(IsDead));
     }
 }
