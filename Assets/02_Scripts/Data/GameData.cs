@@ -32,7 +32,6 @@ public class BaseStatData : GameDataBase
 {
     public int BaseAtk;
     public int BaseHp;
-    public int BaseMp;
     public int BaseAtkSpeed;
     public int BaseDef;
 }
