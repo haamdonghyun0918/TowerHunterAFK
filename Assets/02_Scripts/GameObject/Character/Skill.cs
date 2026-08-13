@@ -8,7 +8,9 @@ public enum SkillType
     None,
     SingleTarget,
     MultiTarget,
-    SelfTarget
+    SelfTarget,
+    SingleTarget_SelfSpawn,
+    MultiTarget_SelfSpawn
 }
 
 public class Skill : MonoBehaviour
@@ -156,17 +158,12 @@ public class Skill : MonoBehaviour
     private Transform GetTargetTransform(SkillType skillType)
     {
         Transform targetTransform = null;
-        if (skillType == SkillType.MultiTarget)
+        if (skillType == SkillType.MultiTarget || skillType == SkillType.SingleTarget)
         {
             targetTransform = _targetTransform;
         }
 
-        else if (skillType == SkillType.SingleTarget)
-        {
-            targetTransform = _targetTransform;
-        }
-
-        else if (skillType == SkillType.SelfTarget)
+        else if (skillType == SkillType.SelfTarget || skillType == SkillType.SingleTarget_SelfSpawn || skillType == SkillType.MultiTarget_SelfSpawn)
         {
             targetTransform = this.gameObject.transform;
         }
@@ -204,6 +201,16 @@ public class Skill : MonoBehaviour
             case SkillType.MultiTarget:
                 {
                     _targetTransform = GetTargetTransform(SkillType.MultiTarget);
+                }
+                break;
+            case SkillType.SingleTarget_SelfSpawn:
+                {
+                    _targetTransform = GetTargetTransform(SkillType.SingleTarget_SelfSpawn);
+                }
+                break;
+            case SkillType.MultiTarget_SelfSpawn:
+                {
+                    _targetTransform = GetTargetTransform(SkillType.MultiTarget_SelfSpawn);
                 }
                 break;
         }
