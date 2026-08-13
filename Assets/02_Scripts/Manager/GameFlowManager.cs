@@ -37,6 +37,11 @@ public class GameFlowManager : MonoBehaviour
             await EquipmentInventory.Instance.Init();
         }
 
+        if (CharacterInventory.Instance != null)
+        {
+            await CharacterInventory.Instance.Init();
+        }
+
         if (ExpeditionManager.Instance != null)
         {
             ExpeditionManager.Instance.OnRewardClaimed += HandleExpeditionRewardClaimed;
@@ -75,7 +80,7 @@ public class GameFlowManager : MonoBehaviour
         Debug.Log($"{stage} 스테이지입니다.");
         if (ObjectManager.Instance != null)
         {
-            ObjectManager.Instance.SpawnEntities(stage);
+            ObjectManager.Instance.SpawnEntities(stage).Forget();
         }
     }
 
@@ -111,17 +116,17 @@ public class GameFlowManager : MonoBehaviour
     {
         if (equipments != null && equipments.Length > 0)
         {
-            // Service와 ViewModel 완료되면 EquipmentManager에 있는 Add메서드 삭제해야 함
-            EquipmentInventory.Instance.AddEquipments(equipments);
-            List<string> currentEquipments = EquipmentInventory.Instance.GetOwnedEquipments();
-            SaveManager.Instance.SaveEquipments(currentEquipments);
-        }
+            foreach (string equipBaseId in equipments)
+            {
+                EquipmentUtils.Instance.AddEquipments(equipBaseId);
+            }
 
-        if (addedGold > 0)
-        {
-            long totalGold = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel().Gold;
-            SaveManager.Instance.SaveGold(totalGold);
-        }
+            if (addedGold > 0)
+            {
+                long totalGold = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel().Gold;
+                SaveManager.Instance.SaveGold(totalGold);
+            }
 
+        }
     }
 }

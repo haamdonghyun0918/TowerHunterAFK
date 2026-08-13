@@ -109,17 +109,27 @@ public class SaveManager : MonoBehaviour
         OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
 
-    public void SaveEquipments(List<string> equipments)
+    public void SaveEquipments(List<EquipmentSaveData> equipments)
     {
         if (equipments == null)
         {
             return;
         }
 
-        //TODO: 인벤토리(창고) 시스템 구현시 실제 그 위치에 저장되게 하기
-        CurrentSaveData.OwnedEquipments = new List<string>(equipments);
+        CurrentSaveData.OwnedEquipments = equipments;
         SaveToFile(CurrentSaveData);
-        Debug.Log("[SaveManager] 아이템을 획득하여 저장하였습니다.");
+        Debug.Log("[SaveManager] 장비를 획득하여 저장하였습니다.");
+    }
+
+    public void SaveCharacters(List<CharacterSaveData> characters)
+    {
+        if (characters == null)
+        {
+            return;
+        }
+        CurrentSaveData.OwnedCharacters = characters;
+        SaveToFile(CurrentSaveData);
+        Debug.Log("[SaveManager] 헌터를 획득하여 저장하였습니다.");
     }
 
     public void SavePlayerLevel(int level)
@@ -170,5 +180,10 @@ public class SaveManager : MonoBehaviour
     public string GetExpeditionStartTime()
     {
         return CurrentSaveData.ExpeditionStartTime;
+    }
+
+    public void SaveCurrentData()
+    {
+        SaveToFile(CurrentSaveData);
     }
 }
