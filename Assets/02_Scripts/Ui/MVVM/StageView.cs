@@ -1,4 +1,6 @@
-﻿using TMPro;
+﻿using System;
+using System.ComponentModel;
+using TMPro;
 using UnityEngine;
 
 public class StageView : MonoBehaviour
@@ -10,6 +12,20 @@ public class StageView : MonoBehaviour
     private void Start()
     {
         Init();
+    }
+
+    private void OnEnable()
+    {
+        if(_stageViewModel != null)
+        {
+            Bind();
+            UpdateView();
+        }
+    }
+
+    private void OnDisable()
+    {
+        UnBind();
     }
 
     private void Init()
@@ -27,6 +43,46 @@ public class StageView : MonoBehaviour
         }
 
         _stageViewModel = NetworkManager.Instance.StageService.GetStageViewModel();
-        
+
+        Bind();
+        UpdateView();
+    }
+
+    private void Bind()
+    {
+        if(_stageViewModel == null)
+        {
+            return;
+        }
+
+        _stageViewModel.PropertyChanged -= OnPropertyChanged;
+        _stageViewModel.PropertyChanged += OnPropertyChanged;
+    }
+
+    private void UnBind()
+    {
+        if (_stageViewModel == null)
+        {
+            return;
+        }
+        _stageViewModel.PropertyChanged -= OnPropertyChanged;
+    }
+
+
+    private void OnPropertyChanged(object snder, PropertyChangedEventArgs enventArgs)
+    {
+        if(enventArgs.PropertyName == nameof(StageViewModel.CurrentStage))
+        {
+            UpdateView();
+        }
+    }
+    private void UpdateView()
+    {
+        if(_stageViewModel == null || Text_CurrentStage == null)
+        {
+            return;
+        }
+
+        Text_CurrentStage.text = $"{_stageViewModel.CurrentStage}층";
     }
 }
