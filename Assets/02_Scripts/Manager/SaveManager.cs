@@ -58,6 +58,11 @@ public class SaveManager : MonoBehaviour
 
     private void SaveToFile(SaveData data)
     {
+        if(data == null)
+        {
+            Debug.LogError($"[SaveMangaer]: 저장할 SaveData가 없습니다.");
+            return;
+        }
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(GetPath(), json);
         Debug.Log($"[SaveManager] 세이브 완료: {GetPath()}");
@@ -79,6 +84,12 @@ public class SaveManager : MonoBehaviour
 
     public int GetCurrentStage()
     {
+        if(CurrentSaveData == null)
+        {
+            Debug.LogError("[SaveManager] Init이 먼저 호출되어야 합니다.");
+            return 1;
+        }
+
         return CurrentSaveData.CurrentStage;
     }
 
@@ -99,6 +110,17 @@ public class SaveManager : MonoBehaviour
 
             SaveToFile(CurrentSaveData);
         }
+    }
+
+    public int GetMaxClearedStage()
+    {
+        if( CurrentSaveData == null)
+        {
+            Debug.LogError("[SaveManager] Init이 먼저 호출되어야 합니다.");
+            return 0;
+        }
+
+        return CurrentSaveData.MaxClearedStage;
     }
 
     public void SaveGold(long gold)
