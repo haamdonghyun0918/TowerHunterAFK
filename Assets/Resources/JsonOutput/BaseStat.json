@@ -4,8 +4,39 @@
     "Comment": "캐릭터 기본 스탯",
     "BaseAtk": 300,
     "BaseHp": 1000,
-    "BaseMp": 100,
     "BaseAtkSpeed": 10,
 	"BaseDef": 10
+  },
+  {
+    "Id": "stat_BaseC_01",
+    "Comment": "C급 캐릭터 기본 스탯",
+    "BaseAtk": 300,
+    "BaseHp": 1000,
+    "BaseAtkSpeed": 10,
+	"BaseDef": 10
+  },
+  {
+    "Id": "stat_BaseB_01",
+    "Comment": "B급 캐릭터 기본 스탯",
+    "BaseAtk": 500,
+    "BaseHp": 2000,
+    "BaseAtkSpeed": 11,
+	"BaseDef": 50
+  },
+  {
+    "Id": "stat_BaseA_01",
+    "Comment": "A급 캐릭터 기본 스탯",
+    "BaseAtk": 700,
+    "BaseHp": 3000,
+    "BaseAtkSpeed": 13,
+	"BaseDef": 100
+  },
+  {
+    "Id": "stat_BaseS_01",
+    "Comment": "S급 캐릭터 기본 스탯",
+    "BaseAtk": 1000,
+    "BaseHp": 5000,
+    "BaseAtkSpeed": 15,
+	"BaseDef": 200
   }
 ]
