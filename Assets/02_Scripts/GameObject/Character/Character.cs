@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using NUnit.Framework.Constraints;
 using System;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -27,8 +28,6 @@ public class Character : BattleCharacter
     [Header("전투 관련")]
     private Skill _skill;
 
-    private Animator _characterAnimator;
-
     private bool _isSkillUsable = false;
     private void Awake()
     {
@@ -43,7 +42,7 @@ public class Character : BattleCharacter
         BindOnSkillCostChanged(ConsoleOnSkillCostChanged);
     }
 
-    private void OnEnable()    // [TODO] 우선 Start로 하고 동적생성이 되면 OnEnable로 변경
+    private void OnEnable()
     {
         _currentSkillCost = 0;
 
@@ -52,7 +51,6 @@ public class Character : BattleCharacter
         {
             Debug.Log($"[Character] GameDataManager가 NULL입니다.");
         }
-        //_characterData = GameDataManager.Instance.GetCharacterData("character_Test_01");     // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
         _characterData = GameDataManager.Instance.GetData<CharacterData>("character_Test_01");
         _characterId = _characterData.Id;
         _maxSkillCost = _characterData.MaxSkillCost;
@@ -103,7 +101,7 @@ public class Character : BattleCharacter
 
         if (_isSkillUsable == true)
         {
-            //[TODO] 스킬사용 모션
+            ChangeState(CharacterState.SkillAttack);
             _skill.UseSkillAsync().Forget();
             await UniTask.Delay(GetSkillDuration());
             if (_skill.GetSkillType() == SkillType.SelfTarget)
@@ -123,13 +121,19 @@ public class Character : BattleCharacter
 
     public async UniTask AtkTarget(Monster targetMonster)
     {
+
         if (targetMonster._isDead == true) return;
+
+        var characterType = _characterData.CharacterType;
+
+        var singleTargetTransform = targetMonster.gameObject.transform;
+        _skill.SetSingleTargetTransform(singleTargetTransform);
 
         IncreaseCurrentSkillCost(1);
 
         if (_isSkillUsable == false)
         {
-            UseNormalAttack(targetMonster);
+            await UseNormalAttack(targetMonster);
             Debug.Log($"[일반공격] 타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
         }
         else
@@ -137,11 +141,15 @@ public class Character : BattleCharacter
             UseSkillCost(_skill.GetRequiredSkillCost());
             await UseSkill(targetMonster);
         }
+
+        ChangeState(CharacterState.Idle);
     }
 
-    private void UseNormalAttack(Monster targetMonster)
+    private async UniTask UseNormalAttack(Monster targetMonster)
     {
-        //[TODO] 평타공격 모션
+        ChangeState(CharacterState.NormalAttack);
+        var characterType = _characterData.CharacterType;
+        await UniTask.Delay(GetNormalAttackMotionDuration(SetCharacterType(characterType)));
         targetMonster.TakeDamage(_characterAtk);
     }
 
