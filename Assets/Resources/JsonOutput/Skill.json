@@ -26,7 +26,7 @@
     "SkillDamage": 10,
     "SkillType": "MultiTarget",
 	"PrefabPath": "MeteorShower",
-	"SkillDuration": 5000,
+	"SkillDuration": 2500,
 	"MotionDuration": 1000
   },
   {
