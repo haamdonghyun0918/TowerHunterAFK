@@ -14,7 +14,8 @@ public class CharacterSaveData
 {
     public string UniqueId;
     public string BaseId;
-    public int Level;
+    public string Rarity = "";
+    public int Rank;
     public long Exp;
     public string EquippedWeaponUid = "";
     public string EquippedArmorUid = "";

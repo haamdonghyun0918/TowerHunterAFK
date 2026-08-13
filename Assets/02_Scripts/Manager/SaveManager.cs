@@ -15,6 +15,9 @@ public class SaveManager : MonoBehaviour
     public event Action<int> OnLevelChanged;
     public event Action<long> OnExpChanged;
 
+    public Dictionary<string, CharacterSaveData> CharacterDict = new Dictionary<string, CharacterSaveData>();
+    public Dictionary<string, EquipmentSaveData> EquipmentDict = new Dictionary<string, EquipmentSaveData>();
+
     private void Awake()
     {
         if (Instance == null)
@@ -31,7 +34,20 @@ public class SaveManager : MonoBehaviour
     public UniTask Init()
     {
         CurrentSaveData = LoadOrCreateData();
-        Debug.Log("SaveManager 호출");
+
+        CharacterDict.Clear();
+        foreach (var character in CurrentSaveData.OwnedCharacters)
+        {
+            CharacterDict[character.UniqueId] = character;
+        }
+
+        EquipmentDict.Clear();
+        foreach (var equip in CurrentSaveData.OwnedEquipments)
+        {
+            EquipmentDict[equip.UniqueId] = equip;
+        }
+
+        Debug.Log("SaveManager 호출 및 캐싱 완료");
         return UniTask.CompletedTask;
     }
 
