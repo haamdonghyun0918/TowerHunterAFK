@@ -24,6 +24,7 @@ public class CharacterData : GameDataBase
     public int AtkPerLevel;
     public int HpPerLevel;
     public int DefPerLevel;
+    public string CharacterType;
 }
 
 [System.Serializable]
@@ -66,6 +67,7 @@ public class SkillData : GameDataBase
     public string SkillType;
     public string PrefabPath;
     public int SkillDuration;
+    public int MotionDuration;
 }
 
 public enum EquipmentTier
