@@ -5,7 +5,7 @@ public class PartySetting
 {
     private const int _maxSlots = 3;
 
-    public void SetCharacter(int slotIndex, string uniqueId)
+    public void SetCharacterToParty(int slotIndex, string uniqueId)
     {
         if (slotIndex < 0 || slotIndex >= _maxSlots)
         {
@@ -99,7 +99,7 @@ public class PartySetting
         {
             string realFirstCharacterUid = ownedChars[0].UniqueId;
 
-            SetCharacter(0, realFirstCharacterUid);
+            SetCharacterToParty(0, realFirstCharacterUid);
             Debug.Log($"[PartySetting] 테스트 파티 편성 완료! (배치된 진짜 UID: {realFirstCharacterUid})");
         }
 
