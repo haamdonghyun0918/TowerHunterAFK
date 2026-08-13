@@ -6,8 +6,6 @@ public class Monster : BattleCharacter
     [Header("데이터 관련")]
     private MonsterData _monsterData;
 
-    private Animator _monsterAnimator;
-
     private Action<int, int> _onChangedHp;
 
     private void Awake()
@@ -44,6 +42,7 @@ public class Monster : BattleCharacter
         TargetCharacter.TakeDamage(_characterAtk);
 
         Debug.Log($"타겟{TargetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
-        //[TODO] 평타공격 모션
+        ChangeState(CharacterState.NormalAttack);
+        ChangeState(CharacterState.Idle);
     }
 }
