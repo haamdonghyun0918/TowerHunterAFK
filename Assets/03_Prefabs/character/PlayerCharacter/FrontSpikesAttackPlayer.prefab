@@ -1249,7 +1249,7 @@ GameObject:
   - component: {fileID: 3487337382238189205}
   - component: {fileID: 3518062294901047257}
   m_Layer: 0
-  m_Name: TestPlayer3
+  m_Name: FrontSpikesAttackPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1249,7 +1249,7 @@ GameObject:
   - component: {fileID: 3487337382238189205}
   - component: {fileID: 3518062294901047257}
   m_Layer: 0
-  m_Name: TestPlayer2
+  m_Name: MeteorShowerPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1307,7 +1307,7 @@ Animator:
   m_GameObject: {fileID: 3545043871792835005}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: bed7a092d53e7c748bd65db98cebf9d6, type: 3}
-  m_Controller: {fileID: 22100000, guid: e3fac6d9cab5b2243b0d7c94e90a58d1, type: 2}
+  m_Controller: {fileID: 22100000, guid: 2981f3356c6c46240873f8892203531e, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
