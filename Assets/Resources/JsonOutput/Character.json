@@ -13,7 +13,8 @@
 	"SkillCostRegenRate": 1,
 	"AtkPerLevel": 10,
 	"HpPerLevel": 10,
-	"DefPerLevel": 10
+	"DefPerLevel": 10,
+	"CharacterType": "Monk"
   },
   {
     "Id": "character_Test_02",
@@ -29,7 +30,8 @@
 	"SkillCostRegenRate": 1,
 	"AtkPerLevel": 10,
 	"HpPerLevel": 10,
-	"DefPerLevel": 10
+	"DefPerLevel": 10,
+	"CharacterType": "Wizard"
   },
   {
     "Id": "character_Test_03",
@@ -45,6 +47,7 @@
 	"SkillCostRegenRate": 1,
 	"AtkPerLevel": 10,
 	"HpPerLevel": 10,
-	"DefPerLevel": 10
+	"DefPerLevel": 10,
+	"CharacterType": "Wizard"
   }
 ]
