@@ -7,5 +7,5 @@
     public int CurrentSkillCost { get; set; }
     public int MaxSkillCost { get; set; }
     public bool IsActive { get; set; }
-    public bool isDead { get; set; }
+    public bool IsDead { get; set; }
 }
