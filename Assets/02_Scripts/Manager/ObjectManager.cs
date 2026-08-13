@@ -45,13 +45,36 @@ public class ObjectManager : MonoBehaviour
                     GameObject gObj_PlayerParty = Instantiate(Prefab_PlayerParty, playerSpawnSpot.position, Quaternion.identity);
                     _currentPlayerParty = gObj_PlayerParty.GetComponent<PlayerPartyController>();
 
-                    //[TODO] : 나중에는 덱 편성/세이브데이터를 받아와서 세팅해줄것.
-                    //테스트용 하드코딩
-                    string[] testHunterIds = { "character_Test_01" };
+                    PartySetting partySetting = new PartySetting();
+                    partySetting.TestParty(); // 테스트용
 
-                    foreach (string hunterId in testHunterIds)
+                    string[] currentPartyUids = partySetting.GetCurrentPartyUids();
+                    List<CharacterSaveData> ownedCharacters = SaveManager.Instance.CurrentSaveData.OwnedCharacters;
+
+                    for (int i = 0; i < currentPartyUids.Length; i++)
                     {
-                        await SpawnHunter(hunterId);
+                        string partyUid = currentPartyUids[i];
+
+                        if (string.IsNullOrEmpty(partyUid))
+                        {
+                            continue;
+                        }
+
+                        CharacterSaveData targetData = null;
+                        foreach (CharacterSaveData ownedChar in ownedCharacters)
+                        {
+                            if (ownedChar.UniqueId == partyUid)
+                            {
+                                targetData = ownedChar;
+                                break;
+                            }
+                        }
+
+                        if (targetData != null)
+                        {
+                            await SpawnHunter(targetData.BaseId);
+                            Debug.Log($"[오브젝트 매니저] {targetData.BaseId} 스폰 완료!");
+                        }
                     }
                 }
             }

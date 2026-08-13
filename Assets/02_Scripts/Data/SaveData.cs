@@ -38,7 +38,8 @@ public class SaveData
 
     public uint RecentCharacterUid = 0;
     public uint RecentEquipmentUid = 0;
-    //TODO: 가지고 있는 헌터들의 Id들과 구성한 헌터들의 스쿼드 저장하는 내용도 추가할 것
+
+    public string[] CurrentPartyCharacterUids = new string[3] { "", "", "" };
 
     public string OngoingExpeditionId = "";
     public string ExpeditionStartTime = "";

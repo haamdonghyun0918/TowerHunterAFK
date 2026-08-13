@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class CharacterInventory
 {
@@ -11,12 +12,30 @@ public class CharacterInventory
         if (SaveManager.Instance != null && SaveManager.Instance.CurrentSaveData != null)
         {
             _ownedCharacters = SaveManager.Instance.CurrentSaveData.OwnedCharacters;
+            // 테스트용 하드코딩
+            if (_ownedCharacters.Count == 0)
+            {
+                GiveTestCharactersAndSetParty();
+            }
 
             if (OnCharacterChanged != null)
             {
                 OnCharacterChanged(_ownedCharacters);
             }
         }
+    }
+
+    private void GiveTestCharactersAndSetParty()
+    {
+        Debug.Log("[초기 설정] 헌터 3명 지급 및 기본 스쿼드 편성을 진행합니다.");
+
+        CharacterUtils charUtils = new CharacterUtils();
+
+        charUtils.AddCharacters("character_Test_01");
+        charUtils.AddCharacters("character_Test_02");
+        charUtils.AddCharacters("character_Test_03");
+
+        _ownedCharacters = SaveManager.Instance.CurrentSaveData.OwnedCharacters;
     }
 
     public List<CharacterSaveData> GetOwnedCharacters()

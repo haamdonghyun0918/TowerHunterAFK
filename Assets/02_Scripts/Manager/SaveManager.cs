@@ -148,6 +148,7 @@ public class SaveManager : MonoBehaviour
         {
             return;
         }
+
         CurrentSaveData.OwnedCharacters = characters;
         SaveToFile(CurrentSaveData);
         Debug.Log("[SaveManager] 헌터를 획득하여 저장하였습니다.");

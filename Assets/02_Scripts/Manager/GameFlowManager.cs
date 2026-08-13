@@ -31,6 +31,12 @@ public class GameFlowManager : MonoBehaviour
             await SaveManager.Instance.Init();
         }
 
+        CharacterInventory charInven = new CharacterInventory();
+        charInven.Init();
+
+        EquipmentInventory equipInven = new EquipmentInventory();
+        equipInven.Init();
+
         if (ExpeditionManager.Instance != null)
         {
             ExpeditionManager.Instance.OnRewardClaimed += HandleExpeditionRewardClaimed;
