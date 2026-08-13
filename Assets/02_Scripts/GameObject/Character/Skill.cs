@@ -72,6 +72,9 @@ public class Skill : MonoBehaviour
             return;
         }
 
+        int motionDuration = _skillData.MotionDuration;
+        await UniTask.Delay(motionDuration);
+
         GameObject instance = await InstantiateAsync(_skillPrefabPath, _targetTransform);
 
     }
