@@ -15,7 +15,7 @@ public class StageService
 
     public StageModel GetStageModel()
     {
-        if( _stageViewModel == null || _stageViewModel == null)
+        if (_stageModel == null || _stageViewModel == null)
         {
             CreateStageViewModel();
         }
