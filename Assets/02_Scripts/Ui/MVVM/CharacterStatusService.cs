@@ -44,4 +44,22 @@ public class CharacterStatusService
         }
         return _characterStatusModels[slotIndex];
     }
+
+    public CharacterStatusViewModel GetCharacterStatusViewModel(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= MaxPartyCount)
+        {
+            Debug.LogError($"[CharacterStatusService] 파티 슬롯 범위를 벗어났습니다. SlotIndex: {slotIndex}");
+            return null;
+        }
+
+        return _characterStatusViewModels[slotIndex];
+    }
+
+    public IReadOnlyList<CharacterStatusViewModel> GetCharacterStatusViewModels()
+    {
+        return _characterStatusViewModels;
+    }
+
+    
 }
