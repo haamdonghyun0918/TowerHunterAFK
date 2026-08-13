@@ -156,12 +156,11 @@ public class ObjectManager : MonoBehaviour
 
         GameObject prefabToSpawn = Prefab_TestDefaultMonster;
 
-        //Monster에는 프리팹 경로가 없네용 >> 생겼음! GameData에서 추가해주자!
-        //if (!string.IsNullOrEmpty(data.PrefabPath))
-        //{
-        //    GameObject loadedPrefab = Resources.Load<GameObject>(data.PrefabPath);
-        //    if (loadedPrefab != null) prefabToSpawn = loadedPrefab;
-        //}
+        if (!string.IsNullOrEmpty(data.PrefabPath))
+        {
+            GameObject loadedPrefab = Resources.Load<GameObject>(data.PrefabPath);
+            if (loadedPrefab != null) prefabToSpawn = loadedPrefab;
+        }
 
         if (prefabToSpawn != null)
         {

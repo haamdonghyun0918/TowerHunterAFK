@@ -61,6 +61,7 @@ public class BattleManager : MonoBehaviour
                 Transform attackerTransform = curUnit.transform;
                 Transform targetTransform = null;
                 bool isSkill = false;
+                int skillCheckParameter = 0; //0 : 타겟이 죽어서 없음. 1: 일반공격. 2: 스킬 공격
 
                 if (curUnit is Character hunter)
                 {
@@ -81,8 +82,7 @@ public class BattleManager : MonoBehaviour
                         continue;
                     }
 
-                    hunter.AtkTarget(target);
-                    await UniTask.Delay(500);
+                    await hunter.AtkTarget(target);
 
                     if (hunter._isDead == false)
                     {
