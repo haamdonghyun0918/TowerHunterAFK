@@ -30,6 +30,19 @@ public class GameFlowManager : MonoBehaviour
         {
             await SaveManager.Instance.Init();
         }
+        else
+        {
+            Debug.LogError("[GameFlowManager] SaveManager가 없습니다.");
+            return;
+        }
+
+        if (NetworkManager.Instance == null || NetworkManager.Instance.StageService == null || NetworkManager.Instance.PlayerResourceService == null)
+        {
+            Debug.LogError("[GameFlowManager] NetworkManager의 Service가 초기화되지 않았습니다.");
+            return;
+        }
+
+        NetworkManager.Instance.PlayerResourceService.SetGoldOnLoad(SaveManager.Instance.CurrentSaveData.Gold);
 
         CharacterInventory charInven = new CharacterInventory();
         charInven.Init();
@@ -50,7 +63,11 @@ public class GameFlowManager : MonoBehaviour
             MapManager.Instance.OnStageFailed += HandleStageFailed;
             await MapManager.Instance.Init();
         }
-
+        else
+        {
+            Debug.LogError("[GameFlowManager] MapManager가 없습니다.");
+            return;
+        }
         Debug.Log("게임 세팅 완료 게임 화면 출력");
     }
 
@@ -82,26 +99,45 @@ public class GameFlowManager : MonoBehaviour
     private void HandleStageCleared()
     {
         Debug.Log("스테이지 클리어");
-        SaveManager.Instance.UpdateMaxClearedStage(MapManager.Instance.CurrentStage);
+
+        if (NetworkManager.Instance == null || NetworkManager.Instance.StageService == null)
+        {
+            Debug.LogError("[GameFlowManager] StageService가 없습니다.");
+            return;
+        }
+
+        StageService stageService = NetworkManager.Instance.StageService;
+
+        stageService.UpdateMaxClearedStage(MapManager.Instance.CurrentStage);
+
         NetworkManager.Instance.PlayerResourceService.RequestAddGold(1000);
+
         long totalGold = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel().Gold;
         SaveManager.Instance.SaveGold(totalGold);
         Debug.Log("클리어 보상 1000골드 지급!");
+        int preSaveStage = stageService.GetStageViewModel().CurrentStage;
+        stageService.RequestGoNextStage();
 
-        int nextStage = MapManager.Instance.CurrentStage + 1;
+        int nextStage = preSaveStage + 1;
         MapManager.Instance.StartNewStage(nextStage).Forget();
     }
 
     private void HandleStageFailed()
     {
         Debug.Log("스쿼드가 전멸하여 스테이지 실패...");
-        int currentStage = MapManager.Instance.CurrentStage;
-        int rollBackStage = ((currentStage - 1) / 10) * 10;
 
-        if (rollBackStage < 10)
+        if(NetworkManager.Instance == null || NetworkManager.Instance.StageService == null)
         {
-            rollBackStage = 1;
+            Debug.LogError("[GameFlowManager]: StageService가 없습니다.");
+            return;
         }
+
+        int currentStage = MapManager.Instance.CurrentStage;
+        StageService stageService = NetworkManager.Instance.StageService;
+
+        stageService.GoToSafeStage();
+
+        int rollBackStage = stageService.GetStageViewModel().CurrentStage;
 
         Debug.Log($"실패로 인해 {rollBackStage} 스테이지로 돌아갑니다...");
         MapManager.Instance.StartNewStage(rollBackStage).Forget();

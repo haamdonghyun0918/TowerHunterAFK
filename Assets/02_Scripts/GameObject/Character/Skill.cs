@@ -72,6 +72,9 @@ public class Skill : MonoBehaviour
             return;
         }
 
+        int motionDuration = _skillData.MotionDuration;
+        await UniTask.Delay(motionDuration);
+
         GameObject instance = await InstantiateAsync(_skillPrefabPath, _targetTransform);
 
     }
@@ -155,13 +158,12 @@ public class Skill : MonoBehaviour
         Transform targetTransform = null;
         if (skillType == SkillType.MultiTarget)
         {
-            targetTransform = _monsterParty.GetMonster(1).transform;
+            targetTransform = _targetTransform;
         }
 
         else if (skillType == SkillType.SingleTarget)
         {
-            //targetTransform = _monsterParty.GetTargetMonster().transform;
-            targetTransform = this.gameObject.transform;
+            targetTransform = _targetTransform;
         }
 
         else if (skillType == SkillType.SelfTarget)
@@ -170,6 +172,11 @@ public class Skill : MonoBehaviour
         }
 
         return targetTransform;
+    }
+
+    public void SetSingleTargetTransform(Transform targetTransform)
+    {
+        _targetTransform = targetTransform;
     }
 
     private Transform SetTargetTransform()

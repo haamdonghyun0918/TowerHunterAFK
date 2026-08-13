@@ -6,19 +6,11 @@ public class Monster : BattleCharacter
     [Header("데이터 관련")]
     private MonsterData _monsterData;
 
-    [Header("전투 관련")]
-    //[SerializeField] private GameObject TargetCharacter;
-    //private Character _targetCharacterComponent;
-
-
-    private Animator _monsterAnimator;
-
     private Action<int, int> _onChangedHp;
 
     private void Awake()
     {
         this.gameObject.SetActive(true);
-        //_targetCharacterComponent = TargetCharacter.GetComponentInChildren<Character>();
     }
 
     private void OnEnable()
@@ -47,8 +39,10 @@ public class Monster : BattleCharacter
     {
         if (TargetCharacter._isDead == true) return;
 
-        Debug.Log($"타겟{TargetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
-        //[TODO] 평타공격 모션
         TargetCharacter.TakeDamage(_characterAtk);
+
+        Debug.Log($"타겟{TargetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
+        ChangeState(CharacterState.NormalAttack);
+        ChangeState(CharacterState.Idle);
     }
 }

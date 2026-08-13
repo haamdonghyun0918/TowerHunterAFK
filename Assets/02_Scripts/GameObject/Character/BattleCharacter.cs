@@ -1,5 +1,16 @@
 ﻿using System;
+using UnityEditor.Animations;
 using UnityEngine;
+
+public enum CharacterState
+{
+    None,
+    Die,
+    Idle,
+    Run,
+    NormalAttack,
+    SkillAttack
+}
 
 public class BattleCharacter : MonoBehaviour
 {
@@ -8,14 +19,20 @@ public class BattleCharacter : MonoBehaviour
     protected int _characterMaxHp;
     protected int _characterAtk;
     protected int _characterDefense;
+
+    [Header("애니메이터")]
+    [SerializeField] private Animator _characterAnimator;
+
     public int _characterAtkSpeed { get; protected set; }
     public bool _isDead { get; protected set; }
     public string _instanceId { get; set; }
+
 
     private Action<int, int> _onChangedHp;
 
     private void OnEnable()
     {
+        ChangeState(CharacterState.Idle);
         _isDead = false;
     }
 
@@ -30,13 +47,22 @@ public class BattleCharacter : MonoBehaviour
 
         int currentDamage = ApplyDefenseDamage(damage);
 
+        //[TODO] ChangeState(CharacterState.Hit);
+
         _characterHp -= currentDamage;
+        
+        if (_characterHp <= 0)
+        {
+            _characterHp = 0;
+        }
+
         InvokeStatChangedEvent();
 
         if (_characterHp <= 0)
         {
             Die();
         }
+        ChangeState(CharacterState.Idle);
     }
 
     private int ApplyDefenseDamage(int damage)
@@ -53,7 +79,7 @@ public class BattleCharacter : MonoBehaviour
 
     private void Die()
     {
-        //[TODO] 죽음 애니메이션 재생
+        ChangeState(CharacterState.Die);
         ResetStateChangedEvent();
         this.gameObject.SetActive(false);
         _isDead = true;
@@ -74,8 +100,37 @@ public class BattleCharacter : MonoBehaviour
         _onChangedHp?.Invoke(_characterHp, _characterMaxHp);
     }
 
-    private void ChangeState()
+    protected void ChangeState(CharacterState newState)
     {
-        //[TODO] 애니메이션 변경 (스킬사용, 평타공격, 죽는애니메이션)
+        switch (newState)
+        {
+            case CharacterState.Idle:
+                {
+                    ResetAllAnimatorParameters();
+                }
+                break;
+            case CharacterState.NormalAttack:
+                {
+                    _characterAnimator.SetBool("IsNormalAttack", true);
+                }
+                break;
+            case CharacterState.SkillAttack:
+                {
+                    _characterAnimator.SetBool("IsSkillAttack", true);
+                }
+                break;
+            case CharacterState.Die:
+                {
+                    _characterAnimator.SetBool("IsDead", true);
+                }
+                break;
+        }
+    }
+
+    private void ResetAllAnimatorParameters()
+    {
+        _characterAnimator.SetBool("IsNormalAttack", false);
+        _characterAnimator.SetBool("IsSkillAttack", false);
+        _characterAnimator.SetBool("IsDead", false);
     }
 }
