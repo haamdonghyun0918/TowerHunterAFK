@@ -51,7 +51,7 @@ public class Character : BattleCharacter
         {
             Debug.Log($"[Character] GameDataManager가 NULL입니다.");
         }
-        _characterData = GameDataManager.Instance.GetData<CharacterData>("character_Test_01");
+        _characterData = GameDataManager.Instance.GetData<CharacterData>("character_flowerslash_05");
         _characterId = _characterData.Id;
         _maxSkillCost = _characterData.MaxSkillCost;
         InitializeSkill();
@@ -126,8 +126,7 @@ public class Character : BattleCharacter
 
         var characterType = _characterData.CharacterType;
 
-        var singleTargetTransform = targetMonster.gameObject.transform;
-        _skill.SetSingleTargetTransform(singleTargetTransform);
+        SetSingleTargetTransform(targetMonster);
 
         IncreaseCurrentSkillCost(1);
 
@@ -143,6 +142,13 @@ public class Character : BattleCharacter
         }
 
         ChangeState(CharacterState.Idle);
+    }
+
+    private void SetSingleTargetTransform(Monster targetMonster)
+    {
+        if (_skill.GetSkillType() != SkillType.SingleTarget) return;
+        var singleTargetTransform = targetMonster.gameObject.transform;
+        _skill.SetSingleTargetTransform(singleTargetTransform);
     }
 
     private async UniTask UseNormalAttack(Monster targetMonster)
