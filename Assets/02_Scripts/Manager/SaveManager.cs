@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using NUnit.Framework;
 using System;
 using System.IO;
 using UnityEngine;
@@ -12,7 +11,7 @@ public class SaveManager : MonoBehaviour
     private const string SaveFileName = "GameSaveData.json";
 
     public event Action<long> OnGoldChanged;
-    public event Action OnNotEnoughGold;
+    //public event Action OnNotEnoughGold;
     public event Action<int> OnLevelChanged;
     public event Action<long> OnExpChanged;
 
