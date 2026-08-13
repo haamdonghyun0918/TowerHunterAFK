@@ -7,8 +7,8 @@ using UnityEngine;
 public class EquipmentInventory : MonoBehaviour
 {
     public static EquipmentInventory Instance { get; private set; }
-    private List<string> _ownedEquipments = new List<string>();
-    public event Action<List<string>> OnEquipmentChanged;
+    private List<EquipmentSaveData> _ownedEquipments = new List<EquipmentSaveData>();
+    public event Action<List<EquipmentSaveData>> OnEquipmentChanged;
 
     private void Awake()
     {
@@ -16,6 +16,7 @@ public class EquipmentInventory : MonoBehaviour
         {
             Instance = this;
         }
+
         else
         {
             Destroy(gameObject);
@@ -26,25 +27,15 @@ public class EquipmentInventory : MonoBehaviour
     {
         if (SaveManager.Instance != null && SaveManager.Instance.CurrentSaveData != null)
         {
-            _ownedEquipments = SaveManager.Instance.CurrentSaveData.OwnedEquipments.ToList();
+            _ownedEquipments = SaveManager.Instance.CurrentSaveData.OwnedEquipments;
+            OnEquipmentChanged?.Invoke(_ownedEquipments);
         }
 
-        Debug.Log("EquipManager 호출");
+        Debug.Log("EquipmentInventory 호출");
         return UniTask.CompletedTask;
     }
 
-    public void AddEquipments(string[] equipments)
-    {
-        if (equipments == null || equipments.Length == 0)
-        {
-            return;
-        }
-
-        _ownedEquipments.AddRange(equipments);
-        OnEquipmentChanged?.Invoke(_ownedEquipments);
-    }
-
-    public List<string> GetOwnedEquipments()
+    public List<EquipmentSaveData> GetOwnedEquipments()
     {
         return _ownedEquipments;
     }
