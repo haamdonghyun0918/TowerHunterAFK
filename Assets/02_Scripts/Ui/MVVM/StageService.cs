@@ -54,7 +54,7 @@ public class StageService
     {
         var stageViewModel = GetStageViewModel();
 
-        if(stageViewModel == null &&stageViewModel.CurrentStage < 1)
+        if(stageViewModel.CurrentStage < 1)
         {
             return;
         }
@@ -77,8 +77,6 @@ public class StageService
         {
             SaveManager.Instance.SaveStage(stage);
         }
-
-        _stageViewModel.CurrentStage = stage;
     }
 
     public void GoToSafeStage()
@@ -96,7 +94,24 @@ public class StageService
         {
             safeStage = 1;
         }
-        SetStage(stageViewModel.CurrentStage / 10);
+        SetStage(safeStage);
+    }
+
+    public void UpdateMaxClearedStage(int clearedStage)
+    {
+        var stageViewModel = GetStageViewModel();
+
+        if(clearedStage <= stageViewModel.CurrentStage)
+        {
+            return;
+        }
+
+        stageViewModel.MaxClearedStage = clearedStage;
+
+        if(SaveManager.Instance != null)
+        {
+            SaveManager.Instance.UpdateMaxClearedStage(clearedStage);
+        }
     }
 
 }
