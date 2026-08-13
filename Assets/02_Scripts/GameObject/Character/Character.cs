@@ -5,6 +5,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
+public enum NormalAttackType{
+    None,
+    Warrior,
+    Wizard,
+    Monk
+}
+
 public class Character : BattleCharacter
 {
     [Header("스킬 관련")]
