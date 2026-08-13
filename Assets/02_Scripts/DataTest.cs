@@ -44,6 +44,5 @@ public class DataTest : MonoBehaviour
         Debug.Log($"로드된 캐릭터 기본 공격력: {baseStatData.BaseAtk}");
         Debug.Log($"로드된 캐릭터 기본 체력: {baseStatData.BaseHp}");
         Debug.Log($"로드된 캐릭터 기본 공격속도: {baseStatData.BaseAtkSpeed}");
-        Debug.Log($"로드된 캐릭터 기본 마나량: {baseStatData.BaseMp}");
     }
 }
