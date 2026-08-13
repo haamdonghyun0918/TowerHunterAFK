@@ -101,7 +101,7 @@ public class StageService
     {
         var stageViewModel = GetStageViewModel();
 
-        if(clearedStage <= stageViewModel.CurrentStage)
+        if(clearedStage <= stageViewModel.MaxClearedStage)
         {
             return;
         }
