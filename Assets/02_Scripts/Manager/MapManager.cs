@@ -6,7 +6,17 @@ using System;
 public class MapManager : MonoBehaviour
 {
     public static MapManager Instance { get; private set; }
-    public int CurrentStage { get; private set; }
+    public int CurrentStage
+    {
+        get
+        {
+            if(NetworkManager.Instance == null || NetworkManager.Instance.StageService == null)
+            {
+                return 1;
+            }
+            return NetworkManager.Instance.StageService.GetStageModel().CurrentStage;
+        }
+    }
 
     [Header("Player Spawn & Clear Spot")]
     [SerializeField] private Transform _playerSpawnSpot;
@@ -40,15 +50,40 @@ public class MapManager : MonoBehaviour
 
     public async UniTask Init()
     {
+        if (SaveManager.Instance == null)
+        {
+            Debug.LogError("[MapManager]: SaveManager가 없습니다.");
+            return;
+        }
+        if (NetworkManager.Instance == null || NetworkManager.Instance.StageService == null)
+        {
+            Debug.LogError("[MapManager]: StageService가 없습니다.");
+            return;
+        }
+
         int savedStage = SaveManager.Instance.GetCurrentStage();
+        NetworkManager.Instance.StageService.SetStageOnLoad(savedStage);
         await StartNewStage(savedStage);
         Debug.Log("MapManager 호출");
     }
 
     public async UniTask StartNewStage(int stage)
     {
-        CurrentStage = stage;
-        SaveManager.Instance.SaveStage(CurrentStage);
+        if (NetworkManager.Instance == null || NetworkManager.Instance.StageService == null)
+        {
+            Debug.LogError("[MapManager]: StageService가 없습니다.");
+            return;
+        }
+        if(stage < 1)
+        {
+            stage = 1;
+        }
+        StageService stageService = NetworkManager.Instance.StageService;
+
+        if(stageService.GetStageViewModel().CurrentStage != stage)
+        {
+            stageService.SetStage(stage);
+        }
 
         await ChangeMapBasedOnStage(CurrentStage);
         OnStageChanged?.Invoke(CurrentStage);
@@ -66,6 +101,12 @@ public class MapManager : MonoBehaviour
 
     private async UniTask ChangeMapBasedOnStage(int currentStage)
     {
+        if (_mapAddressableKeys == null || _mapAddressableKeys.Length == 0)
+        {
+            Debug.LogError("[MapManager]: 맵 Addressable Key가 없습니다.");
+            return;
+        }
+
         int mapIndex = ((currentStage - 1) % (_mapAddressableKeys.Length * 10)) / 10;
 
         if (mapIndex >= _mapAddressableKeys.Length)
@@ -78,6 +119,12 @@ public class MapManager : MonoBehaviour
 
     private async UniTask LoadMapSprite(string mapKey)
     {
+        if (_mapBackGround == null)
+        {
+            Debug.LogError("[MapManager]: 맵 배경 SpriteRenderer가 연결되지 않았습니다.");
+            return;
+        }
+
         try
         {
             Sprite loadedSprite = await Addressables.LoadAssetAsync<Sprite>(mapKey);
