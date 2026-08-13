@@ -158,7 +158,7 @@ public class Skill : MonoBehaviour
         Transform targetTransform = null;
         if (skillType == SkillType.MultiTarget)
         {
-            targetTransform = _monsterParty.GetMonster(1).transform;
+            targetTransform = _targetTransform;
         }
 
         else if (skillType == SkillType.SingleTarget)
