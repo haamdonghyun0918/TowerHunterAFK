@@ -68,14 +68,29 @@ public class SkillData : GameDataBase
     public int SkillDuration;
 }
 
+public enum EquipmentTier
+{
+    None = 0,
+    Normal = 1,
+    Rare = 2,
+    Epic = 3
+}
+
+public enum EquipmentRange
+{
+    None = 0,
+    Melee = 1,
+    Ranged = 2 
+}
+
 [System.Serializable]
 public class EquipMentData: GameDataBase
 {
     public string Name;
     public string Position;
-    public int Tier;
+    public EquipmentTier Tier;
     public int Rank;
-    public int Range;
+    public EquipmentRange Range;
     public int BuffAtk;
     public int BuffHp;
     public int BuffAtkSpeed;
