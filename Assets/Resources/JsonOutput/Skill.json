@@ -3,8 +3,8 @@
     "Id": "skill_dragonPunch_01",
     "Name": "드래곤펀치",
     "RequiredCost": 2,
-    "SkillDamage": 2,
-    "SkillType": "SingleTarget",
+    "SkillDamage": 3,
+    "SkillType": "SingleTarget_SelfSpawn",
 	"PrefabPath": "DragonPunch",
 	"SkillDuration": 2000,
 	"MotionDuration": 500
@@ -36,25 +36,25 @@
     "SkillDamage": 4,
     "SkillType": "MultiTarget",
 	"PrefabPath": "EnergyExplosion",
-	"SkillDuration": 2000,
-	"MotionDuration": 1000
+	"SkillDuration": 2500,
+	"MotionDuration": 0
   },
   {
     "Id": "skill_flowerslash_01",
     "Name": "플라워슬래쉬",
     "RequiredCost": 2,
-    "SkillDamage": 5,
-    "SkillType": "SelfTarget",
+    "SkillDamage": 4,
+    "SkillType": "MultiTarget_SelfSpawn",
 	"PrefabPath": "FlowerSlash",
 	"SkillDuration": 3000,
-	"MotionDuration": 1000
+	"MotionDuration": 0
   },
   {
     "Id": "skill_frontspikesattack_01",
     "Name": "전방스파이크어택",
-    "RequiredCost": 2,
-    "SkillDamage": 4,
-    "SkillType": "MultiTarget",
+    "RequiredCost": 3,
+    "SkillDamage": 10,
+    "SkillType": "MultiTarget_SelfSpawn",
 	"PrefabPath": "FrontSpikesAttack",
 	"SkillDuration": 2000,
 	"MotionDuration": 1000
