@@ -50,4 +50,25 @@ public class StageService
         stageViewModel.CurrentStage++;
     }
 
+    public void SetStage(int stage)
+    {
+        var stageModel = GetStageViewModel();
+
+        _stageViewModel.CurrentStage = stage;
+    }
+
+    public void GoToSafeStage()
+    {
+        var stageViewModel = GetStageViewModel();
+        if( stageViewModel == null )
+        {
+            return;
+        }
+        if(stageViewModel.CurrentStage <=10)
+        {
+            SetStage(1);
+        }
+        SetStage(stageViewModel.CurrentStage / 10);
+    }
+
 }
