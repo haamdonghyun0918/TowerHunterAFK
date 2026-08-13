@@ -1,22 +1,7 @@
 ﻿using UnityEngine;
 
-public class CharacterUtils : MonoBehaviour
+public class CharacterUtils
 {
-    public static CharacterUtils Instance { get; private set; }
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     public void AddCharacters(string baseCharacterId)
     {
         CharacterData charData = GameDataManager.Instance.GetData<CharacterData>(baseCharacterId);
@@ -30,20 +15,20 @@ public class CharacterUtils : MonoBehaviour
         SaveManager.Instance.CurrentSaveData.RecentCharacterUid += 1;
         uint currentUid = SaveManager.Instance.CurrentSaveData.RecentCharacterUid;
 
-        CharacterSaveData newCharacter = new CharacterSaveData
-        {
-            UniqueId = "CH_" + currentUid.ToString(),
-            BaseId = baseCharacterId,
-            Level = 1,
-            Exp = 0,
-            EquippedWeaponUid = "",
-            EquippedArmorUid = "",
-            EquippedAccessoryUid = ""
-        };
+        CharacterSaveData newCharacter = new CharacterSaveData();
+        newCharacter.UniqueId = "CH_" + currentUid.ToString();
+        newCharacter.BaseId = baseCharacterId;
+        newCharacter.Level = 1;
+        newCharacter.Exp = 0;
+        newCharacter.EquippedWeaponUid = "";
+        newCharacter.EquippedArmorUid = "";
+        newCharacter.EquippedAccessoryUid = "";
 
         SaveManager.Instance.CurrentSaveData.OwnedCharacters.Add(newCharacter);
         SaveManager.Instance.SaveCurrentData();
 
-        Debug.Log($"[CharacterUtils] 헌터 획득! 헌터 이름: {charData.Name}], 게임 상 헌터 아이디: {newCharacter.UniqueId})");
+        Debug.Log($"[CharacterUtils] 헌터 획득! 헌터 이름: {charData.Name}, 게임 상 헌터 아이디: {newCharacter.UniqueId}");
     }
+
+
 }

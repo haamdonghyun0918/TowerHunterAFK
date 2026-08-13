@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameFlowManager : MonoBehaviour
@@ -30,16 +29,6 @@ public class GameFlowManager : MonoBehaviour
         if (SaveManager.Instance != null)
         {
             await SaveManager.Instance.Init();
-        }
-
-        if (EquipmentInventory.Instance != null)
-        {
-            await EquipmentInventory.Instance.Init();
-        }
-
-        if (CharacterInventory.Instance != null)
-        {
-            await CharacterInventory.Instance.Init();
         }
 
         if (ExpeditionManager.Instance != null)
@@ -102,7 +91,7 @@ public class GameFlowManager : MonoBehaviour
         Debug.Log("스쿼드가 전멸하여 스테이지 실패...");
         int currentStage = MapManager.Instance.CurrentStage;
         int rollBackStage = ((currentStage - 1) / 10) * 10;
-        
+
         if (rollBackStage < 10)
         {
             rollBackStage = 1;
@@ -116,9 +105,11 @@ public class GameFlowManager : MonoBehaviour
     {
         if (equipments != null && equipments.Length > 0)
         {
+            EquipmentUtils equipUtils = new EquipmentUtils();
+
             foreach (string equipBaseId in equipments)
             {
-                EquipmentUtils.Instance.AddEquipments(equipBaseId);
+                equipUtils.AddEquipments(equipBaseId);
             }
 
             if (addedGold > 0)
