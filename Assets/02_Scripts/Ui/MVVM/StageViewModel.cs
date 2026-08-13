@@ -21,4 +21,24 @@
             }
         }
     }
+
+    public int MaxClearedStage
+    {
+        get => _stageModel.MaxClearedStage;
+        set
+        {
+            if( _stageModel.MaxClearedStage != value)
+            {
+                _stageModel.MaxClearedStage = value;
+                OnPropertyChanged(nameof(MaxClearedStage));
+            }
+
+        }
+    }
+
+    public void InvokeOnceOnInit()
+    {
+        OnPropertyChanged(nameof(CurrentStage));
+        OnPropertyChanged(nameof(MaxClearedStage));
+    }
 }
