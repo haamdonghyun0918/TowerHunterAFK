@@ -15,7 +15,7 @@ public class StageService
 
     public StageModel GetStageModel()
     {
-        if( _stageViewModel == null )
+        if( _stageViewModel == null || _stageViewModel == null)
         {
             CreateStageViewModel();
         }
@@ -33,26 +33,50 @@ public class StageService
 
     public void SetStageOnLoad(int stage)
     {
-        var stageModel = GetStageViewModel();
+        var stageViewModel = GetStageViewModel();
 
-        _stageViewModel.CurrentStage = stage;
+        if(stage<1)
+        {
+            stage = 1;
+        }
+
+        stageViewModel.CurrentStage = stage;
+
+        if (SaveManager.Instance != null)
+        {
+            stageViewModel.MaxClearedStage = SaveManager.Instance.GetMaxClearedStage();
+        }
+
+        stageViewModel.InvokeOnceOnInit();
     }
 
     public void RequestGoNextStage()
     {
-        if(_stageModel == null && _stageViewModel == null && _stageViewModel.CurrentStage < 0)
+        var stageViewModel = GetStageViewModel();
+
+        if(stageViewModel == null &&stageViewModel.CurrentStage < 1)
         {
             return;
         }
 
-        var stageViewModel = GetStageViewModel();
-
-        stageViewModel.CurrentStage++;
+        SetStage(stageViewModel.CurrentStage + 1);
     }
 
     public void SetStage(int stage)
     {
-        var stageModel = GetStageViewModel();
+        var stageViewModel = GetStageViewModel();
+
+        if(stage < 1)
+        {
+            stage = 1;
+        }
+
+        stageViewModel.CurrentStage = stage;
+
+        if(SaveManager.Instance != null)
+        {
+            SaveManager.Instance.SaveStage(stage);
+        }
 
         _stageViewModel.CurrentStage = stage;
     }
@@ -60,13 +84,17 @@ public class StageService
     public void GoToSafeStage()
     {
         var stageViewModel = GetStageViewModel();
+
+        int currentStage = stageViewModel.CurrentStage;
+        int safeStage = ((currentStage - 1) / 10) * 10;
+
         if( stageViewModel == null )
         {
             return;
         }
-        if(stageViewModel.CurrentStage <=10)
+        if(currentStage < 10)
         {
-            SetStage(1);
+            safeStage = 1;
         }
         SetStage(stageViewModel.CurrentStage / 10);
     }
