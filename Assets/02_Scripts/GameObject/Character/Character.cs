@@ -180,6 +180,50 @@ public class Character : BattleCharacter
         }
     }
 
+    private int GetNormalAttackMotionDuration(NormalAttackType newType)
+    {
+        switch (newType)
+        {
+            case NormalAttackType.None:
+                {
+                    return 0;
+                }
+            case NormalAttackType.Warrior:
+                {
+                    return 1000;
+                }
+            case NormalAttackType.Wizard:
+                {
+                    return 1500;
+                }
+            case NormalAttackType.Monk:
+                {
+                    return 1000;
+                }
+            default:
+                {
+                    return 1000;
+                }
+        }
+    }
+
+    private NormalAttackType SetCharacterType(string characterType)
+    {
+        if (characterType == null) return NormalAttackType.None;
+        characterType = _characterData.CharacterType;
+
+        try
+        {
+            return (NormalAttackType)System.Enum.Parse(typeof(NormalAttackType), characterType, true);
+        }
+
+        catch
+        {
+            Debug.LogError($"[Character] {characterType}캐릭터타입 변환 실패");
+            return NormalAttackType.None;
+        }
+    }
+
     // 테스트용 치트 함수 =======================================================
 
     private void Update()   // 테스트용으로만 업데이트 사용
