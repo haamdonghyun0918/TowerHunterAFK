@@ -1,7 +1,8 @@
-﻿using Cysharp.Threading.Tasks.Triggers;
+﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class ObjectManager : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    public void SpawnEntities(int stage)
+    public async UniTask SpawnEntities(int stage)
     {
         ClearCurrentEntities();
 
@@ -50,7 +51,7 @@ public class ObjectManager : MonoBehaviour
 
                     foreach (string hunterId in testHunterIds)
                     {
-                        SpawnHunter(hunterId);
+                        await SpawnHunter(hunterId);
                     }
                 }
             }
@@ -94,7 +95,7 @@ public class ObjectManager : MonoBehaviour
                     string[] testMonsterIds = { "monster_Test_01", "monster_Test_01" };
                     foreach (string monsterId in testMonsterIds)
                     {
-                        SpawnMonster(monsterId, newMonsterParty);
+                       await SpawnMonster(monsterId, newMonsterParty);
                     }
 
                     _currentMonsterParty.Add(newMonsterParty);
@@ -113,7 +114,7 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    private void SpawnHunter(string characterId)
+    private async UniTask SpawnHunter(string characterId)
     {
         var data = GameDataManager.Instance.GetData<CharacterData>(characterId);
         if (data == null)
@@ -125,7 +126,7 @@ public class ObjectManager : MonoBehaviour
         GameObject hunterPrefab = Prefab_TestDefaultPlayer;
         if (string.IsNullOrEmpty(data.PrefabPath) == false)
         {
-            GameObject loadedPrefab = Resources.Load<GameObject>(data.PrefabPath);
+            GameObject loadedPrefab = await Addressables.LoadAssetAsync<GameObject>(data.PrefabPath);
             if (loadedPrefab != null)
             {
                 hunterPrefab = loadedPrefab;
@@ -145,7 +146,7 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    private void SpawnMonster(string monsterId, MonsterParty targetMonsterParty)
+    private async UniTask SpawnMonster(string monsterId, MonsterParty targetMonsterParty)
     {
         var data = GameDataManager.Instance.GetData<MonsterData>(monsterId);
         if (data == null)
@@ -156,12 +157,14 @@ public class ObjectManager : MonoBehaviour
 
         GameObject prefabToSpawn = Prefab_TestDefaultMonster;
 
-        //Monster에는 프리팹 경로가 없네용 >> 생겼음! GameData에서 추가해주자!
-        //if (!string.IsNullOrEmpty(data.PrefabPath))
-        //{
-        //    GameObject loadedPrefab = Resources.Load<GameObject>(data.PrefabPath);
-        //    if (loadedPrefab != null) prefabToSpawn = loadedPrefab;
-        //}
+        if (string.IsNullOrEmpty(data.PrefabPath) == false)
+        {
+            GameObject loadedPrefab = await Addressables.LoadAssetAsync<GameObject>(data.PrefabPath);
+            if (loadedPrefab != null)
+            {
+                prefabToSpawn = loadedPrefab;
+            }
+        }
 
         if (prefabToSpawn != null)
         {

@@ -60,7 +60,6 @@ public class BattleManager : MonoBehaviour
 
                 Transform attackerTransform = curUnit.transform;
                 Transform targetTransform = null;
-                bool isSkill = false;
 
                 if (curUnit is Character hunter)
                 {
@@ -74,18 +73,18 @@ public class BattleManager : MonoBehaviour
 
                     Vector3 originPos = attackerTransform.position;
                     attackerTransform.position = (originPos + targetTransform.position) / 2f;
-                    await UniTask.Delay(isSkill ? 1000 : 500);
 
                     if (hunter._isDead == true)
                     {
                         continue;
                     }
 
-                    hunter.AtkTarget(target);
-                    await UniTask.Delay(500);
+                    await UniTask.Delay(300);
+                    await hunter.AtkTarget(target);
 
                     if (hunter._isDead == false)
                     {
+                        await UniTask.Delay(300);
                         attackerTransform.position = originPos;
                         await UniTask.Delay(500);
                     }
@@ -101,7 +100,7 @@ public class BattleManager : MonoBehaviour
                     targetTransform = target.transform;
                     Vector3 originPos = attackerTransform.position;
                     attackerTransform.position = (originPos + targetTransform.position) / 2f;
-                    await UniTask.Delay(500);
+                    await UniTask.Delay(300);
 
                     if (monster._isDead == true)
                     {
@@ -109,12 +108,12 @@ public class BattleManager : MonoBehaviour
                     }
 
                     monster.AtkTarget(target);
-                    await UniTask.Delay(500);
+                    await UniTask.Delay(300);
 
                     if (monster._isDead == false)
                     {
                         attackerTransform.position = originPos;
-                        await UniTask.Delay(500);
+                        await UniTask.Delay(300);
                     }
                 }
 
