@@ -27,7 +27,7 @@ public class GameFlowManager : MonoBehaviour
     private async UniTaskVoid StartGame()
     {
         Debug.Log("게임 시작중....=>로딩 화면");
-        if (SaveManager.Instance == null)
+        if (SaveManager.Instance != null)
         {
             await SaveManager.Instance.Init();
         }
