@@ -6,7 +6,8 @@
     "SkillDamage": 2,
     "SkillType": "SingleTarget",
 	"PrefabPath": "DragonPunch",
-	"SkillDuration": 2000
+	"SkillDuration": 2000,
+	"MotionDuration": 500
   },
   {
     "Id": "skill_knives_01",
@@ -15,7 +16,8 @@
     "SkillDamage": 5,
     "SkillType": "SingleTarget",
 	"PrefabPath": "Knives",
-	"SkillDuration": 4000
+	"SkillDuration": 4000,
+	"MotionDuration": 1000
   },
   {
     "Id": "skill_meteorshower_01",
@@ -24,7 +26,8 @@
     "SkillDamage": 10,
     "SkillType": "MultiTarget",
 	"PrefabPath": "MeteorShower",
-	"SkillDuration": 5000
+	"SkillDuration": 5000,
+	"MotionDuration": 1000
   },
   {
     "Id": "skill_energyexplosion_01",
@@ -33,7 +36,8 @@
     "SkillDamage": 4,
     "SkillType": "MultiTarget",
 	"PrefabPath": "EnergyExplosion",
-	"SkillDuration": 2000
+	"SkillDuration": 2000,
+	"MotionDuration": 1000
   },
   {
     "Id": "skill_flowerslash_01",
@@ -42,7 +46,8 @@
     "SkillDamage": 5,
     "SkillType": "SelfTarget",
 	"PrefabPath": "FlowerSlash",
-	"SkillDuration": 3000
+	"SkillDuration": 3000,
+	"MotionDuration": 1000
   },
   {
     "Id": "skill_frontspikesattack_01",
@@ -51,7 +56,8 @@
     "SkillDamage": 4,
     "SkillType": "MultiTarget",
 	"PrefabPath": "FrontSpikesAttack",
-	"SkillDuration": 2000
+	"SkillDuration": 2000,
+	"MotionDuration": 1000
   },
   {
     "Id": "skill_heal_01",
@@ -60,6 +66,7 @@
     "SkillDamage": -5,
     "SkillType": "SelfTarget",
 	"PrefabPath": "Heal",
-	"SkillDuration": 2000
+	"SkillDuration": 2000,
+	"MotionDuration": 1000
   }
 ]
