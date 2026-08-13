@@ -90,7 +90,7 @@ public class Character : BattleCharacter
         _characterDefense = baseStatData.BaseDef;
     }
 
-    private async UniTaskVoid UseSkill(Monster targetMonster)
+    private async UniTask UseSkill(Monster targetMonster)
     {
         int currentDamage = _characterAtk * _skill.GetSkillDamage();
 
@@ -114,9 +114,9 @@ public class Character : BattleCharacter
         InvokeCostChangedEvent();
     }
 
-    public int AtkTarget(Monster targetMonster)
+    public async UniTask AtkTarget(Monster targetMonster)
     {
-        if (targetMonster._isDead == true) return 0;
+        if (targetMonster._isDead == true) return;
 
         IncreaseCurrentSkillCost(1);
 
@@ -124,13 +124,11 @@ public class Character : BattleCharacter
         {
             UseNormalAttack(targetMonster);
             Debug.Log($"[일반공격] 타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
-            return 1;
         }
         else
         {
             UseSkillCost(_skill.GetRequiredSkillCost());
-            UseSkill(targetMonster).Forget();
-            return 2;
+            await UseSkill(targetMonster);
         }
     }
 
