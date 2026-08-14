@@ -18,7 +18,9 @@ public class Character : BattleCharacter
     [Header("스킬 관련")]
     private int _currentSkillCost;
     private int _maxSkillCost;
-    private event Action _onSkillCostChange;
+
+    //캐릭터 스탯 서비스에 현재 코스트와 최대 코스트를 전달하기 위함
+    private event Action<int, int> _onSkillCostChange;
     public Transform _targetMonsterTransform { get; private set; }
 
     [Header("데이터 관련")]
@@ -62,6 +64,18 @@ public class Character : BattleCharacter
     {
         return _characterId;
     }
+
+    //추가
+    public int GetCurrentSkillCost()
+    {
+        return _currentSkillCost;
+    }
+
+    public int GetMaxSkillCost()
+    {
+        return _maxSkillCost;
+    }
+    //끝
 
     public int GetSkillDuration()
     {
@@ -172,6 +186,8 @@ public class Character : BattleCharacter
             Debug.Log("스킬 코스트가 부족합니다!");
         }
         _currentSkillCost -= amount;
+
+        InvokeCostChangedEvent();
     }
 
     private void CheckSkillUsable()
@@ -246,6 +262,8 @@ public class Character : BattleCharacter
     {
         _currentSkillCost = _maxSkillCost;
         CheckSkillUsable();
+        //추가
+        InvokeCostChangedEvent();
     }
 
     public void MakeFullHp()
@@ -253,25 +271,39 @@ public class Character : BattleCharacter
         _characterHp = _characterMaxHp;
         _isDead = false;
         gameObject.SetActive(true);
+        //추가
+        InvokeStatChangedEvent();
+        InvokeCostChangedEvent();
     }
 
 
     // 콘솔 띄우기용 이벤트 =========================================
 
 
-
-    private void ConsoleOnSkillCostChanged()
+    //현재 코스트와 최대 코스트 받기
+    private void ConsoleOnSkillCostChanged(int currentSkillCost, int maxSkillCost)
     {
-        Debug.Log($"현재 스킬 코스트: {_currentSkillCost}");
+        Debug.Log($"현재 스킬 코스트: {currentSkillCost}");
     }
 
-    private void BindOnSkillCostChanged(Action skillCostChangedCallback)
+    //Action -> Action<int,int>
+    private void BindOnSkillCostChanged(Action<int, int> skillCostChangedCallback)
     {
         _onSkillCostChange += skillCostChangedCallback;
     }
 
+    public void BindOnSkillCostChangedEvent(Action<int, int> skillCostChangedEventCallback)
+    {
+        _onSkillCostChange += skillCostChangedEventCallback;
+    }
+
+    public void UnbindOnSkillCostChangedEvent(Action<int,int> skillCostChangedEventCallBack)
+    {
+        _onSkillCostChange -= skillCostChangedEventCallBack;
+    }
+
     private void InvokeCostChangedEvent()
     {
-        _onSkillCostChange?.Invoke();
+        _onSkillCostChange?.Invoke(_currentSkillCost, _maxSkillCost);
     }
 }
