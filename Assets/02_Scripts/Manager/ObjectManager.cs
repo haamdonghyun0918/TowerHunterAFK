@@ -175,6 +175,7 @@ public class ObjectManager : MonoBehaviour
             GameObject hunterObj = Instantiate(hunterPrefab);
             Character newHunter = hunterObj.GetComponent<Character>();
 
+            newHunter.InitCharacter(data);
             _currentPlayerParty.AddHunter(newHunter);
         }
     }

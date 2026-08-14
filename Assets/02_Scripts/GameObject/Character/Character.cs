@@ -1,10 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
-using NUnit.Framework.Constraints;
 using System;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public enum NormalAttackType{
     None,
@@ -53,15 +49,23 @@ public class Character : BattleCharacter
         {
             Debug.Log($"[Character] GameDataManager가 NULL입니다.");
         }
-        _characterId = _characterData.Id;
-        _maxSkillCost = _characterData.MaxSkillCost;
-        InitializeSkill();
-        SetStatData();
     }
 
-    public void InitCharacter(string characterId)
+    public void InitCharacter(CharacterData characterData)
     {
-        _characterData = GameDataManager.Instance.GetData<CharacterData>(characterId);
+        _characterData = characterData;
+
+        if (_characterData == null)
+        {
+            Debug.LogError("데이터가 Null입니다.");
+            return;
+        }
+
+        _characterId = _characterData.Id;
+        _maxSkillCost = _characterData.MaxSkillCost;
+
+        InitializeSkill();
+        SetStatData();
     }
 
     public string GetCharacterId()
