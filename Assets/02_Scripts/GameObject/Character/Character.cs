@@ -111,6 +111,8 @@ public class Character : BattleCharacter
 
     private async UniTask UseSkill(Monster targetMonster)
     {
+        SetSingleTargetTransform(targetMonster);
+
         int currentDamage = _characterAtk * _skill.GetSkillDamage();
 
         if (_isSkillUsable == true)
@@ -140,8 +142,6 @@ public class Character : BattleCharacter
 
         var characterType = _characterData.CharacterType;
 
-        SetSingleTargetTransform(targetMonster);
-
         IncreaseCurrentSkillCost(1);
 
         if (_isSkillUsable == false)
@@ -160,7 +160,7 @@ public class Character : BattleCharacter
 
     private void SetSingleTargetTransform(Monster targetMonster)
     {
-        if (_skill.GetSkillType() != SkillType.SingleTarget) return;
+        if (_skill.GetSkillType() != SkillType.SingleTarget && _skill.GetSkillType() != SkillType.MultiTarget) return;
         var singleTargetTransform = targetMonster.gameObject.transform;
         _skill.SetSingleTargetTransform(singleTargetTransform);
     }
