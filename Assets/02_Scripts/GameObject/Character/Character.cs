@@ -53,11 +53,15 @@ public class Character : BattleCharacter
         {
             Debug.Log($"[Character] GameDataManager가 NULL입니다.");
         }
-        _characterData = GameDataManager.Instance.GetData<CharacterData>("character_flowerslash_05");
         _characterId = _characterData.Id;
         _maxSkillCost = _characterData.MaxSkillCost;
         InitializeSkill();
         SetStatData();
+    }
+
+    public void InitCharacter(string characterId)
+    {
+        _characterData = GameDataManager.Instance.GetData<CharacterData>(characterId);
     }
 
     public string GetCharacterId()
