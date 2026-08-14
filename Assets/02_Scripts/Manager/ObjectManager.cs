@@ -80,6 +80,20 @@ public class ObjectManager : MonoBehaviour
             {
                 _currentPlayerParty.MakeFullHPAllHunters();
             }
+
+            //추가
+            if(_currentPlayerParty != null)
+            {
+                if(NetworkManager.Instance == null || NetworkManager.Instance.CharacterStatusService  == null)
+                {
+                    Debug.LogError("[ObjectManager] CharacterStatusService가 없습니다.");
+                }
+                else
+                {
+                    NetworkManager.Instance.CharacterStatusService.SetParty(_currentPlayerParty);
+                }
+            }
+            //끝
         }
 
         int maxCleared = 0;
@@ -204,6 +218,7 @@ public class ObjectManager : MonoBehaviour
         {
             if (monsterParty != null)
             {
+                //ToDo 경인: 수정
                 Destroy(monsterParty.gameObject);
             }
         }

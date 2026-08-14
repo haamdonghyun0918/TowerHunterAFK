@@ -41,6 +41,11 @@ public class BattleCharacter : MonoBehaviour
         _isDead = true;
     }
 
+    private void OnDestroy()
+    {
+        ResetStateChangedEvent();
+    }
+
     public void TakeDamage(int damage)
     {
         if (_isDead == true) return;
@@ -80,10 +85,28 @@ public class BattleCharacter : MonoBehaviour
     private void Die()
     {
         ChangeState(CharacterState.Die);
-        ResetStateChangedEvent();
+
+        //이걸 얘가 아닌 ObjectManager에서 하는 것이 맞지 않나? 스스로 하는 것이 맞나?
         this.gameObject.SetActive(false);
         _isDead = true;
     }
+
+    //추가
+    public int GetCurrentHp()
+    {
+        return _characterHp;
+    }
+
+    public int GetMaxHp()
+    {
+        return _characterMaxHp;
+    }
+
+    public void UnbindOnStatChangedEvent(Action<int,int> hpChangeCallback)
+    {
+        _onChangedHp -= hpChangeCallback;
+    }
+    //끝
 
     public void BindOnStatChangedEvent(Action<int, int> hpChangeCallback)
     {
@@ -95,7 +118,8 @@ public class BattleCharacter : MonoBehaviour
         _onChangedHp = null;
     }
 
-    private void InvokeStatChangedEvent()
+    //Character.MakeFullHp()에서 호출할 수 있도록
+    protected void InvokeStatChangedEvent()
     {
         _onChangedHp?.Invoke(_characterHp, _characterMaxHp);
     }

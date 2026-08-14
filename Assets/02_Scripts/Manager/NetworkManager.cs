@@ -8,6 +8,8 @@ public class NetworkManager : MonoBehaviour
 
     public StageService StageService { get; private set; }
 
+    public CharacterStatusService CharacterStatusService { get; private set; }
+
     private void Awake()
     {
         if(Instance == null)
@@ -15,6 +17,7 @@ public class NetworkManager : MonoBehaviour
             Instance = this;
             PlayerResourceService = new PlayerResourceService();
             StageService = new StageService();
+            CharacterStatusService = new CharacterStatusService();
         }
         else
         {
