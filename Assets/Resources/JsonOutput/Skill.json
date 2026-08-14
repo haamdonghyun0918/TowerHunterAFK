@@ -14,7 +14,7 @@
     "Name": "칼날비",
     "RequiredCost": 2,
     "SkillDamage": 5,
-    "SkillType": "SingleTarget",
+    "SkillType": "MultiTarget_SelfSpawn",
 	"PrefabPath": "Knives",
 	"SkillDuration": 4000,
 	"MotionDuration": 1000
@@ -47,7 +47,7 @@
     "SkillType": "MultiTarget_SelfSpawn",
 	"PrefabPath": "FlowerSlash",
 	"SkillDuration": 3000,
-	"MotionDuration": 0
+	"MotionDuration": 200
   },
   {
     "Id": "skill_frontspikesattack_01",
@@ -57,7 +57,7 @@
     "SkillType": "MultiTarget_SelfSpawn",
 	"PrefabPath": "FrontSpikesAttack",
 	"SkillDuration": 2000,
-	"MotionDuration": 1000
+	"MotionDuration": 800
   },
   {
     "Id": "skill_heal_01",
@@ -67,6 +67,6 @@
     "SkillType": "SelfTarget",
 	"PrefabPath": "Heal",
 	"SkillDuration": 2000,
-	"MotionDuration": 1000
+	"MotionDuration": 0
   }
 ]
