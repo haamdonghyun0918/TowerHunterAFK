@@ -83,6 +83,6 @@ public class StageView : MonoBehaviour
             return;
         }
 
-        Text_CurrentStage.text = $"{_stageViewModel.CurrentStage}층";
+        Text_CurrentStage.text = $"{_stageViewModel.CurrentStage} Floor";
     }
 }

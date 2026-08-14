@@ -125,7 +125,7 @@ public class ObjectManager : MonoBehaviour
                     GameObject gObj_MonsterParty = Instantiate(Prefab_MonsterParty, spot.position, Quaternion.identity);
                     MonsterParty newMonsterParty = gObj_MonsterParty.GetComponent<MonsterParty>();
 
-                    string[] testMonsterIds = { "monster_Test_01", "monster_Test_01" };
+                    string[] testMonsterIds = { "monster_Test_01", "monster_Test_02", "monster_Test_03" };
                     foreach (string monsterId in testMonsterIds)
                     {
                        await SpawnMonster(monsterId, newMonsterParty);

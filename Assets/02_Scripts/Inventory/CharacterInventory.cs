@@ -32,8 +32,6 @@ public class CharacterInventory
         CharacterUtils charUtils = new CharacterUtils();
 
         charUtils.AddCharacters("character_Test_01");
-        charUtils.AddCharacters("character_Test_02");
-        charUtils.AddCharacters("character_Test_03");
 
         _ownedCharacters = SaveManager.Instance.CurrentSaveData.OwnedCharacters;
     }
