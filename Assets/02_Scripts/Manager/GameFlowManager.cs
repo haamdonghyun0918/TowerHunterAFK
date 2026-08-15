@@ -52,7 +52,7 @@ public class GameFlowManager : MonoBehaviour
 
         if (ExpeditionManager.Instance != null)
         {
-            ExpeditionManager.Instance.OnRewardClaimed += HandleExpeditionRewardClaimed;
+            //ExpeditionManager.Instance.OnRewardClaimed += HandleExpeditionRewardClaimed;
             await ExpeditionManager.Instance.Init();
         }
 
@@ -73,10 +73,10 @@ public class GameFlowManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (ExpeditionManager.Instance != null)
-        {
-            ExpeditionManager.Instance.OnRewardClaimed -= HandleExpeditionRewardClaimed;
-        }
+        //if (ExpeditionManager.Instance != null)
+        //{
+        //    ExpeditionManager.Instance.OnRewardClaimed -= HandleExpeditionRewardClaimed;
+        //}
 
         if (MapManager.Instance != null)
         {
@@ -111,10 +111,8 @@ public class GameFlowManager : MonoBehaviour
         stageService.UpdateMaxClearedStage(MapManager.Instance.CurrentStage);
 
         NetworkManager.Instance.PlayerResourceService.RequestAddGold(1000);
-
-        long totalGold = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel().Gold;
-        SaveManager.Instance.SaveGold(totalGold);
         Debug.Log("클리어 보상 1000골드 지급!");
+
         int preSaveStage = stageService.GetStageViewModel().CurrentStage;
         stageService.RequestGoNextStage();
 
@@ -143,23 +141,4 @@ public class GameFlowManager : MonoBehaviour
         MapManager.Instance.StartNewStage(rollBackStage).Forget();
     }
 
-    private void HandleExpeditionRewardClaimed(long addedGold, string[] equipments)
-    {
-        if (equipments != null && equipments.Length > 0)
-        {
-            EquipmentUtils equipUtils = new EquipmentUtils();
-
-            foreach (string equipBaseId in equipments)
-            {
-                equipUtils.AddEquipments(equipBaseId);
-            }
-
-            if (addedGold > 0)
-            {
-                long totalGold = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel().Gold;
-                SaveManager.Instance.SaveGold(totalGold);
-            }
-
-        }
-    }
 }

@@ -9,11 +9,11 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance { get; private set; }
     public SaveData CurrentSaveData { get; private set; }
     private const string SaveFileName = "GameSaveData.json";
-
-    public event Action<long> OnGoldChanged;
+    // 이벤트 부분은 mvvm을 통하여 필요가 없어질 것 같아서 삭제 예정
+    //public event Action<long> OnGoldChanged;
     //public event Action OnNotEnoughGold;
-    public event Action<int> OnLevelChanged;
-    public event Action<long> OnExpChanged;
+    //public event Action<int> OnLevelChanged;
+    //public event Action<long> OnExpChanged;
 
     public Dictionary<string, CharacterSaveData> CharacterDict = new Dictionary<string, CharacterSaveData>();
     public Dictionary<string, EquipmentSaveData> EquipmentDict = new Dictionary<string, EquipmentSaveData>();
@@ -120,7 +120,7 @@ public class SaveManager : MonoBehaviour
             if (newLevel > CurrentSaveData.PlayerLevel)
             {
                 CurrentSaveData.PlayerLevel = newLevel;
-                OnLevelChanged?.Invoke(CurrentSaveData.PlayerLevel);
+                //OnLevelChanged?.Invoke(CurrentSaveData.PlayerLevel);
                 Debug.Log($"[SaveManager] 레벨 업! 현재 플레이어 레벨: {CurrentSaveData.PlayerLevel}");
             }
 
@@ -143,7 +143,7 @@ public class SaveManager : MonoBehaviour
     {
         CurrentSaveData.Gold = gold;
         SaveToFile(CurrentSaveData);
-        OnGoldChanged?.Invoke(CurrentSaveData.Gold);
+        //OnGoldChanged?.Invoke(CurrentSaveData.Gold);
     }
 
     public void SaveEquipments(List<EquipmentSaveData> equipments)
@@ -174,7 +174,7 @@ public class SaveManager : MonoBehaviour
     {
         CurrentSaveData.PlayerLevel = level;
         SaveToFile(CurrentSaveData);
-        OnLevelChanged?.Invoke(CurrentSaveData.PlayerLevel);
+        //OnLevelChanged?.Invoke(CurrentSaveData.PlayerLevel);
     }
 
     public int GetPlayerLevel()
@@ -186,7 +186,7 @@ public class SaveManager : MonoBehaviour
     {
         CurrentSaveData.Exp = exp;
         SaveToFile(CurrentSaveData);
-        OnExpChanged?.Invoke(CurrentSaveData.Exp);
+        //OnExpChanged?.Invoke(CurrentSaveData.Exp);
     }
 
     public long GetPlayerExp()
