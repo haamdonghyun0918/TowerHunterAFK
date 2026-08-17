@@ -5,6 +5,7 @@ public class Monster : BattleCharacter
 {
     [Header("데이터 관련")]
     private MonsterData _monsterData;
+    private string _monsterId;
 
     private Action<int, int> _onChangedHp;
 
@@ -22,7 +23,22 @@ public class Monster : BattleCharacter
             Debug.Log("[Monster] GameDataManager가 NULL입니다.");
         }
 
-        _monsterData = GameDataManager.Instance.GetData<MonsterData>("monster_Test_01");    // [TODO] 하드코딩을 하지않고 (ID)데이터를 받아와야함
+    }
+
+    public void InitMonster(MonsterData monsterData)
+    {
+        _monsterData = monsterData;
+
+        if (_monsterData == null)
+        {
+            Debug.LogError("[Monster]데이터가 Null입니다.");
+            return;
+        }
+
+        _isDead = false;
+
+        _monsterId = _monsterData.Id;
+
         SetStatData();
     }
 

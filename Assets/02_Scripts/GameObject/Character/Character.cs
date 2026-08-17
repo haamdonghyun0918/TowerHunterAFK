@@ -57,7 +57,7 @@ public class Character : BattleCharacter
 
         if (_characterData == null)
         {
-            Debug.LogError("데이터가 Null입니다.");
+            Debug.LogError("[Character]데이터가 Null입니다.");
             return;
         }
 
