@@ -14,7 +14,8 @@
 	"AtkPerLevel": 10,
 	"HpPerLevel": 10,
 	"DefPerLevel": 10,
-	"CharacterType": "Monk"
+	"CharacterType": "Monk",
+	"GachaWeight": 100
   },
   {
     "Id": "character_knives_02",
@@ -31,7 +32,8 @@
 	"AtkPerLevel": 15,
 	"HpPerLevel": 15,
 	"DefPerLevel": 15,
-	"CharacterType": "Wizard"
+	"CharacterType": "Wizard",
+	"GachaWeight": 10
   },
   {
     "Id": "character_meteorshower_03",
@@ -48,7 +50,8 @@
 	"AtkPerLevel": 20,
 	"HpPerLevel": 20,
 	"DefPerLevel": 20,
-	"CharacterType": "Wizard"
+	"CharacterType": "Wizard",
+	"GachaWeight": 1
   },
   {
     "Id": "character_energyexplosion_04",
@@ -65,7 +68,8 @@
 	"AtkPerLevel": 15,
 	"HpPerLevel": 15,
 	"DefPerLevel": 15,
-	"CharacterType": "Wizard"
+	"CharacterType": "Wizard",
+	"GachaWeight": 10
   },
   {
     "Id": "character_flowerslash_05",
@@ -82,7 +86,8 @@
 	"AtkPerLevel": 15,
 	"HpPerLevel": 15,
 	"DefPerLevel": 15,
-	"CharacterType": "Warrior"
+	"CharacterType": "Warrior",
+	"GachaWeight": 10
   },
   {
     "Id": "character_frontspikesattack_06",
@@ -99,6 +104,7 @@
 	"AtkPerLevel": 20,
 	"HpPerLevel": 20,
 	"DefPerLevel": 20,
-	"CharacterType": "Monk"
+	"CharacterType": "Monk",
+	"GachaWeight": 1
   }
 ]
