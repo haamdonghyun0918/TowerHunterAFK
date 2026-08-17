@@ -1150,7 +1150,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.465
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1218,8 +1218,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7269800978982045727}
   - {fileID: 2338530926976712941}
+  - {fileID: 7269800978982045727}
   m_Father: {fileID: 5213220552789187062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
