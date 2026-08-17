@@ -63,8 +63,17 @@ public class ObjectManager : MonoBehaviour
 
                         if (SaveManager.Instance.CharacterDict.TryGetValue(partyUid, out CharacterSaveData targetData))
                         {
-                            await SpawnHunter(targetData.BaseId);
-                            Debug.Log($"[오브젝트 매니저] {targetData.BaseId} 스폰 완료!");
+                            bool isSpawned = await SpawnHunter(targetData.BaseId);
+
+                            if (isSpawned == true)
+                            {
+                                Debug.Log($"[오브젝트 매니저] {targetData.BaseId} 스폰 완료!");
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"[오브젝트 매니저] {targetData.BaseId} 스폰 중단됨");
+
+                            }
                         }
                         else
                         {
@@ -149,13 +158,13 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    private async UniTask SpawnHunter(string characterId)
+    private async UniTask<bool> SpawnHunter(string characterId)
     {
         var data = GameDataManager.Instance.GetData<CharacterData>(characterId);
         if (data == null)
         {
             Debug.LogError($"[ObjectManager] characterId {characterId} 데이터를 찾을 수 없습니다!");
-            return;
+            return false;
         }
 
         GameObject hunterPrefab = Prefab_TestDefaultPlayer;
@@ -176,9 +185,12 @@ public class ObjectManager : MonoBehaviour
         {
             GameObject hunterObj = Instantiate(hunterPrefab);
             Character newHunter = hunterObj.GetComponent<Character>();
-            newHunter.InitCharacter(characterId);
+            newHunter.InitCharacter(data);
             _currentPlayerParty.AddHunter(newHunter);
+            return true;
         }
+
+        return false;
     }
 
     private async UniTask SpawnMonster(string monsterId, MonsterParty targetMonsterParty)
