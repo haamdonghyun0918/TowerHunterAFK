@@ -66,7 +66,10 @@ public class BattleCharacter : MonoBehaviour
         {
             Die();
         }
-        ChangeState(CharacterState.Idle);
+        else
+        {
+            ChangeState(CharacterState.Idle);
+        }
     }
 
     private int ApplyDefenseDamage(int damage)
@@ -86,6 +89,11 @@ public class BattleCharacter : MonoBehaviour
         ChangeState(CharacterState.Die);
 
         _isDead = true;
+
+        if (this != null && this.gameObject != null)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 
     //추가

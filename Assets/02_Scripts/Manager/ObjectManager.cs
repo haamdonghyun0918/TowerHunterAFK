@@ -206,6 +206,7 @@ public class ObjectManager : MonoBehaviour
         {
             Monster reuseMonster = pool.Dequeue();
             reuseMonster.gameObject.SetActive(true);
+            reuseMonster.InitMonster(data);
             targetMonsterParty.AddMonster(reuseMonster);
             return;
         }
@@ -225,6 +226,7 @@ public class ObjectManager : MonoBehaviour
         {
             GameObject mobObj = Instantiate(prefabToSpawn);
             Monster newMonster = mobObj.GetComponent<Monster>();
+            newMonster.InitMonster(data);
             newMonster._instanceId = monsterId;
             targetMonsterParty.AddMonster(newMonster);
         }
