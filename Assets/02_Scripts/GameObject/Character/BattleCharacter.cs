@@ -85,8 +85,6 @@ public class BattleCharacter : MonoBehaviour
     {
         ChangeState(CharacterState.Die);
 
-        //이걸 얘가 아닌 ObjectManager에서 하는 것이 맞지 않나? 스스로 하는 것이 맞나?
-        this.gameObject.SetActive(false);
         _isDead = true;
     }
 
