@@ -11,6 +11,10 @@ public class UiManager : MonoBehaviour
     private Dictionary<Type, UiBase> _createdUiDic = new Dictionary<Type, UiBase>();
     private HashSet<Type> _openUiDic = new HashSet<Type>();
 
+    private readonly HashSet<Type> _openUiTypes = new HashSet<Type>();
+
+    private readonly HashSet<Type> _creatingUiTypes = new HashSet<Type>();
+
     private void Awake()
     {
         if (Instance == null)
@@ -27,6 +31,11 @@ public class UiManager : MonoBehaviour
     public async UniTask<T> OpenUi<T>() where T : UiBase
     {
         Type uiType = typeof(T);
+
+        if(_createdUiDic.TryGetValue(uiType, out UiBase cachedUi))
+        {
+            return ActivateUi(cachedUi as T);
+        }
 
         if (_createdUiDic.ContainsKey(uiType) == false)
         {
@@ -55,6 +64,21 @@ public class UiManager : MonoBehaviour
             openedUi.gameObject.SetActive(false);
             _openUiDic.Remove(uiType);
         }
+    }
+
+    private T ActivateUi<T>(T ui) where T : UiBase
+    {
+        if(ui == null)
+        {
+            return null;
+        }
+        ui.gameObject.SetActive(true);
+
+        ui.transform.SetAsLastSibling();
+
+        _openUiTypes.Add(typeof(T));
+
+        return ui;
     }
 
     private async UniTask CreateUi<T>() where T : UiBase
