@@ -12,7 +12,10 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private GameObject Prefab_TestDefaultMonster;
 
     private PlayerPartyController _currentPlayerParty;
-    private List<MonsterParty> _currentMonsterParty = new List<MonsterParty>();
+    private List<MonsterParty> _monsterPartyList = new List<MonsterParty>();
+
+    private Queue<MonsterParty> _monsterPartyPool = new Queue<MonsterParty>();
+    private Dictionary<string, Queue<Monster>> _monsterPoolDictionary = new Dictionary<string, Queue<Monster>>();
 
     public static ObjectManager Instance { get; set; }
 
@@ -24,7 +27,7 @@ public class ObjectManager : MonoBehaviour
         }
         else if (Instance != this)
         {
-            Destroy(gameObject);
+            Destroy(this);
         }
     }
 
@@ -82,9 +85,9 @@ public class ObjectManager : MonoBehaviour
             }
 
             //추가
-            if(_currentPlayerParty != null)
+            if (_currentPlayerParty != null)
             {
-                if(NetworkManager.Instance == null || NetworkManager.Instance.CharacterStatusService  == null)
+                if (NetworkManager.Instance == null || NetworkManager.Instance.CharacterStatusService == null)
                 {
                     Debug.LogError("[ObjectManager] CharacterStatusService가 없습니다.");
                 }
@@ -97,7 +100,7 @@ public class ObjectManager : MonoBehaviour
         }
 
         int maxCleared = 0;
-        if(NetworkManager.Instance != null && NetworkManager.Instance.StageService != null)
+        if (NetworkManager.Instance != null && NetworkManager.Instance.StageService != null)
         {
             maxCleared = NetworkManager.Instance.StageService.GetStageViewModel().MaxClearedStage;
         }
@@ -122,16 +125,15 @@ public class ObjectManager : MonoBehaviour
                         continue;
                     }
 
-                    GameObject gObj_MonsterParty = Instantiate(Prefab_MonsterParty, spot.position, Quaternion.identity);
-                    MonsterParty newMonsterParty = gObj_MonsterParty.GetComponent<MonsterParty>();
+                    MonsterParty newMonsterParty = GetOrCreateMonsterParty(spot.position);
 
-                    string[] testMonsterIds = { "monster_Test_01", "monster_Test_01" };
+                    string[] testMonsterIds = { "monster_Test_01", "monster_Test_02", "monster_Test_03" };
                     foreach (string monsterId in testMonsterIds)
                     {
-                       await SpawnMonster(monsterId, newMonsterParty);
+                        await SpawnMonster(monsterId, newMonsterParty);
                     }
 
-                    _currentMonsterParty.Add(newMonsterParty);
+                    _monsterPartyList.Add(newMonsterParty);
                 }
             }
         }
@@ -174,7 +176,7 @@ public class ObjectManager : MonoBehaviour
         {
             GameObject hunterObj = Instantiate(hunterPrefab);
             Character newHunter = hunterObj.GetComponent<Character>();
-
+            newHunter.InitCharacter(characterId);
             _currentPlayerParty.AddHunter(newHunter);
         }
     }
@@ -185,6 +187,14 @@ public class ObjectManager : MonoBehaviour
         if (data == null)
         {
             Debug.LogError($"[ObjectManager] monsterId {monsterId} 데이터를 찾을 수 없습니다!");
+            return;
+        }
+
+        if ((_monsterPoolDictionary.TryGetValue(monsterId, out Queue<Monster> pool)) && (pool.Count > 0) == true)
+        {
+            Monster reuseMonster = pool.Dequeue();
+            reuseMonster.gameObject.SetActive(true);
+            targetMonsterParty.AddMonster(reuseMonster);
             return;
         }
 
@@ -203,7 +213,7 @@ public class ObjectManager : MonoBehaviour
         {
             GameObject mobObj = Instantiate(prefabToSpawn);
             Monster newMonster = mobObj.GetComponent<Monster>();
-
+            newMonster._instanceId = monsterId;
             targetMonsterParty.AddMonster(newMonster);
         }
         else
@@ -212,17 +222,53 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
+    private MonsterParty GetOrCreateMonsterParty(Vector3 position)
+    {
+        if (_monsterPartyPool.Count > 0)
+        {
+            MonsterParty monsterParty = _monsterPartyPool.Dequeue();
+            monsterParty.transform.position = position;
+            monsterParty.gameObject.SetActive(true);
+            return monsterParty;
+        }
+        else
+        {
+            GameObject gObj_monsterParty = Instantiate(Prefab_MonsterParty, position, Quaternion.identity);
+            return gObj_monsterParty.GetComponent<MonsterParty>();
+        }
+
+    }
+
     private void ClearCurrentEntities()
     {
-        foreach (var monsterParty in _currentMonsterParty)
+        foreach (var monsterParty in _monsterPartyList)
         {
             if (monsterParty != null)
             {
-                //ToDo 경인: 수정
-                Destroy(monsterParty.gameObject);
+                for (int i = 0; i < 3; i++)
+                {
+                    Monster monster = monsterParty.GetMonster(i);
+                    if (monster != null)
+                    {
+                        monster.gameObject.SetActive(false);
+                        string monsterId = monster._instanceId;
+                        if (string.IsNullOrEmpty(monsterId) == false) 
+                        {
+                            if (_monsterPoolDictionary.ContainsKey(monsterId) == false)
+                            {
+                                _monsterPoolDictionary[monsterId] = new Queue<Monster>();
+                            }
+                            _monsterPoolDictionary[monsterId].Enqueue(monster);
+                        }
+                    }
+                }
+
+                monsterParty.ClearParty();
+                monsterParty.gameObject.SetActive(false);
+                _monsterPartyPool.Enqueue(monsterParty);
             }
         }
-        
-        _currentMonsterParty.Clear();
+
+        _monsterPartyList.Clear();
     }
 }

@@ -47,10 +47,10 @@ public class MonsterParty : MonoBehaviour
             if (_monsters[i] == null)
             {
                 _monsters[i] = newMonster;
-                newMonster.transform.SetParent(_monsterSlots[i]);
-                newMonster.transform.localPosition = Vector3.zero;
-                newMonster.transform.localRotation = Quaternion.identity;
-                //newMonster.OnMonsterDeath += HandleMonsterDeath;
+                _monsters[i].transform.SetParent(_monsterSlots[i]);
+                _monsters[i].transform.localPosition = Vector3.zero;
+                _monsters[i].transform.localRotation = Quaternion.identity;
+                //_monsters[i].OnMonsterDeath += HandleMonsterDeath;
 
                 return true;
             }
@@ -69,6 +69,14 @@ public class MonsterParty : MonoBehaviour
                 //newMonster.OnMonsterDeath -= HandleMonsterDeath;
                 break;
             }
+        }
+    }
+
+    public void ClearParty()
+    {
+        for (int i = 0; i < _monsters.Length; i++)
+        {
+            _monsters[i] = null;
         }
     }
 }
