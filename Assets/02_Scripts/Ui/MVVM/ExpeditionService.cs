@@ -81,6 +81,7 @@ public class ExpeditionService
     {
         if(index < 0 || index >= _expeditionsList.Count)
         {
+            Debug.LogError("[ExpeditionService] 원정대 리스트가 존재하지 않습니다.");
             return false;
         }
 
@@ -103,11 +104,13 @@ public class ExpeditionService
     {
         if(_expeditionModel.SelectedExpedition == null)
         {
+            Debug.LogError("[ExpeditionService] 원정대를 선택하지 않았습니다.");
             return;
         }
 
         if(_expeditionModel.IsExpeditionStart == true)
         {
+            Debug.LogError("[ExpeditionService] 원정대를 보냈습니다.");
             return;
         }
 
@@ -130,11 +133,13 @@ public class ExpeditionService
     {
         if(_expeditionModel.IsCompleted == false)
         {
+            Debug.LogError("[ExpeditionService] 원정대가 완료되지 않았습니다.");
             return;
         }
 
         if(_expeditionModel.SelectedExpedition == null)
         {
+            Debug.LogError("[ExpeditionService] 원정대를 선택하지 않았습니다.");
             return;
         }
 
