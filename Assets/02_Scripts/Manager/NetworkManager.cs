@@ -10,6 +10,8 @@ public class NetworkManager : MonoBehaviour
 
     public CharacterStatusService CharacterStatusService { get; private set; }
 
+    public ExpeditionService ExpeditionService { get; private set; }
+
     private void Awake()
     {
         if(Instance == null)
@@ -18,6 +20,7 @@ public class NetworkManager : MonoBehaviour
             PlayerResourceService = new PlayerResourceService();
             StageService = new StageService();
             CharacterStatusService = new CharacterStatusService();
+            ExpeditionService = new ExpeditionService();
         }
         else
         {

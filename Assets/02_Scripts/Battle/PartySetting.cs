@@ -98,9 +98,13 @@ public class PartySetting
         if (ownedChars != null && ownedChars.Count > 0)
         {
             string realFirstCharacterUid = ownedChars[0].UniqueId;
+            string realSecondCharacterUid = ownedChars[1].UniqueId;
+            string realThirdCharacterUid = ownedChars[2].UniqueId;
 
             SetCharacterToParty(0, realFirstCharacterUid);
-            Debug.Log($"[PartySetting] 테스트 파티 편성 완료! (배치된 진짜 UID: {realFirstCharacterUid})");
+            SetCharacterToParty(1, realSecondCharacterUid);
+            SetCharacterToParty(2, realThirdCharacterUid);
+            Debug.Log($"[PartySetting] 테스트 파티 편성 완료! (배치된 진짜 UID: {realFirstCharacterUid}, {realSecondCharacterUid}, {realThirdCharacterUid})");
         }
 
         else
