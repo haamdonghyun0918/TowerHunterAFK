@@ -1,7 +1,4 @@
-﻿using UnityEditor.Overlays;
-using UnityEngine;
-
-public class EquipmentModel
+﻿public class EquipmentModel
 {
     public EquipmentSaveData _saveData { get; private set; }
     public EquipMentData _baseData { get; private set; }
