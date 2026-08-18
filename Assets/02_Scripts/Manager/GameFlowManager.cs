@@ -5,6 +5,10 @@ public class GameFlowManager : MonoBehaviour
 {
     public static GameFlowManager Instance { get; private set; }
 
+    private float _inactivityTimer = 0f;
+    private const float _sleepModeTimer = 60f;
+    private bool _isSleepMode = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -21,6 +25,11 @@ public class GameFlowManager : MonoBehaviour
     private void Start()
     {
         StartGame().Forget();
+    }
+
+    private void Update()
+    {
+        CheckSleepMode();
     }
 
     private async UniTaskVoid StartGame()
@@ -141,4 +150,61 @@ public class GameFlowManager : MonoBehaviour
         MapManager.Instance.StartNewStage(rollBackStage).Forget();
     }
 
+    public bool GetSleepMode()
+    {
+        return _isSleepMode;
+    }
+
+    private void CheckSleepMode()
+    {
+        bool isInputDetected = (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1));
+
+        if (isInputDetected)
+        {
+            if (_isSleepMode)
+            {
+                ExitSleepMode();
+            }
+
+            _inactivityTimer = 0f;
+        }
+
+        else
+        {
+            if (_isSleepMode == false)
+            {
+                _inactivityTimer += Time.deltaTime;
+
+                if (_inactivityTimer >= _sleepModeTimer)
+                {
+                    EnterSleepMode();
+                }
+            }
+        }
+    }
+
+    private void EnterSleepMode()
+    {
+        _isSleepMode = true;
+
+        if (UiManager.Instance != null)
+        {
+            UiManager.Instance.OpenUi<SleepModeUi>().Forget();
+        }
+
+        Debug.Log("[GameFlowManager] 절전 모드 진입");
+    }
+
+    private void ExitSleepMode()
+    {
+        _isSleepMode = false;
+
+        if (UiManager.Instance != null)
+        {
+            UiManager.Instance.CloseUi<SleepModeUi>();
+        }
+
+        _inactivityTimer = 0f;
+        Debug.Log("[GameFlowManager] 입력 감지 - 절전 모드 해제");
+    }
 }
