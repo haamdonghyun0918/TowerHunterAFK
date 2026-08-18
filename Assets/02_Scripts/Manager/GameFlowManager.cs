@@ -133,7 +133,7 @@ public class GameFlowManager : MonoBehaviour
     {
         Debug.Log("스쿼드가 전멸하여 스테이지 실패...");
 
-        if(NetworkManager.Instance == null || NetworkManager.Instance.StageService == null)
+        if (NetworkManager.Instance == null || NetworkManager.Instance.StageService == null)
         {
             Debug.LogError("[GameFlowManager]: StageService가 없습니다.");
             return;
@@ -187,17 +187,21 @@ public class GameFlowManager : MonoBehaviour
     {
         _isSleepMode = true;
 
+        Application.targetFrameRate = 15;
+
         if (UiManager.Instance != null)
         {
             UiManager.Instance.OpenUi<SleepModeUi>().Forget();
         }
 
-        Debug.Log("[GameFlowManager] 절전 모드 진입");
+        Debug.Log("[GameFlowManager] 절전 모드 진입/ 15 프레임으로 진행");
     }
 
     private void ExitSleepMode()
     {
         _isSleepMode = false;
+
+        Application.targetFrameRate = 60;
 
         if (UiManager.Instance != null)
         {
@@ -205,6 +209,6 @@ public class GameFlowManager : MonoBehaviour
         }
 
         _inactivityTimer = 0f;
-        Debug.Log("[GameFlowManager] 입력 감지 - 절전 모드 해제");
+        Debug.Log("[GameFlowManager] 절전 모드 해제: 60프레임으로 복구");
     }
 }
