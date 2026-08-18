@@ -40,6 +40,12 @@
         resourceViewModel.Gold = gold;
     }
 
+    public void SetDiamondOnLoad(uint diamond)
+    {
+        var resourceViewModel = GetPlayerResourceViewModel();
+        resourceViewModel.Diamond = diamond;
+    }
+
     public void RequestAddGold(long addGold)
     {
         if(addGold <= 0)
@@ -50,12 +56,28 @@
         var resourceViewModel = GetPlayerResourceViewModel();
 
         resourceViewModel.Gold += addGold;
-        // 여기서 바로 저장되도록 수정
+
         if(SaveManager.Instance != null)
         {
             SaveManager.Instance.SaveGold(resourceViewModel.Gold);
         }
 
+    }
+
+    public void RequestAddDiamond(uint addDiamond)
+    {
+        if (addDiamond <= 0)
+        {
+            return;
+        }
+
+        var resourceViewModel = GetPlayerResourceViewModel();
+        resourceViewModel.Diamond += addDiamond;
+
+        if(SaveManager.Instance != null)
+        {
+            SaveManager.Instance.SaveDiamond(resourceViewModel.Diamond);
+        }
     }
 
     public bool RequestUseGold(long useGold)
@@ -73,7 +95,7 @@
         }
 
         resourceViewModel.Gold -= useGold;
-        // 여기서 바로 저장되도록 수정
+
         if(SaveManager.Instance != null)
         {
             SaveManager.Instance.SaveGold(resourceViewModel.Gold);
