@@ -4,12 +4,6 @@ using Cysharp.Threading.Tasks;
 public class ExpeditionManager : MonoBehaviour
 {
     public static ExpeditionManager Instance { get; private set; }
-
-    //[Header("Progress State")]
-    //[SerializeField] private bool _expeditionStart = false;
-    //[SerializeField] private bool _isCompleted = false;
-    //[SerializeField] private DateTime _startTime;
-
     ////TODO: 헌터들의 데이터를 가져와야 함 + 헌터들을 통하여 스쿼드 짜는 로직 추가할 것
     //public event Action<ExpeditionData> OnExpeditionSelected;
     //public event Action OnExpeditionStarted;

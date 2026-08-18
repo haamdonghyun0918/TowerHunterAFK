@@ -37,8 +37,23 @@
         }
     }
 
+    public uint Diamond
+    {
+        get => _playerResourceModel.Diamond;
+        set
+        {
+            if(_playerResourceModel.Diamond != value)
+            {
+                _playerResourceModel.Diamond = value;
+                OnPropertyChanged(nameof(Diamond));
+            }
+        }
+    }
+
     public void InvokeOnceOnInit()
     {
         OnPropertyChanged(nameof(Gold));
+        OnPropertyChanged(nameof(Exp));
+        OnPropertyChanged(nameof(Diamond));
     }
 }
