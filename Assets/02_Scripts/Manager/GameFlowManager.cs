@@ -52,6 +52,7 @@ public class GameFlowManager : MonoBehaviour
         }
 
         NetworkManager.Instance.PlayerResourceService.SetGoldOnLoad(SaveManager.Instance.CurrentSaveData.Gold);
+        NetworkManager.Instance.PlayerResourceService.SetDiamondOnLoad(SaveManager.Instance.CurrentSaveData.Diamond);
 
         CharacterInventory charInven = new CharacterInventory();
         charInven.Init();
@@ -82,11 +83,6 @@ public class GameFlowManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        //if (ExpeditionManager.Instance != null)
-        //{
-        //    ExpeditionManager.Instance.OnRewardClaimed -= HandleExpeditionRewardClaimed;
-        //}
-
         if (MapManager.Instance != null)
         {
             MapManager.Instance.OnStageChanged -= HandleStageChanged;
@@ -121,6 +117,13 @@ public class GameFlowManager : MonoBehaviour
 
         NetworkManager.Instance.PlayerResourceService.RequestAddGold(1000);
         Debug.Log("클리어 보상 1000골드 지급!");
+
+        int currentClearedStage = stageService.GetStageViewModel().CurrentStage;
+        if (currentClearedStage % 10 == 0)
+        {
+            NetworkManager.Instance.PlayerResourceService.RequestAddDiamond(500);
+            Debug.Log($"보스 층인 {currentClearedStage} Floor 를 클리어 하셨습니다! 500 다이아몬드가 추가됩니다!");
+        }
 
         int preSaveStage = stageService.GetStageViewModel().CurrentStage;
         stageService.RequestGoNextStage();
