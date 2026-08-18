@@ -1,7 +1,9 @@
-﻿public class EquipmentModel
+﻿using System;
+
+public class EquipmentModel
 {
-    public EquipmentSaveData _saveData { get; private set; }
-    public EquipMentData _baseData { get; private set; }
+    private EquipmentSaveData _saveData;
+    private EquipMentData _baseData;
 
     public EquipmentModel(EquipmentSaveData saveData, EquipMentData baseData)
     {
@@ -17,23 +19,19 @@
     public EquipmentRange Range => _baseData.Range;
     public string IconAddress => _baseData.IconAddress;
 
-    //이하 단순 값 수정 메서드.
-    //_saveData, _baseData를 여기저기서 수정하지 않고 EquipmentModel를 통해서만 수정하게 해야한다 (그렇지 않으면 기껏 만들어놓은 이유가 없어짐)
-    //모델에 이것들 두는게 맞는가 고민중.
-
-    public int GetTotalAtk()
+    public int GetEquipmentTotalAtk()
     {
         int enhanceBonus = _saveData.EnhanceLevel * 5;
         return _baseData.BuffAtk + enhanceBonus;
     }
 
-    public int GetTotalDef()
+    public int GetEquipmentTotalDef()
     {
         int enhanceBonus = _saveData.EnhanceLevel * 3;
         return _baseData.BuffDef + enhanceBonus;
     }
 
-    public void AddEnhanceLevel(int amount = 1)
+    public void AddEquipmentEnhanceLevel(int amount = 1)
     {
         _saveData.EnhanceLevel += amount;
     }
