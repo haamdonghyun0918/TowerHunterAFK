@@ -7,8 +7,8 @@ public class SleepModeUi : UiBase
     [Header("Ui Texts")]
     [SerializeField] private TMP_Text Text_Floor;
     [SerializeField] private TMP_Text Text_Gold;
-    [SerializeField] private TMP_Text Text_Diamond;
     [SerializeField] private TMP_Text Text_Exp;
+    [SerializeField] private TMP_Text Text_Diamond;
     [SerializeField] private TMP_Text Text_MagicStone;
 
     private StageViewModel _stageViewModel;
@@ -77,9 +77,15 @@ public class SleepModeUi : UiBase
         {
             UpdateGoldView();
         }
+       
         else if (eventArgs.PropertyName == nameof(PlayerResourceViewModel.Exp))
         {
             UpdateExpView();
+        }
+
+        else if (eventArgs.PropertyName == nameof(PlayerResourceViewModel.Diamond))
+        {
+            UpdateDiamondView();
         }
     }
 
@@ -88,6 +94,7 @@ public class SleepModeUi : UiBase
         UpdateStageView();
         UpdateGoldView();
         UpdateExpView();
+        UpdateDiamondView();
     }
     private void UpdateStageView()
     {
@@ -110,6 +117,14 @@ public class SleepModeUi : UiBase
         if (_playerResourceViewModel != null && Text_Exp != null)
         {
             Text_Exp.text = _playerResourceViewModel.Exp.ToString("N0");
+        }
+    }
+
+    private void UpdateDiamondView()
+    {
+        if (_playerResourceViewModel != null && Text_Diamond != null)
+        {
+            Text_Diamond.text = _playerResourceViewModel.Diamond.ToString("N0");
         }
     }
 }
