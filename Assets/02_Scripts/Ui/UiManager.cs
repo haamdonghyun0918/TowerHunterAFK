@@ -32,15 +32,17 @@ public class UiManager : MonoBehaviour
     {
         Type uiType = typeof(T);
 
-        if(_createdUiDic.TryGetValue(uiType, out UiBase cachedUi))
-        {
-            return ActivateUi(cachedUi as T);
-        }
-
-        if (_createdUiDic.ContainsKey(uiType) == false)
+        if(_createdUiDic.ContainsKey(uiType) == false)
         {
             await CreateUi<T>();
         }
+
+        if(_createdUiDic.TryGetValue(uiType, out UiBase createdUi)==false)
+        {
+            Debug.LogError($"[UiManager]: {uiType.Name} UI를 열 수 없습니다.");
+            return null;
+        }
+
 
         T openedUi = _createdUiDic[uiType] as T;
 
@@ -66,25 +68,23 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    private T ActivateUi<T>(T ui) where T : UiBase
-    {
-        if(ui == null)
-        {
-            return null;
-        }
-        ui.gameObject.SetActive(true);
-
-        ui.transform.SetAsLastSibling();
-
-        _openUiTypes.Add(typeof(T));
-
-        return ui;
-    }
-
     private async UniTask CreateUi<T>() where T : UiBase
     {
         Type uiType = typeof(T);
         string address = uiType.Name;
+
+        if(Canvas_GameCanvas == null)
+        {
+            Debug.LogError($"[UiManager]: Canvas_GameCanvas가 연결되지 않았습니다.");
+            return;
+        }
+
+        if(ResourceManager.Instance == null)
+        {
+            Debug.LogError("[UiManager]: ResourceManager.Instance가 없습니다");
+            return;
+        }
+
         GameObject gObj = await ResourceManager.Instance.Instantiate(address, Canvas_GameCanvas.transform);
 
         if (gObj == null)
