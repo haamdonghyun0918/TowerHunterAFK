@@ -7,8 +7,6 @@
         OnPropertyChanged(nameof(EnhanceLevelText));
         OnPropertyChanged(nameof(TotalAtkText));
         OnPropertyChanged(nameof(CostText));
-
-
     }
 
     private string _targetEquipmentUniqueId;
@@ -46,13 +44,13 @@
     private string _enhanceLevelText;
     public string EnhanceLevelText
     {
-        get => _itemName;
+        get => _enhanceLevelText;
 
         set
         {
-            if (_itemName != value)
+            if (_enhanceLevelText != value)
             {
-                _itemName = value;
+                _enhanceLevelText = value;
 
                 OnPropertyChanged(nameof(EnhanceLevelText));
             }
@@ -62,13 +60,13 @@
     private string _totalAtkText;
     public string TotalAtkText
     {
-        get => _itemName;
+        get => _totalAtkText;
 
         set
         {
-            if (_itemName != value)
+            if (_totalAtkText != value)
             {
-                _itemName = value;
+                _totalAtkText = value;
 
                 OnPropertyChanged(nameof(TotalAtkText));
             }
@@ -78,13 +76,13 @@
     private string _costText;
     public string CostText
     {
-        get => _itemName;
+        get => _costText;
 
         set
         {
-            if (_itemName != value)
+            if (_costText != value)
             {
-                _itemName = value;
+                _costText = value;
 
                 OnPropertyChanged(nameof(CostText));
             }
