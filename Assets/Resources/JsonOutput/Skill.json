@@ -10,6 +10,26 @@
 	"MotionDuration": 500
   },
   {
+    "Id": "skill_blueexplosion_01",
+    "Name": "블루익스플로전",
+    "RequiredCost": 2,
+    "SkillDamage": 3,
+    "SkillType": "MultiTarget_SelfSpawn",
+	"PrefabPath": "BlueExplosion",
+	"SkillDuration": 2500,
+	"MotionDuration": 1700
+  },
+  {
+    "Id": "skill_meteor_01",
+    "Name": "메테오",
+    "RequiredCost": 2,
+    "SkillDamage": 3,
+    "SkillType": "SingleTarget",
+	"PrefabPath": "Meteor",
+	"SkillDuration": 2500,
+	"MotionDuration": 1000
+  },
+  {
     "Id": "skill_knives_01",
     "Name": "칼날비",
     "RequiredCost": 2,
