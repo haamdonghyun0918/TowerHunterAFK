@@ -1,6 +1,6 @@
 ﻿public class StageViewModel : ViewModelBase
 {
-    private StageModel _stageModel;
+    private readonly StageModel _stageModel;
 
     public StageViewModel(StageModel StageModel)
     {
@@ -11,7 +11,7 @@
     {
         get => _stageModel.CurrentStage;
 
-        set
+        private set
         {
             if(_stageModel.CurrentStage != value)
             {
@@ -25,7 +25,8 @@
     public int MaxClearedStage
     {
         get => _stageModel.MaxClearedStage;
-        set
+
+        private set
         {
             if( _stageModel.MaxClearedStage != value)
             {
@@ -34,6 +35,41 @@
             }
 
         }
+    }
+
+    public void SetCurrentStage(int stage)
+    {
+        if(stage < 1)
+        {
+            stage = 1;
+        }
+
+        CurrentStage = stage;
+    }
+
+    public void MoveNextStage()
+    {
+        SetCurrentStage(CurrentStage + 1);
+    }
+
+    public void SetMaxClearedStageOnLoad(int stage)
+    {
+        if(stage < 0)
+        {
+            stage = 0;
+        }
+
+        MaxClearedStage = stage;
+    }
+    
+    public bool TryUpdateMaxClearedStage(int clearedStage)
+    {
+        if(clearedStage <=  MaxClearedStage)
+        {
+            return false;
+        }
+        MaxClearedStage = clearedStage;
+        return true;
     }
 
     public void InvokeOnceOnInit()
