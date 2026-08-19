@@ -1,6 +1,6 @@
 [
   {
-    "Id": "skill_dragonPunch_01",
+    "Id": "skill_dragonkick_01",
     "Name": "드래곤펀치",
     "RequiredCost": 2,
     "SkillDamage": 3,
@@ -8,6 +8,26 @@
 	"PrefabPath": "DragonPunch",
 	"SkillDuration": 2000,
 	"MotionDuration": 500
+  },
+  {
+    "Id": "skill_blueexplosion_01",
+    "Name": "블루익스플로전",
+    "RequiredCost": 2,
+    "SkillDamage": 3,
+    "SkillType": "MultiTarget_SelfSpawn",
+	"PrefabPath": "BlueExplosion",
+	"SkillDuration": 2500,
+	"MotionDuration": 1700
+  },
+  {
+    "Id": "skill_meteor_01",
+    "Name": "메테오",
+    "RequiredCost": 2,
+    "SkillDamage": 3,
+    "SkillType": "SingleTarget",
+	"PrefabPath": "Meteor",
+	"SkillDuration": 2500,
+	"MotionDuration": 1000
   },
   {
     "Id": "skill_knives_01",
@@ -97,6 +117,46 @@
     "SkillType": "MultiTarget",
 	"PrefabPath": "ColumnElectric",
 	"SkillDuration": 1800,
+	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_darkenergy_01",
+    "Name": "다크에너지",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "DarkEnergy",
+	"SkillDuration": 3000,
+	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_devilorange_01",
+    "Name": "데빌오렌지",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "DevilOrange",
+	"SkillDuration": 3000,
+	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_earthshatter_01",
+    "Name": "대지분쇄",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget_SelfSpawn",
+	"PrefabPath": "EarthShatter",
+	"SkillDuration": 2000,
+	"MotionDuration": 1500
+  },
+  {
+    "Id": "skill_electricstrike_01",
+    "Name": "일렉트릭스트라이크",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "ElectricStrike",
+	"SkillDuration": 3000,
 	"MotionDuration": 0
   }
 ]
