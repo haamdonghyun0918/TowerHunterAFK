@@ -49,7 +49,7 @@
 
         var resourceViewModel = GetPlayerResourceViewModel();
 
-        resourceViewModel.Gold += addGold;
+        resourceViewModel.Gold = resourceViewModel.Gold + addGold;
         // 여기서 바로 저장되도록 수정
         if(SaveManager.Instance != null)
         {
@@ -72,7 +72,7 @@
             return false;
         }
 
-        resourceViewModel.Gold -= useGold;
+        resourceViewModel.Gold = resourceViewModel.Gold - useGold;
         // 여기서 바로 저장되도록 수정
         if(SaveManager.Instance != null)
         {
