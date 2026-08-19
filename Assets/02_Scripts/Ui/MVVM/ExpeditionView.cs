@@ -24,7 +24,7 @@ public class ExpeditionView : MonoBehaviour
 
     private void OnDisable()
     {
-        Unbind();
+        UnBind();
     }
 
     private void Init()
@@ -58,7 +58,7 @@ public class ExpeditionView : MonoBehaviour
         _expeditionViewModel.PropertyChanged += OnPropertyChanged;
     }
 
-    private void Unbind()
+    private void UnBind()
     {
         if(_expeditionViewModel == null)
         {

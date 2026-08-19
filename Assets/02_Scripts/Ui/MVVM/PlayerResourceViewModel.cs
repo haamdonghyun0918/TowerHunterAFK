@@ -37,8 +37,55 @@
         }
     }
 
+    public uint Diamond
+    {
+        get => _playerResourceModel.Diamond;
+        set
+        {
+            if(_playerResourceModel.Diamond != value)
+            {
+                _playerResourceModel.Diamond = value;
+                OnPropertyChanged(nameof(Diamond));
+            }
+        }
+    }
+
     public void InvokeOnceOnInit()
     {
+        OnPropertyChanged(nameof(Gold));
+        OnPropertyChanged(nameof(Exp));
+        OnPropertyChanged(nameof(Diamond));
+    }
+
+    public bool IncreaseGold(long amount)
+    {
+        if(amount <= 0)
+        {
+            return false;
+        }
+
+        SetGold(_playerResourceModel.Gold +  amount);
+        return true;
+    }
+
+    public bool TryDecreaseGold(long amount)
+    {
+        if (amount <= 0 || Gold<amount)
+        {
+            return false;
+        }
+        SetGold(Gold - amount);
+        return true;
+    }
+
+    private void SetGold(long value)
+    {
+        if (_playerResourceModel.Gold == value)
+        {
+            return;
+        }
+
+        _playerResourceModel.Gold = value;
         OnPropertyChanged(nameof(Gold));
     }
 }

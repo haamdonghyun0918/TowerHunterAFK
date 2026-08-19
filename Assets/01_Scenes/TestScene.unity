@@ -364,6 +364,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManagerContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 5952608474815518533, guid: cea3744920a8f7743858faf8a064be65, type: 3}
+      propertyPath: Canvas_GameCanvas
+      value: 
+      objectReference: {fileID: 233446993}
     - target: {fileID: 6330782208708968489, guid: cea3744920a8f7743858faf8a064be65, type: 3}
       propertyPath: m_LocalPosition.z
       value: -1
