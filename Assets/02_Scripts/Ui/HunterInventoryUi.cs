@@ -6,12 +6,14 @@ using TMPro;
 public class HunterInventoryUi : UiBase
 {
     [SerializeField] private Transform _content;
+    [SerializeField] private UiButton _buttonClose;
     private List<HunterSlot> _createdSlots = new List<HunterSlot>();
     private const int _firstSlotCount = 30;
 
     private void OnEnable()
     {
         ReLoadHunterInventoryUi().Forget();
+        _buttonClose.BindOnClickButtonEvent(CloseHunterInventory);
     }
 
     public async UniTaskVoid ReLoadHunterInventoryUi()
@@ -82,5 +84,10 @@ public class HunterInventoryUi : UiBase
         {
             Debug.Log("비어있습니다.");
         }
+    }
+
+    private void CloseHunterInventory()
+    {
+        UiManager.Instance.CloseUi<HunterInventoryUi>();
     }
 }
