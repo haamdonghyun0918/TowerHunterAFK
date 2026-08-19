@@ -139,7 +139,7 @@ public class Character : BattleCharacter
                 Debug.Log($"[스킬공격] 타겟{targetMonster.name}에게 {currentDamage} 데미지를 줍니다.");
             }
         }
-        CheckSkillUsable();
+        CheckSkillUseable();
         InvokeCostChangedEvent();
     }
 
@@ -190,7 +190,7 @@ public class Character : BattleCharacter
         }
 
         InvokeCostChangedEvent();
-        CheckSkillUsable();
+        CheckSkillUseable();
     }
 
     public void UseSkillCost(int amount)
@@ -204,7 +204,7 @@ public class Character : BattleCharacter
         InvokeCostChangedEvent();
     }
 
-    private void CheckSkillUsable()
+    private void CheckSkillUseable()
     {
         int requiredSkillCost = _skill.GetRequiredSkillCost();
 
@@ -275,7 +275,7 @@ public class Character : BattleCharacter
     private void TestGetMaxSkillCost()
     {
         _currentSkillCost = _maxSkillCost;
-        CheckSkillUsable();
+        CheckSkillUseable();
         //추가
         InvokeCostChangedEvent();
     }
@@ -297,7 +297,7 @@ public class Character : BattleCharacter
     //현재 코스트와 최대 코스트 받기
     private void ConsoleOnSkillCostChanged(int currentSkillCost, int maxSkillCost)
     {
-        Debug.Log($"현재 스킬 코스트: {currentSkillCost}");
+        Debug.Log($"{_characterId}현재 스킬 코스트: {currentSkillCost}");
     }
 
     //Action -> Action<int,int>
