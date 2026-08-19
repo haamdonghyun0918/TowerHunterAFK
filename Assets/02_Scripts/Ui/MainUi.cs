@@ -50,11 +50,11 @@ public class MainUi : UiBase
 
     private async void OpenHunterInventory()
     {
-        //await UiManager.Instance.OpenUi<HunterInventory>
+        await UiManager.Instance.OpenUi<HunterInventoryUi>();
     }
 
     private async void OpenEquipmentInventory()
     {
-        //await UiManager.Instance.OpenUi<EquipmentInventory>
+        await UiManager.Instance.OpenUi<EquipmentInventoryUi>();
     }
 }
