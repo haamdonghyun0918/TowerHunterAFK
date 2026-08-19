@@ -1526,6 +1526,81 @@ MonoBehaviour:
   Text_Base: {fileID: 0}
   Image_Base: {fileID: 0}
   Image_Select: {fileID: 0}
+--- !u!1 &3720598570799285451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2156914997672834533}
+  - component: {fileID: 1568849217500009826}
+  - component: {fileID: 8146712902583524513}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2156914997672834533
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3720598570799285451}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1104366784977997168}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 751, y: -340}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1568849217500009826
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3720598570799285451}
+  m_CullTransparentMesh: 1
+--- !u!114 &8146712902583524513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3720598570799285451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.14901961, g: 0.14117648, b: 0.15686275, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &3836178321458596827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2367,6 +2442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1104366784977997168}
   - component: {fileID: 2626649227073192912}
+  - component: {fileID: 7513638963608493548}
   m_Layer: 5
   m_Name: ExpeditionUi
   m_TagString: Untagged
@@ -2387,6 +2463,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 372719073108760285}
+  - {fileID: 2156914997672834533}
   - {fileID: 4658864869259356917}
   - {fileID: 6532435069970640656}
   - {fileID: 3671100410714763737}
@@ -2414,6 +2491,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExpeditionUi
   _buttonClose: {fileID: 1171099089878460997}
+--- !u!114 &7513638963608493548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7102404705426565794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c314e7c74bbee94ab932ba7c986acdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExpeditionView
+  _content: {fileID: 3462400514467211201}
+  _expeditionListPrefab: {fileID: 6242166926758701854, guid: b32746875eabe9e42a2c9c0e7b87b861, type: 3}
+  _infoName: {fileID: 2781305997665594195}
+  _infoDuration: {fileID: 7452772393673930550}
+  _infoLevel: {fileID: 5635713708267290523}
+  _rewardGold: {fileID: 3689073665749306717}
+  _rewardDiamond: {fileID: 7012129712381518430}
+  _rewardEquipment: {fileID: 4938651470580058891}
+  _remainTime: {fileID: 8213919767139271794}
+  _buttonStart: {fileID: 4359001292989258538}
+  _buttonClaimReward: {fileID: 1311180432595097688}
 --- !u!1 &7289467236628040251
 GameObject:
   m_ObjectHideFlags: 0
