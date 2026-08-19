@@ -1,6 +1,6 @@
 ﻿public class PlayerResourceViewModel : ViewModelBase
 {
-    private PlayerResourceModel _playerResourceModel;
+    private readonly PlayerResourceModel _playerResourceModel;
 
     public PlayerResourceViewModel(PlayerResourceModel playerResourceModel)
     {
@@ -11,7 +11,7 @@
     {
         get => _playerResourceModel.Gold;
 
-        set
+        private set
         {
             if(_playerResourceModel.Gold != value)
             {
@@ -26,7 +26,7 @@
     {
         get => _playerResourceModel.Exp;
 
-        set
+        private set
         {
             if( _playerResourceModel.Exp != value)
             {
@@ -40,7 +40,8 @@
     public uint Diamond
     {
         get => _playerResourceModel.Diamond;
-        set
+
+        private set
         {
             if(_playerResourceModel.Diamond != value)
             {
@@ -50,6 +51,83 @@
         }
     }
 
+    public void SetGoldOnLoad(long gold)
+    {
+        Gold = gold;
+    }
+
+    public void SetExpOnLoad(long exp)
+    {
+        Exp = exp;
+    }
+
+    public void SetDiamondOnLoad(uint diamond)
+    {
+        Diamond = diamond;
+    }
+
+    public bool TryDecreaseGold(long amount)
+    {
+        if(amount <= 0 || Gold < amount)
+        {
+            return false;
+        }
+        Gold = Gold - amount;
+        return true;
+    }
+
+    public bool TryIncreaseGold(long amount)
+    {
+        if(amount <= 0)
+        {
+            return false;
+        }
+
+        Gold = Gold + amount;
+        return true;
+    }
+
+    public bool TryIncreaseExp(long amount)
+    {
+        if(amount <= 0)
+        {
+            return false;
+        }
+
+        Exp = Exp + amount;
+        return true;
+    }
+
+    public bool TryDecreaseExp(long amount)
+    {
+        if(amount <= 0 ||  Exp > amount)
+        {
+            return false;
+        }
+        Exp = Exp - amount;
+        return true;
+    }
+
+    public bool TryIncreaseDiamond(uint amount)
+    {
+        if(amount <= 0)
+        {
+            return false;
+        }
+        Diamond = Diamond + amount;
+        return true;
+    }
+
+    public bool TryDecreaseDiamond(uint amount)
+    {
+        if(amount <= 0 || Diamond > amount)
+        {
+            return false;
+        }
+        Diamond = Diamond - amount;
+        return true;
+    }
+
     public void InvokeOnceOnInit()
     {
         OnPropertyChanged(nameof(Gold));
@@ -57,35 +135,4 @@
         OnPropertyChanged(nameof(Diamond));
     }
 
-    public bool IncreaseGold(long amount)
-    {
-        if(amount <= 0)
-        {
-            return false;
-        }
-
-        SetGold(_playerResourceModel.Gold +  amount);
-        return true;
-    }
-
-    public bool TryDecreaseGold(long amount)
-    {
-        if (amount <= 0 || Gold<amount)
-        {
-            return false;
-        }
-        SetGold(Gold - amount);
-        return true;
-    }
-
-    private void SetGold(long value)
-    {
-        if (_playerResourceModel.Gold == value)
-        {
-            return;
-        }
-
-        _playerResourceModel.Gold = value;
-        OnPropertyChanged(nameof(Gold));
-    }
 }
