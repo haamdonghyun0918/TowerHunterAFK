@@ -169,6 +169,8 @@ public class GachaSystem : MonoBehaviour
 
         PlayDrawAnimation(character);
 
+        OpenCharacterCardUI(character);
+
         _drawCharacterCount++;
         Debug.Log($"{_drawCharacterCount}개의 캐릭터를 뽑았습니다.");
 
@@ -179,6 +181,20 @@ public class GachaSystem : MonoBehaviour
 
         CheckDrawTenCharacters();
         return character;
+    }
+
+    private void OpenCharacterCardUI(CharacterData character)
+    {
+        //[TODO] 카드 UI 오픈
+        string id = character.Id;
+        int starLevel = character.StarLevel;
+        string name = character.Name;
+        string rarity = character.Rarity;
+        var baseStatData = GameDataManager.Instance.GetData<BaseStatData>(character.BaseStatDataId);
+        int baseAtk = baseStatData.BaseAtk;
+        int baseDef = baseStatData.BaseDef;
+        int baseAtkSpeed = baseStatData.BaseAtkSpeed;
+        int baseHp = baseStatData.BaseHp;
     }
 
     private void PlayDrawAnimation(CharacterData character)
