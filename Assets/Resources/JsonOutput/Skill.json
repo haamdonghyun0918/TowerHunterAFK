@@ -68,5 +68,35 @@
 	"PrefabPath": "Heal",
 	"SkillDuration": 2000,
 	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_redball_01",
+    "Name": "붉은공",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "RedBall",
+	"SkillDuration": 3000,
+	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_orangeBeam_01",
+    "Name": "주황빔",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "OrangeBeam",
+	"SkillDuration": 1800,
+	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_columnelectric_01",
+    "Name": "전기기둥",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "ColumnElectric",
+	"SkillDuration": 1800,
+	"MotionDuration": 0
   }
 ]
