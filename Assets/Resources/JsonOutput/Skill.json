@@ -98,5 +98,45 @@
 	"PrefabPath": "ColumnElectric",
 	"SkillDuration": 1800,
 	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_darkenergy_01",
+    "Name": "다크에너지",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "DarkEnergy",
+	"SkillDuration": 3000,
+	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_devilorange_01",
+    "Name": "데빌오렌지",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "DevilOrange",
+	"SkillDuration": 3000,
+	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_earthshatter_01",
+    "Name": "대지분쇄",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget_SelfSpawn",
+	"PrefabPath": "EarthShatter",
+	"SkillDuration": 2000,
+	"MotionDuration": 1500
+  },
+  {
+    "Id": "skill_electricstrike_01",
+    "Name": "일렉트릭스트라이크",
+    "RequiredCost": 4,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "ElectricStrike",
+	"SkillDuration": 3000,
+	"MotionDuration": 0
   }
 ]
