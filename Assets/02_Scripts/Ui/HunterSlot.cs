@@ -1,0 +1,33 @@
+﻿using UnityEngine;
+using TMPro;
+using System;
+
+public class HunterSlot : MonoBehaviour
+{
+    [SerializeField] private TMP_Text _hunterName;
+
+    private int _index;
+    private Action<int> _onClickSlot;
+
+    public void SetUp(CharacterData data, int index = 0, Action<int> onClick = null)
+    {
+        _index = index;
+        _onClickSlot = onClick;
+
+        if (data != null)
+        {
+            _hunterName.text = data.Name;
+        }
+        else
+        {
+            _hunterName.text = "";
+        }
+    }
+
+    private void OnClickSlot()
+    {
+        _onClickSlot?.Invoke(_index);
+    }
+
+
+}
