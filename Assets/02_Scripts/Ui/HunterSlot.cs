@@ -5,6 +5,7 @@ using System;
 public class HunterSlot : MonoBehaviour
 {
     [SerializeField] private TMP_Text _hunterName;
+    [SerializeField] private UiButton _hunterSlotButton;
 
     private int _index;
     private Action<int> _onClickSlot;
@@ -18,9 +19,15 @@ public class HunterSlot : MonoBehaviour
         {
             _hunterName.text = data.Name;
         }
+
         else
         {
             _hunterName.text = "";
+        }
+
+        if (_hunterSlotButton != null)
+        {
+            _hunterSlotButton.BindOnClickButtonEvent(OnClickSlot);
         }
     }
 
