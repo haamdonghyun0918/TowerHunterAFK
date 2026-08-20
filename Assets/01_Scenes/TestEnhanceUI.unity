@@ -516,6 +516,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EquipmentEnhanceUI
       objectReference: {fileID: 0}
+    - target: {fileID: 2982020919150505200, guid: 7c007b06f9b7760459b844079387794e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4650449471032103900, guid: 7c007b06f9b7760459b844079387794e, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0

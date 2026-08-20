@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using System.ComponentModel;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +11,8 @@ public class EquipmentEnhanceUI : UiBase
     [SerializeField] private TMP_Text Text_EnhanceCost;
     [SerializeField] private Image Image_ItemIcon;
     [SerializeField] private Button Button_EnhanceBtn;
+    [SerializeField] private Button Button_CloseAll;
+
 
     private int _equipmentLevel;
 
@@ -22,6 +23,7 @@ public class EquipmentEnhanceUI : UiBase
         _viewModel = NetworkManager.Instance.EquipmentService.GetEquipmentEnhanceViewModel();
         Bind();
         Button_EnhanceBtn.onClick.AddListener(OnClick_EnhanceBtn);
+        Button_CloseAll.onClick.AddListener(OnClick_CloseAll);
         UpdateEnhanceUI();
     }
 
@@ -77,6 +79,11 @@ public class EquipmentEnhanceUI : UiBase
 
         string targetUid = _viewModel.TargetEquipmentUniqueId;
         NetworkManager.Instance.EquipmentService.RequestEnhance(targetUid);
+    }
+
+    private void OnClick_CloseAll()
+    {
+        UiManager.Instance.CloseUi<EquipmentEnhanceUI>();
     }
 
     private async UniTaskVoid LoadIconAsync()
