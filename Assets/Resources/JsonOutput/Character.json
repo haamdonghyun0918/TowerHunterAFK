@@ -15,7 +15,8 @@
 	"HpPerLevel": 10,
 	"DefPerLevel": 10,
 	"CharacterType": "Monk",
-	"GachaWeight": 100
+	"GachaWeight": 100,
+	"IconPath": "DragonKickIcon"
   },
   {
     "Id": "character_blueexplosion_01",
@@ -33,7 +34,8 @@
 	"HpPerLevel": 10,
 	"DefPerLevel": 10,
 	"CharacterType": "Monk",
-	"GachaWeight": 100
+	"GachaWeight": 100,
+	"IconPath": "BlueExplosionIcon"
   },
   {
     "Id": "character_meteor_01",
@@ -51,7 +53,8 @@
 	"HpPerLevel": 10,
 	"DefPerLevel": 10,
 	"CharacterType": "Wizard",
-	"GachaWeight": 100
+	"GachaWeight": 100,
+	"IconPath": "MeteorIcon"
   },
   {
     "Id": "character_knives_01",
@@ -69,7 +72,8 @@
 	"HpPerLevel": 15,
 	"DefPerLevel": 15,
 	"CharacterType": "Wizard",
-	"GachaWeight": 10
+	"GachaWeight": 10,
+	"IconPath": "KnivesIcon"
   },
   {
     "Id": "character_energyexplosion_01",
@@ -87,7 +91,8 @@
 	"HpPerLevel": 15,
 	"DefPerLevel": 15,
 	"CharacterType": "Wizard",
-	"GachaWeight": 10
+	"GachaWeight": 10,
+	"IconPath": "EnergyExplosionIcon"
   },
   {
     "Id": "character_flowerslash_01",
@@ -105,7 +110,8 @@
 	"HpPerLevel": 15,
 	"DefPerLevel": 15,
 	"CharacterType": "Warrior",
-	"GachaWeight": 10
+	"GachaWeight": 10,
+	"IconPath": "FlowerSlashIcon"
   },
   {
     "Id": "character_frontspikesattack_01",
@@ -123,7 +129,8 @@
 	"HpPerLevel": 20,
 	"DefPerLevel": 20,
 	"CharacterType": "Monk",
-	"GachaWeight": 5
+	"GachaWeight": 5,
+	"IconPath": "FrontSpikesAttackIcon"
   },
   {
     "Id": "character_meteorshower_01",
@@ -141,7 +148,8 @@
 	"HpPerLevel": 20,
 	"DefPerLevel": 20,
 	"CharacterType": "Wizard",
-	"GachaWeight": 5
+	"GachaWeight": 5,
+	"IconPath": "MeteorShowerIcon"
   },
   {
     "Id": "character_redball_01",
@@ -159,7 +167,8 @@
 	"HpPerLevel": 30,
 	"DefPerLevel": 30,
 	"CharacterType": "Wizard",
-	"GachaWeight": 1
+	"GachaWeight": 1,
+	"IconPath": "RedBallIcon"
   },
   {
     "Id": "character_orangeBeam_01",
@@ -177,7 +186,8 @@
 	"HpPerLevel": 30,
 	"DefPerLevel": 30,
 	"CharacterType": "Wizard",
-	"GachaWeight": 1
+	"GachaWeight": 1,
+	"IconPath": "OrangeBeamIcon"
   },
   {
     "Id": "character_columnelectric_01",
@@ -195,7 +205,8 @@
 	"HpPerLevel": 30,
 	"DefPerLevel": 30,
 	"CharacterType": "Wizard",
-	"GachaWeight": 1
+	"GachaWeight": 1,
+	"IconPath": "ColumnElectricIcon"
   },
   {
     "Id": "character_darkenergy_01",
@@ -213,7 +224,8 @@
 	"HpPerLevel": 30,
 	"DefPerLevel": 30,
 	"CharacterType": "Wizard",
-	"GachaWeight": 1
+	"GachaWeight": 1,
+	"IconPath": "DarkEnergyIcon"
   },
   {
     "Id": "character_devilorange_01",
@@ -231,7 +243,8 @@
 	"HpPerLevel": 30,
 	"DefPerLevel": 30,
 	"CharacterType": "Wizard",
-	"GachaWeight": 1
+	"GachaWeight": 1,
+	"IconPath": "DevilOrangeIcon"
   },
   {
     "Id": "character_earthshatter_01",
@@ -249,7 +262,8 @@
 	"HpPerLevel": 30,
 	"DefPerLevel": 30,
 	"CharacterType": "Wizard",
-	"GachaWeight": 1
+	"GachaWeight": 1,
+	"IconPath": "EarthShatterIcon"
   },
   {
     "Id": "character_electricstrike_01",
@@ -267,6 +281,7 @@
 	"HpPerLevel": 30,
 	"DefPerLevel": 30,
 	"CharacterType": "Wizard",
-	"GachaWeight": 1
+	"GachaWeight": 1,
+	"IconPath": "ElectricStrikeIcon"
   }
 ]

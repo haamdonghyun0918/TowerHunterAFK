@@ -5,6 +5,7 @@ public class PartySetting
 {
     private const int _maxSlots = 3;
 
+    // 중복된 헌터를 파티에 넣을 경우 사용되는 메서드(시스템적으로)
     public void SetCharacterToParty(int slotIndex, string uniqueId)
     {
         if (slotIndex < 0 || slotIndex >= _maxSlots)
@@ -26,6 +27,7 @@ public class PartySetting
         SaveManager.Instance.SaveCurrentData();
     }
 
+    // 빈자리에 넣는 메서드(실제 플레이어가 버튼을 눌렀을 때 사용할 메서드)
     public bool AddCharacterToParty(string uniqueId)
     {
         string[] currentParty = SaveManager.Instance.CurrentSaveData.CurrentPartyCharacterUids;
@@ -91,25 +93,35 @@ public class PartySetting
         return SaveManager.Instance.CurrentSaveData.CurrentPartyCharacterUids;
     }
 
-    public void TestParty()
+    public void CreateHunterParty()
     {
-        List<CharacterSaveData> ownedChars = SaveManager.Instance.CurrentSaveData.OwnedCharacters;
+        var saveData = SaveManager.Instance.CurrentSaveData;
+        string[] currentParty = saveData.CurrentPartyCharacterUids;
 
-        if (ownedChars != null && ownedChars.Count > 0)
+        bool isPartyEmpty = true;
+        
+        for (int i = 0; i < _maxSlots; i++)
         {
-            string realFirstCharacterUid = ownedChars[0].UniqueId;
-            string realSecondCharacterUid = ownedChars[1].UniqueId;
-            string realThirdCharacterUid = ownedChars[2].UniqueId;
-
-            SetCharacterToParty(0, realFirstCharacterUid);
-            SetCharacterToParty(1, realSecondCharacterUid);
-            SetCharacterToParty(2, realThirdCharacterUid);
-            Debug.Log($"[PartySetting] 테스트 파티 편성 완료! (배치된 진짜 UID: {realFirstCharacterUid}, {realSecondCharacterUid}, {realThirdCharacterUid})");
+            if (string.IsNullOrEmpty(currentParty[i]) == false)
+            {
+                isPartyEmpty = false;
+                break;
+            }
         }
 
-        else
+        // 처음 게임 시작할 때 줄 기본 캐릭터로 나중에 변경해줘야 함
+        if (isPartyEmpty)
         {
-            Debug.LogError("[PartySetting] 큰일났습니다! 인벤토리에 캐릭터가 한 명도 없습니다!");
+            if (saveData.OwnedCharacters.Count == 0)
+            {
+                CharacterUtils utils = new CharacterUtils();
+                utils.AddCharacters("DevilOrangePlayer");
+            }
+
+            if (saveData.OwnedCharacters.Count > 0)
+            {
+                SetCharacterToParty(0, saveData.OwnedCharacters[0].UniqueId);
+            }
         }
     }
 }

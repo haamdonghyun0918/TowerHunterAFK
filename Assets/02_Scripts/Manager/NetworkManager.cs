@@ -12,6 +12,8 @@ public class NetworkManager : MonoBehaviour
 
     public ExpeditionService ExpeditionService { get; private set; }
 
+    public EquipmentService EquipmentService { get; private set; }
+
     private void Awake()
     {
         if(Instance == null)
@@ -21,6 +23,7 @@ public class NetworkManager : MonoBehaviour
             StageService = new StageService();
             CharacterStatusService = new CharacterStatusService();
             ExpeditionService = new ExpeditionService();
+            EquipmentService = new EquipmentService();
         }
         else
         {

@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fc9265f7a455b5f4c9caa085027bf6b0, type: 3}
       propertyPath: m_Name
-      value: tripo_convert_796a6406-2b53-4a1b-a48f-ada1a18a4e6b
+      value: FrontSpikesAttackPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: fc9265f7a455b5f4c9caa085027bf6b0, type: 3}
       propertyPath: m_Controller

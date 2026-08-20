@@ -7,7 +7,9 @@ public class HunterInventoryUi : UiBase
 {
     [SerializeField] private Transform _content;
     [SerializeField] private UiButton _buttonClose;
+    [SerializeField] private Transform[] _partySlotTransforms = new Transform[3];
     private List<HunterSlot> _createdSlots = new List<HunterSlot>();
+    private HunterSlot[] _partySlots = new HunterSlot[3];
     private const int _firstSlotCount = 30;
 
     private void OnEnable()
@@ -24,65 +26,99 @@ public class HunterInventoryUi : UiBase
             return;
         }
 
-        List<CharacterSaveData> ownedCharacters = SaveManager.Instance.CurrentSaveData.OwnedCharacters;
+        var saveData = SaveManager.Instance.CurrentSaveData;
+        string[] currentPartyUids = saveData.CurrentPartyCharacterUids;
+        List<CharacterSaveData> ownedCharacters = saveData.OwnedCharacters;
 
-        int targetSlotCount = Mathf.Max(_firstSlotCount, ownedCharacters.Count);
+        for (int i = 0; i < 3; i++)
+        {
+            if (_partySlots[i] == null)
+            {
+                GameObject pObj = await ResourceManager.Instance.Instantiate("HunterSlot", _partySlotTransforms[i]);
+                _partySlots[i] = pObj.GetComponent<HunterSlot>();
+            }
 
+            string partyUid = currentPartyUids[i];
+
+            if (string.IsNullOrEmpty(partyUid) == false && SaveManager.Instance.CharacterDict.TryGetValue(partyUid, out var charData))
+            {
+                var data = GameDataManager.Instance.GetData<CharacterData>(charData.BaseId);
+                _partySlots[i].SetUp(data, partyUid, OnClickPartySlot);
+            }
+
+            else
+            {
+                _partySlots[i].SetUp(null, "", null);
+            }
+        }
+
+        List<CharacterSaveData> waitChars = new List<CharacterSaveData>();
+        foreach (var hunter in ownedCharacters)
+        {
+            bool isParty = false;
+            for (int i = 0; i < 3; i++)
+            {
+                if (currentPartyUids[i] == hunter.UniqueId)
+                {
+                    isParty = true;
+                }
+            }
+
+            if (isParty == false)
+            {
+                waitChars.Add(hunter);
+            }
+        }
+
+        int targetSlotCount = Mathf.Max(_firstSlotCount, waitChars.Count);
         int currentCount = _createdSlots.Count;
+
         for (int i = currentCount; i < targetSlotCount; i++)
         {
             GameObject slotObj = await ResourceManager.Instance.Instantiate("HunterSlot", _content);
-
             if (slotObj != null)
             {
-                HunterSlot hunterSlot = slotObj.GetComponent<HunterSlot>();
-                if (hunterSlot != null)
-                {
-                    _createdSlots.Add(hunterSlot);
-                }
-            }
-            else
-            {
-                Debug.LogError("[HunterInventoryUi]: HunterSlot 프리팹 생성 실패.");
-                break;
+                _createdSlots.Add(slotObj.GetComponent<HunterSlot>());
             }
         }
 
         for (int i = 0; i < _createdSlots.Count; i++)
         {
-            if (i < ownedCharacters.Count)
+            if (i < waitChars.Count)
             {
-                string baseId = ownedCharacters[i].BaseId;
-                CharacterData charData = GameDataManager.Instance.GetData<CharacterData>(baseId);
-
-                _createdSlots[i].SetUp(charData, i, OnClickSlot);
+                var data = GameDataManager.Instance.GetData<CharacterData>(waitChars[i].BaseId);
+  
+                _createdSlots[i].SetUp(data, waitChars[i].UniqueId, OnClickSlot);
+                _createdSlots[i].gameObject.SetActive(true);
             }
 
             else
             {
-                _createdSlots[i].SetUp(null, i, OnClickSlot);
+                _createdSlots[i].gameObject.SetActive(false);
             }
         }
     }
-    private void OnClickSlot(int index)
+
+    private void OnClickSlot(string uniqueId)
     {
-        List<CharacterSaveData> ownedCharacters = SaveManager.Instance.CurrentSaveData.OwnedCharacters;
-
-        if (index < ownedCharacters.Count)
+        PartySetting partySetting = new PartySetting();
+        bool isSuccess = partySetting.AddCharacterToParty(uniqueId);
+        
+        if (isSuccess)
         {
-            string baseId = ownedCharacters[index].BaseId;
-            CharacterData charData = GameDataManager.Instance.GetData<CharacterData>(baseId);
-
-            if (charData != null)
-            {
-                Debug.Log($"선택된 헌터: {charData.Name}");
-            }
-
+            ReLoadHunterInventoryUi().Forget();
         }
 
-        else
+    }
+
+    private void OnClickPartySlot(string uniqueId)
+    {
+        PartySetting partySetting = new PartySetting();
+        bool isSuccess = partySetting.RemoveCharacterFromParty(uniqueId);
+
+        if (isSuccess)
         {
-            Debug.Log("비어있습니다.");
+            ReLoadHunterInventoryUi().Forget();
         }
     }
 

@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d0b327478b0682f44857570078440b7a, type: 3}
       propertyPath: m_Name
-      value: FlowerSlashPlayer 1
+      value: FlowerSlashPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: d0b327478b0682f44857570078440b7a, type: 3}
       propertyPath: m_Controller

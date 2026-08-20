@@ -7,12 +7,12 @@ public class HunterSlot : MonoBehaviour
     [SerializeField] private TMP_Text _hunterName;
     [SerializeField] private UiButton _hunterSlotButton;
 
-    private int _index;
-    private Action<int> _onClickSlot;
+    private string _uniqueId;
+    private Action<string> _onClickSlot;
 
-    public void SetUp(CharacterData data, int index = 0, Action<int> onClick = null)
+    public void SetUp(CharacterData data, string uniqueId, Action<string> onClick = null)
     {
-        _index = index;
+        _uniqueId = uniqueId;
         _onClickSlot = onClick;
 
         if (data != null)
@@ -22,18 +22,19 @@ public class HunterSlot : MonoBehaviour
 
         else
         {
-            _hunterName.text = "";
+            _hunterName.text = "비어있음";
         }
 
         if (_hunterSlotButton != null)
         {
+            _hunterSlotButton.UnBindOnClickButtonEvent(OnClickSlot);
             _hunterSlotButton.BindOnClickButtonEvent(OnClickSlot);
         }
     }
 
     private void OnClickSlot()
     {
-        _onClickSlot?.Invoke(_index);
+        _onClickSlot?.Invoke(_uniqueId);
     }
 
 

@@ -48,7 +48,7 @@ public class ObjectManager : MonoBehaviour
                     _currentPlayerParty = gObj_PlayerParty.GetComponent<PlayerPartyController>();
 
                     PartySetting partySetting = new PartySetting();
-                    partySetting.TestParty(); // 테스트용
+                    partySetting.CreateHunterParty();
 
                     string[] currentPartyUids = partySetting.GetCurrentPartyUids();
 
