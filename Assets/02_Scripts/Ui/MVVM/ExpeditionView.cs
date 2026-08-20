@@ -80,22 +80,25 @@ public class ExpeditionView : MonoBehaviour
         _expeditionViewModel = NetworkManager.Instance.ExpeditionService.GetExpeditionViewModel();
         Bind();
 
-        var model = NetworkManager.Instance.ExpeditionService.GetExpeditionModel();
+        ExpeditionData selectedExpedition = _expeditionViewModel.SelectedExpedition;
 
-        if (model.SelectedExpedition != null && model.IsExpeditionStart)
+        if (selectedExpedition != null && _expeditionViewModel.IsExpeditionStart)
         {
-            for (int i = 0; i < _expeditionList.Count; i++)
+            if(_expeditionList != null)
             {
-                if (_expeditionList[i].Id == model.SelectedExpedition.Id)
+                for (int i = 0; i < _expeditionList.Count; i++)
                 {
-                    _selectedIndex = i;
-                    break;
+                    if (_expeditionList[i].Id == selectedExpedition.Id)
+                    {
+                        _selectedIndex = i;
+                        break;
+                    }
                 }
             }
-            UpdateInfo(model.SelectedExpedition);
-            UpdateReward(model.SelectedExpedition);
+            
+            UpdateInfo(selectedExpedition);
+            UpdateReward(selectedExpedition);
         }
-
         else if (_expeditionList != null && _expeditionList.Count > 0)
         {
             SelectExpedition(0);
@@ -191,6 +194,11 @@ public class ExpeditionView : MonoBehaviour
 
     private void UpdateReward(ExpeditionData data)
     {
+        if(data == null)
+        {
+            return;
+        }
+
         if (_rewardGold)
         {
             _rewardGold.text = $"{data.RewardGold} Gold";
