@@ -409,6 +409,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HunterInventoryUi
   _content: {fileID: 3144412418109967839}
   _buttonClose: {fileID: 268220072152992133}
+  _partySlotTransforms:
+  - {fileID: 1392458891410929630}
+  - {fileID: 6212061027547729461}
+  - {fileID: 5141824370464341559}
 --- !u!1 &5014563451671591194
 GameObject:
   m_ObjectHideFlags: 0
