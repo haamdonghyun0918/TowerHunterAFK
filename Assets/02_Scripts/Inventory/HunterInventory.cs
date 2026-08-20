@@ -10,6 +10,7 @@ public class HunterInventory
     {
         ReloadData();
     }
+
     private void ReloadData()
     {
         if (SaveManager.Instance != null && SaveManager.Instance.CurrentSaveData != null)
