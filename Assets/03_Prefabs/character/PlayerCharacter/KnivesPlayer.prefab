@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 06f43decd26f28f49b7af4e3a00c9fcd, type: 3}
       propertyPath: m_Name
-      value: KnivesPlayer 1
+      value: KnivesPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 06f43decd26f28f49b7af4e3a00c9fcd, type: 3}
       propertyPath: m_Controller
