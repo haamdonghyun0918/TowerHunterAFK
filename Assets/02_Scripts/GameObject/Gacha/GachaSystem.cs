@@ -171,6 +171,10 @@ public class GachaSystem : MonoBehaviour
 
         OpenCharacterCardUI(character);
 
+        // 실제로 저장되어야 하므로 CharacterUtils에서 Add를 통하여 인스턴스 Id를 가지며 인벤토리에 들어가도록 추가
+        CharacterUtils charUtils = new CharacterUtils();
+        charUtils.AddCharacters(character.Id);
+
         _drawCharacterCount++;
         Debug.Log($"{_drawCharacterCount}개의 캐릭터를 뽑았습니다.");
 
