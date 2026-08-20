@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CharacterUtils
+public class HunterUtil
 {
     public void AddCharacters(string baseCharacterId)
     {
@@ -30,6 +30,11 @@ public class CharacterUtils
         SaveManager.Instance.SaveCurrentData();
 
         Debug.Log($"[CharacterUtils] 헌터 획득! 헌터 이름: {charData.Name}, 게임 상 헌터 아이디: {newCharacter.UniqueId}");
+
+        if (GameFlowManager.Instance != null && GameFlowManager.Instance.HunterInven != null)
+        {
+            GameFlowManager.Instance.HunterInven.NotifyInventoryChanged();
+        }
     }
 
 

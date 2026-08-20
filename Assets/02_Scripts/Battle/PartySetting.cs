@@ -122,7 +122,7 @@ public class PartySetting
         {
             if (saveData.OwnedCharacters.Count == 0)
             {
-                CharacterUtils utils = new CharacterUtils();
+                HunterUtil utils = new HunterUtil();
                 utils.AddCharacters("DevilOrangePlayer");
             }
 

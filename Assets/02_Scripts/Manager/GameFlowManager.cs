@@ -4,6 +4,8 @@ using UnityEngine;
 public class GameFlowManager : MonoBehaviour
 {
     public static GameFlowManager Instance { get; private set; }
+    public HunterInventory HunterInven { get; private set; }
+    public EquipmentInventory EquipInven { get; private set; }
 
     private float _inactivityTimer = 0f;
     private const float _sleepModeTimer = 60f;
@@ -54,15 +56,14 @@ public class GameFlowManager : MonoBehaviour
         NetworkManager.Instance.PlayerResourceService.SetGoldOnLoad(SaveManager.Instance.CurrentSaveData.Gold);
         NetworkManager.Instance.PlayerResourceService.SetDiamondOnLoad(SaveManager.Instance.CurrentSaveData.Diamond);
 
-        CharacterInventory charInven = new CharacterInventory();
-        charInven.Init();
+        HunterInven = new HunterInventory();
+        HunterInven.Init();
 
-        EquipmentInventory equipInven = new EquipmentInventory();
-        equipInven.Init();
+        EquipInven = new EquipmentInventory();
+        EquipInven.Init();
 
         if (ExpeditionManager.Instance != null)
         {
-            //ExpeditionManager.Instance.OnRewardClaimed += HandleExpeditionRewardClaimed;
             await ExpeditionManager.Instance.Init();
         }
 

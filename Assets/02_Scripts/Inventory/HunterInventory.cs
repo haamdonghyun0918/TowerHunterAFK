@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class CharacterInventory
+public class HunterInventory
 {
     private List<CharacterSaveData> _ownedCharacters = new List<CharacterSaveData>();
-    public event Action<List<CharacterSaveData>> OnCharacterChanged;
+    public event Action OnInventoryUpdated;
 
     public void Init()
+    {
+        ReloadData();
+    }
+    private void ReloadData()
     {
         if (SaveManager.Instance != null && SaveManager.Instance.CurrentSaveData != null)
         {
             _ownedCharacters = SaveManager.Instance.CurrentSaveData.OwnedCharacters;
-
-            if (OnCharacterChanged != null)
-            {
-                OnCharacterChanged(_ownedCharacters);
-            }
-
         }
     }
 
@@ -25,4 +23,9 @@ public class CharacterInventory
         return _ownedCharacters;
     }
 
+    public void NotifyInventoryChanged()
+    {
+        ReloadData();
+        OnInventoryUpdated?.Invoke();
+    }
 }
