@@ -117,7 +117,7 @@ public class Character : BattleCharacter
         _characterDefense = baseStatData.BaseDef;
     }
 
-    private async UniTask UseSkill(Monster targetMonster)
+    private async UniTask UseSkill(Monster targetMonster, MonsterParty monsterParty)
     {
         SetSingleTargetTransform(targetMonster);
 
@@ -132,6 +132,15 @@ public class Character : BattleCharacter
             {
                 this.TakeDamage(currentDamage);
                 Debug.Log($"[힐스킬] 타겟{this.name}에게 {-currentDamage} 힐을 줍니다.");
+            }
+            else if (_skill.GetSkillType() == SkillType.MultiTarget || _skill.GetSkillType() == SkillType.MultiTarget_SelfSpawn)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    var targetMonsterInParty = monsterParty.GetMonster(i);
+                    targetMonsterInParty.TakeDamage(currentDamage);
+                    Debug.Log($"[스킬공격] 타겟{targetMonsterInParty.name}에게 {currentDamage} 데미지를 줍니다.");
+                }
             }
             else
             {
@@ -160,7 +169,7 @@ public class Character : BattleCharacter
         else
         {
             UseSkillCost(_skill.GetRequiredSkillCost());
-            await UseSkill(targetMonster);
+            await UseSkill(targetMonster, monsterParty);
         }
 
         ChangeState(CharacterState.Idle);
