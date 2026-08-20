@@ -87,18 +87,16 @@ public class StageService
 
     public void UpdateMaxClearedStage(int clearedStage)
     {
-        var stageViewModel = GetStageViewModel();
+        StageViewModel viewModel = GetStageViewModel();
 
-        if(clearedStage <= stageViewModel.MaxClearedStage)
+        if(viewModel.TryUpdateMaxClearedStage(clearedStage) == false)
         {
             return;
         }
 
-        stageViewModel.MaxClearedStage = clearedStage;
-
         if(SaveManager.Instance != null)
         {
-            SaveManager.Instance.UpdateMaxClearedStage(clearedStage);
+            SaveManager.Instance.UpdateMaxClearedStage(viewModel.MaxClearedStage);
         }
     }
 
