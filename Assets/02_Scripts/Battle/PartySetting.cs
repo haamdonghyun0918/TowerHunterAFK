@@ -123,7 +123,7 @@ public class PartySetting
             if (saveData.OwnedCharacters.Count == 0)
             {
                 HunterUtil utils = new HunterUtil();
-                utils.AddCharacters("DevilOrangePlayer");
+                utils.AddCharacters("character_dragonkick_01");
             }
 
             if (saveData.OwnedCharacters.Count > 0)
