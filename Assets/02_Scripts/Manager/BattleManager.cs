@@ -89,7 +89,7 @@ public class BattleManager : MonoBehaviour
                     }
 
                     await UniTask.Delay(300);
-                    await hunter.AtkTarget(target);
+                    await hunter.AtkTarget(target, enemyParty);
 
                     if (hunter._isDead == false)
                     {

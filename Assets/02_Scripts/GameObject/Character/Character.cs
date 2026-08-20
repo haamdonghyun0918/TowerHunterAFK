@@ -143,7 +143,7 @@ public class Character : BattleCharacter
         InvokeCostChangedEvent();
     }
 
-    public async UniTask AtkTarget(Monster targetMonster)
+    public async UniTask AtkTarget(Monster targetMonster, MonsterParty monsterParty)
     {
 
         if (targetMonster._isDead == true) return;
