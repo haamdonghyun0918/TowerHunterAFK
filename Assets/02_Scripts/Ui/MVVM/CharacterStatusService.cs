@@ -6,12 +6,10 @@ public class CharacterStatusService
 {
     private const int MaxPartyCount = 3;
 
-    private CharacterStatusModel[] _characterStatusModels = new CharacterStatusModel[MaxPartyCount];
-    private CharacterStatusViewModel[] _characterStatusViewModels = new CharacterStatusViewModel[MaxPartyCount];
-    private Character[] _characters = new Character[MaxPartyCount];
-
-    private Action<int, int>[] _hpChangedCallbacks = new Action<int, int>[MaxPartyCount];
-    private Action<int, int>[] _skillCostChangedCallbacks = new Action<int, int>[MaxPartyCount];
+    private readonly CharacterStatusViewModel[] _characterStatusViewModels = new CharacterStatusViewModel[MaxPartyCount];
+    private readonly Character[] _characters = new Character[MaxPartyCount];
+    private readonly Action<int, int>[] _hpChangedCallbacks = new Action<int, int>[MaxPartyCount];
+    private readonly Action<int, int>[] _skillCostChangedCallbacks = new Action<int, int>[MaxPartyCount];
 
     public CharacterStatusService()
     {
@@ -22,27 +20,13 @@ public class CharacterStatusService
         for(int i = 0; i<MaxPartyCount; i++)
         {
             CharacterStatusModel characterStatusModel = new CharacterStatusModel();
-            CharacterStatusViewModel characterStatusViewModel = new CharacterStatusViewModel(characterStatusModel);
 
-            characterStatusModel.SlotIndex = i;
-            _characterStatusModels[i] = characterStatusModel;
-            _characterStatusViewModels[i] = characterStatusViewModel;
+            _characterStatusViewModels[i] = new CharacterStatusViewModel(characterStatusModel,i);
         }
     }
-
     public int GetMaxPartyCount()
     {
         return MaxPartyCount;
-    }
-
-    public CharacterStatusModel GetCharacterStatusModel(int slotIndex)
-    {
-        if(slotIndex < 0 || slotIndex >= MaxPartyCount)
-        {
-            Debug.LogError($"[CharacterStatusService] 파티 슬롯 범위를 벗어났습니다. SlotIndex: {slotIndex}");
-            return null;
-        }
-        return _characterStatusModels[slotIndex];
     }
 
     public CharacterStatusViewModel GetCharacterStatusViewModel(int slotIndex)
@@ -121,16 +105,7 @@ public class CharacterStatusService
 
     private void ResetCharacterStatus(int slotIndex)
     {
-        CharacterStatusViewModel characterStatusViewModel = _characterStatusViewModels[slotIndex];
-
-        characterStatusViewModel.CharacterId = "";
-        characterStatusViewModel.CurrentHp = 0;
-        characterStatusViewModel.MaxHp = 0;
-        characterStatusViewModel.CurrentSkillCost = 0;
-        characterStatusViewModel.MaxSkillCost = 0;
-        characterStatusViewModel.IsActive = false;
-        characterStatusViewModel.IsDead = false;
-        characterStatusViewModel.InvokeOnceOnInit();
+        _characterStatusViewModels[slotIndex].Reset();
     }
 
     public void SetCharacter(int slotIndex, Character character)
@@ -169,19 +144,12 @@ public class CharacterStatusService
 
     private void HandleHpChanged(int slotIndex, int currentHp, int maxHp)
     {
-        CharacterStatusViewModel characterStatusViewModel = _characterStatusViewModels[slotIndex];
-
-        characterStatusViewModel.CurrentHp = currentHp;
-        characterStatusViewModel.MaxHp = maxHp;
-        characterStatusViewModel.IsDead = currentHp <= 0;
+        _characterStatusViewModels[slotIndex].UpdateHp(currentHp, maxHp);
     }
 
     private void HandleSkillCostChanged(int slotIndex, int currentSkillCost, int maxSkillCost)
     {
-        CharacterStatusViewModel characterStatusViewModel = _characterStatusViewModels[slotIndex];
-
-        characterStatusViewModel.CurrentSkillCost = currentSkillCost;
-        characterStatusViewModel.MaxSkillCost = maxSkillCost;
+        _characterStatusViewModels[slotIndex].UpdateSkillCost(currentSkillCost, maxSkillCost);
     }
 
     private void UpdateCharacterStatus(int slotIndex)
@@ -196,13 +164,14 @@ public class CharacterStatusService
 
         CharacterStatusViewModel characterStatusViewModel = _characterStatusViewModels[slotIndex];
 
-        characterStatusViewModel.CharacterId = character.GetCharacterId();
-        characterStatusViewModel.CurrentHp = character.GetCurrentHp();
-        characterStatusViewModel.MaxHp = character.GetMaxHp();
-        characterStatusViewModel.CurrentSkillCost = character.GetCurrentSkillCost();
-        characterStatusViewModel.MaxSkillCost = character.GetMaxSkillCost();
-        characterStatusViewModel.IsActive = true;
-        characterStatusViewModel.IsDead = character._isDead;
-        characterStatusViewModel.InvokeOnceOnInit();
+        _characterStatusViewModels[slotIndex]
+            .SetCharacterStatus(
+                character.GetCharacterId(),
+                character.GetCurrentHp(),
+                character.GetMaxHp(),
+                character.GetCurrentSkillCost(),
+                character.GetMaxSkillCost(),
+                true,
+                character._isDead);
     }
 }
