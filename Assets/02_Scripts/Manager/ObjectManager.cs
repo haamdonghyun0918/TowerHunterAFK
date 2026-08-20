@@ -111,7 +111,7 @@ public class ObjectManager : MonoBehaviour
         int maxCleared = 0;
         if (NetworkManager.Instance != null && NetworkManager.Instance.StageService != null)
         {
-            maxCleared = NetworkManager.Instance.StageService.GetStageViewModel().MaxClearedStage;
+            maxCleared = NetworkManager.Instance.StageService.MaxClearedStage;
         }
         bool isRestArea = (stage % 10 == 0) && (maxCleared >= stage);
 

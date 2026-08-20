@@ -14,7 +14,7 @@ public class MapManager : MonoBehaviour
             {
                 return 1;
             }
-            return NetworkManager.Instance.StageService.GetStageModel().CurrentStage;
+            return NetworkManager.Instance.StageService.CurrentStage;
         }
     }
 
@@ -80,7 +80,7 @@ public class MapManager : MonoBehaviour
         }
         StageService stageService = NetworkManager.Instance.StageService;
 
-        if(stageService.GetStageViewModel().CurrentStage != stage)
+        if (stageService.CurrentStage != stage)
         {
             stageService.SetStage(stage);
         }

@@ -55,6 +55,7 @@ public class GameFlowManager : MonoBehaviour
 
         NetworkManager.Instance.PlayerResourceService.SetGoldOnLoad(SaveManager.Instance.CurrentSaveData.Gold);
         NetworkManager.Instance.PlayerResourceService.SetDiamondOnLoad(SaveManager.Instance.CurrentSaveData.Diamond);
+        NetworkManager.Instance.PlayerResourceService.SetExpOnLoad(SaveManager.Instance.CurrentSaveData.Exp);
 
         HunterInven = new HunterInventory();
         HunterInven.Init();
@@ -119,14 +120,14 @@ public class GameFlowManager : MonoBehaviour
         NetworkManager.Instance.PlayerResourceService.RequestAddGold(1000);
         Debug.Log("클리어 보상 1000골드 지급!");
 
-        int currentClearedStage = stageService.GetStageViewModel().CurrentStage;
+        int currentClearedStage = stageService.CurrentStage;
         if (currentClearedStage % 10 == 0)
         {
             NetworkManager.Instance.PlayerResourceService.RequestAddDiamond(500);
             Debug.Log($"보스 층인 {currentClearedStage} Floor 를 클리어 하셨습니다! 500 다이아몬드가 추가됩니다!");
         }
 
-        int preSaveStage = stageService.GetStageViewModel().CurrentStage;
+        int preSaveStage = stageService.CurrentStage;
         stageService.RequestGoNextStage();
 
         int nextStage = preSaveStage + 1;
@@ -148,7 +149,7 @@ public class GameFlowManager : MonoBehaviour
 
         stageService.GoToSafeStage();
 
-        int rollBackStage = stageService.GetStageViewModel().CurrentStage;
+        int rollBackStage = stageService.CurrentStage;
 
         Debug.Log($"실패로 인해 {rollBackStage} 스테이지로 돌아갑니다...");
         MapManager.Instance.StartNewStage(rollBackStage).Forget();

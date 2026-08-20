@@ -1,6 +1,5 @@
 ﻿public class PlayerResourceService 
 {
-    private PlayerResourceModel _playerResourceModel;
 
     private PlayerResourceViewModel _playerResourceViewModel;
 
@@ -12,98 +11,132 @@
         }
         return _playerResourceViewModel;
     }
-
-    public PlayerResourceModel GetPlayerResourceModel()
-    {
-        if(_playerResourceModel == null)
-        {
-            CreatePlayerResourceViewModel();
-        }
-
-        return _playerResourceModel;
-    }
-
+    
     private void CreatePlayerResourceViewModel()
     {
-        var resourceModel = new PlayerResourceModel();
+        PlayerResourceModel resourceModel = new PlayerResourceModel();
 
-        var resourceViewModel = new PlayerResourceViewModel(resourceModel);
-
-        _playerResourceModel = resourceModel;
-        _playerResourceViewModel = resourceViewModel;
+        _playerResourceViewModel = new PlayerResourceViewModel(resourceModel);
     }
 
     public void SetGoldOnLoad(long gold)
     {
-        var resourceViewModel = GetPlayerResourceViewModel();
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
 
-        resourceViewModel.Gold = gold;
+        viewModel.SetGoldOnLoad(gold);
+    }
+
+    public void SetExpOnLoad(long exp)
+    {
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+
+        viewModel.SetExpOnLoad(exp);
     }
 
     public void SetDiamondOnLoad(uint diamond)
     {
-        var resourceViewModel = GetPlayerResourceViewModel();
-        resourceViewModel.Diamond = diamond;
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+
+        viewModel.SetDiamondOnLoad(diamond);
     }
 
     public void RequestAddGold(long addGold)
     {
-        if(addGold <= 0)
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+
+        if(viewModel.TryIncreaseGold(addGold) == false)
         {
             return;
         }
 
-        var resourceViewModel = GetPlayerResourceViewModel();
-
-        resourceViewModel.Gold = resourceViewModel.Gold + addGold;
-        // 여기서 바로 저장되도록 수정
         if(SaveManager.Instance != null)
         {
-            SaveManager.Instance.SaveGold(resourceViewModel.Gold);
+            SaveManager.Instance.SaveGold(viewModel.Gold);
         }
 
     }
 
     public void RequestAddDiamond(uint addDiamond)
     {
-        if (addDiamond <= 0)
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+
+        if (viewModel.TryIncreaseDiamond(addDiamond) == false)
         {
             return;
         }
 
-        var resourceViewModel = GetPlayerResourceViewModel();
-        resourceViewModel.Diamond += addDiamond;
-
-        if(SaveManager.Instance != null)
+        if (SaveManager.Instance != null)
         {
-            SaveManager.Instance.SaveDiamond(resourceViewModel.Diamond);
+            SaveManager.Instance.SaveDiamond(viewModel.Diamond);
+        }
+    }
+
+    public void RequestAddExp(long addExp)
+    {
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+
+        if( viewModel.TryIncreaseExp(addExp) == false)
+        {
+            return;
+        }
+        if( SaveManager.Instance != null)
+        {
+            SaveManager.Instance.SaveExp(viewModel.Exp);
         }
     }
 
     public bool RequestUseGold(long useGold)
     {
-        if(useGold <= 0)
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+
+        if(viewModel.TryDecreaseGold(useGold) == false)
         {
             return false;
         }
 
-        var resourceViewModel = GetPlayerResourceViewModel();
-
-        if(resourceViewModel.Gold  < useGold)
-        {
-            return false;
-        }
-
-        resourceViewModel.Gold = resourceViewModel.Gold - useGold;
-        // 여기서 바로 저장되도록 수정
         if(SaveManager.Instance != null)
         {
-            SaveManager.Instance.SaveGold(resourceViewModel.Gold);
+            SaveManager.Instance.SaveGold(viewModel.Gold);
         }
-
         return true;
     }
 
+    public bool RequestUseExp(long useExp)
+    {
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+
+        if (viewModel.TryDecreaseExp(useExp) == false)
+        {
+            return false;
+        }
+
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.SaveExp(viewModel.Exp);
+        }
+        return true;
+    }
+
+    public bool RequestUseDiamond(uint useDiamond)
+    {
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+
+        if (viewModel.TryDecreaseDiamond(useDiamond) == false)
+        {
+            return false;
+        }
+
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.SaveDiamond(viewModel.Diamond);
+        }
+        return true;
+    }
+
+
+
+
+    //ToDo 장비 아이템 데이터
     public void RequestAddEquipment(string[] equipments)
     {
         if (equipments == null || equipments.Length == 0)

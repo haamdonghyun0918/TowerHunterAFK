@@ -1,8 +1,17 @@
 ﻿
 public class StageService 
 {
-    private StageModel _stageModel;
     private StageViewModel _stageViewModel;
+
+    public int CurrentStage
+    {
+        get => GetStageViewModel().CurrentStage;
+    }
+
+    public int MaxClearedStage
+    {
+        get => GetStageViewModel().MaxClearedStage;
+    }
 
     public StageViewModel GetStageViewModel()
     {
@@ -13,104 +22,81 @@ public class StageService
         return _stageViewModel;
     }
 
-    public StageModel GetStageModel()
-    {
-        if (_stageModel == null || _stageViewModel == null)
-        {
-            CreateStageViewModel();
-        }
-        return _stageModel;
-    }
-
     private void CreateStageViewModel()
     {
-        var stageModel = new StageModel();
-        var stageViewModel = new StageViewModel(stageModel);
+        StageModel stageModel = new StageModel();
 
-        _stageViewModel = stageViewModel;
-        _stageModel = stageModel;
+        _stageViewModel = new StageViewModel(stageModel);
     }
 
     public void SetStageOnLoad(int stage)
     {
-        var stageViewModel = GetStageViewModel();
+        StageViewModel viewModel = GetStageViewModel();
 
-        if(stage<1)
+        viewModel.SetCurrentStage(stage);
+
+        if(SaveManager.Instance != null)
         {
-            stage = 1;
+            int maxClearedStage = SaveManager.Instance.GetMaxClearedStage();
+
+            viewModel.SetMaxClearedStageOnLoad(maxClearedStage);
         }
-
-        stageViewModel.CurrentStage = stage;
-
-        if (SaveManager.Instance != null)
-        {
-            stageViewModel.MaxClearedStage = SaveManager.Instance.GetMaxClearedStage();
-        }
-
-        stageViewModel.InvokeOnceOnInit();
+        viewModel.InvokeOnceOnInit();
     }
 
     public void RequestGoNextStage()
     {
-        var stageViewModel = GetStageViewModel();
+        StageViewModel viewModel = GetStageViewModel();
 
-        if(stageViewModel.CurrentStage < 1)
+        viewModel.MoveNextStage();
+
+        if(SaveManager.Instance != null)
         {
-            return;
+            SaveManager.Instance.SaveStage(viewModel.CurrentStage);
         }
-
-        SetStage(stageViewModel.CurrentStage + 1);
     }
 
     public void SetStage(int stage)
     {
-        var stageViewModel = GetStageViewModel();
+        StageViewModel viewModel = GetStageViewModel();
 
-        if(stage < 1)
-        {
-            stage = 1;
-        }
-
-        stageViewModel.CurrentStage = stage;
-
+        viewModel.SetCurrentStage(stage);
+        
         if(SaveManager.Instance != null)
         {
-            SaveManager.Instance.SaveStage(stage);
+            SaveManager.Instance.SaveStage(viewModel.CurrentStage);
         }
     }
 
     public void GoToSafeStage()
     {
-        var stageViewModel = GetStageViewModel();
+        int currentStage = CurrentStage;
+        int safeStage;
 
-        int currentStage = stageViewModel.CurrentStage;
-        int safeStage = ((currentStage - 1) / 10) * 10;
-
-        if( stageViewModel == null )
-        {
-            return;
-        }
         if(currentStage < 10)
         {
             safeStage = 1;
         }
+        else
+        {
+            safeStage = ((currentStage - 1) / 10) * 10;
+        }
+
         SetStage(safeStage);
     }
 
     public void UpdateMaxClearedStage(int clearedStage)
     {
-        var stageViewModel = GetStageViewModel();
+        StageViewModel viewModel = GetStageViewModel();
 
-        if(clearedStage <= stageViewModel.MaxClearedStage)
+        if(viewModel.TryUpdateMaxClearedStage(clearedStage) == false)
         {
             return;
         }
 
-        stageViewModel.MaxClearedStage = clearedStage;
-
         if(SaveManager.Instance != null)
         {
-            SaveManager.Instance.UpdateMaxClearedStage(clearedStage);
+            SaveManager.Instance.UpdateMaxClearedStage(viewModel.MaxClearedStage);
         }
     }
 

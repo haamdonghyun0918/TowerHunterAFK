@@ -1,77 +1,27 @@
-﻿using UnityEngine;
-using UnityEngine.TextCore.Text;
-
-public class CharacterStatusViewModel : ViewModelBase
+﻿public class CharacterStatusViewModel : ViewModelBase
 {
-    private CharacterStatusModel _characterStatusModel;
+    private readonly CharacterStatusModel _characterStatusModel;
 
-    public CharacterStatusViewModel(CharacterStatusModel characterStatusModel)
+    public CharacterStatusViewModel(CharacterStatusModel model, int slotIndex)
     {
-        _characterStatusModel = characterStatusModel;
+        _characterStatusModel = model;
+        _characterStatusModel.SlotIndex = slotIndex;
     }
 
-    public int SlotIndex
-    {
-        get => _characterStatusModel.SlotIndex;
-
-        set
-        {
-            if(_characterStatusModel.SlotIndex != value)
-            {
-                _characterStatusModel.SlotIndex = value;
-                OnPropertyChanged(nameof(SlotIndex));
-            }
-        }
-    }
-    public string CharacterId
-    {
-        get => _characterStatusModel.CharacterId;
-
-        set
-        {
-            if(_characterStatusModel.CharacterId !=value)
-            {
-                _characterStatusModel.CharacterId = value;
-                OnPropertyChanged(nameof(CharacterId));
-            }
-        }
-    }
-
-    public int CurrentHp
-    {
-        get => _characterStatusModel.CurrentHp;
-
-        set
-        {
-            if (_characterStatusModel.CurrentHp != value)
-            {
-                _characterStatusModel.CurrentHp = value;
-                OnPropertyChanged(nameof(CurrentHp));
-                OnPropertyChanged(nameof(HpRatio));
-            }
-        }
-    }
-
-    public int MaxHp
-    {
-        get => _characterStatusModel.MaxHp;
-
-        set
-        {
-            if (_characterStatusModel.MaxHp != value)
-            {
-                _characterStatusModel.MaxHp = value;
-                OnPropertyChanged(nameof(MaxHp));
-                OnPropertyChanged(nameof(HpRatio));
-            }
-        }
-    }
+    public int SlotIndex => _characterStatusModel.SlotIndex;
+    public string CharacterId => _characterStatusModel.CharacterId;
+    public int CurrentHp => _characterStatusModel.CurrentHp;
+    public int MaxHp => _characterStatusModel.MaxHp;
+    public int CurrentSkillCost => _characterStatusModel.CurrentSkillCost;
+    public int MaxSkillCost => _characterStatusModel.MaxSkillCost;
+    public bool IsActive => _characterStatusModel.IsActive;
+    public bool IsDead => _characterStatusModel.IsDead;
 
     public float HpRatio
     {
         get
         {
-            if(MaxHp <= 0)
+            if (MaxHp <= 0)
             {
                 return 0f;
             }
@@ -80,73 +30,122 @@ public class CharacterStatusViewModel : ViewModelBase
         }
     }
 
-    public int CurrentSkillCost
+    public void SetCharacterStatus(
+        string characterId,
+        int currentHp,
+        int maxHp,
+        int currentSkillCost,
+        int maxSkillCost,
+        bool isActive,
+        bool isDead)
     {
-        get => _characterStatusModel.CurrentSkillCost;
+        bool characterIdChanged = (CharacterId != characterId);
+        bool currentHpChanged = (CurrentHp != currentHp);
+        bool maxHpChanged = (MaxHp != maxHp);
+        bool currentSkillCostChanged = (CurrentSkillCost != currentSkillCost);
+        bool maxSkillCostChanged = (MaxSkillCost != maxSkillCost);
+        bool isActiveChanged = (IsActive != isActive);
+        bool isDeadChanged = (IsDead != isDead);
 
-        set
+        _characterStatusModel.CharacterId = characterId;
+        _characterStatusModel.CurrentHp = currentHp;
+        _characterStatusModel.MaxHp = maxHp;
+        _characterStatusModel.CurrentSkillCost = currentSkillCost;
+        _characterStatusModel.MaxSkillCost = maxSkillCost;
+        _characterStatusModel.IsActive = isActive;
+        _characterStatusModel.IsDead = isDead;
+
+        if (characterIdChanged)
         {
-            if(_characterStatusModel.CurrentSkillCost != value)
-            {
-                _characterStatusModel.CurrentSkillCost = value;
-                OnPropertyChanged(nameof(CurrentSkillCost));
-            }
+            OnPropertyChanged(nameof(CharacterId));
+        }
+        if(currentHpChanged)
+        {
+            OnPropertyChanged(nameof(CurrentHp));
+        }
+        if(maxHpChanged)
+        {
+            OnPropertyChanged(nameof(MaxHp));
+        }
+        if(currentHpChanged || maxHpChanged)
+        {
+            OnPropertyChanged(nameof(HpRatio));
+        }
+        if (currentSkillCostChanged)
+        {
+            OnPropertyChanged(nameof(CurrentSkillCost));
+        }
+        if(maxSkillCostChanged)
+        {
+            OnPropertyChanged(nameof(MaxSkillCost));
+        }
+        if(isActiveChanged)
+        {
+            OnPropertyChanged(nameof(IsActive));
+        }
+        if(isDeadChanged)
+        {
+            OnPropertyChanged(nameof(IsDead));
+        }
+
+    }
+
+    public void UpdateHp(int currentHp, int maxHp)
+    {
+        bool currentHpChanged = (CurrentHp != currentHp);
+
+        bool maxHpChanged = (MaxHp != maxHp);
+
+        bool isDead = currentHp <= 0;
+        bool isDeadChanged = (IsDead != isDead);
+
+        _characterStatusModel.CurrentHp = currentHp;
+        _characterStatusModel.MaxHp = maxHp;
+        _characterStatusModel.IsDead = isDead;
+
+        if (currentHpChanged)
+        {
+            OnPropertyChanged(nameof(CurrentHp));
+        }
+
+        if (maxHpChanged)
+        {
+            OnPropertyChanged(nameof(MaxHp));
+        }
+
+        if (currentHpChanged || maxHpChanged)
+        {
+            OnPropertyChanged(nameof(HpRatio));
+        }
+
+        if (isDeadChanged)
+        {
+            OnPropertyChanged(nameof(IsDead));
         }
     }
 
-    public int MaxSkillCost
+    public void UpdateSkillCost(int currentSkillCost, int maxSkillCost)
     {
-        get => _characterStatusModel.MaxSkillCost;
+        bool currentChanged = (CurrentSkillCost != currentSkillCost);
+        bool maxChanged = (MaxSkillCost != maxSkillCost);
 
-        set
+        _characterStatusModel.CurrentSkillCost = currentSkillCost;
+        _characterStatusModel.MaxSkillCost = maxSkillCost;
+
+        if(currentChanged)
         {
-            if(_characterStatusModel.MaxSkillCost != value)
-            {
-                _characterStatusModel.MaxSkillCost = value;
-                OnPropertyChanged(nameof(MaxSkillCost));
-            }
+            OnPropertyChanged(nameof(CurrentSkillCost));
+        }
+
+        if(maxChanged)
+        {
+            OnPropertyChanged(nameof(MaxSkillCost));
         }
     }
 
-
-    public bool IsActive
+    public void Reset()
     {
-        get => _characterStatusModel.IsActive;
-
-        set
-        {
-            if(_characterStatusModel.IsActive != value)
-            {
-                _characterStatusModel.IsActive = value;
-                OnPropertyChanged(nameof(IsActive));
-            }
-        }
+        SetCharacterStatus("", 0, 0, 0, 0, false, false);
     }
 
-    public bool IsDead
-    {
-        get => _characterStatusModel.IsDead;
-        
-        set
-        {
-            if(_characterStatusModel.IsDead != value)
-            {
-                _characterStatusModel.IsDead = value;
-                OnPropertyChanged(nameof(IsDead));
-            }
-        }
-    }
-
-    public void InvokeOnceOnInit()
-    {
-        OnPropertyChanged(nameof(SlotIndex));
-        OnPropertyChanged(nameof(CharacterId));
-        OnPropertyChanged(nameof(CurrentHp));
-        OnPropertyChanged(nameof(MaxHp));
-        OnPropertyChanged(nameof(HpRatio));
-        OnPropertyChanged(nameof(CurrentSkillCost));
-        OnPropertyChanged(nameof(MaxSkillCost));
-        OnPropertyChanged(nameof(IsActive));
-        OnPropertyChanged(nameof(IsDead));
-    }
 }
