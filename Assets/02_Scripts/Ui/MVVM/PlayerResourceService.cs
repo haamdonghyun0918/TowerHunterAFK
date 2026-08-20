@@ -1,6 +1,4 @@
-﻿using static UnityEditor.Profiling.HierarchyFrameDataView;
-
-public class PlayerResourceService 
+﻿public class PlayerResourceService 
 {
 
     private PlayerResourceViewModel _playerResourceViewModel;
@@ -16,10 +14,9 @@ public class PlayerResourceService
     
     private void CreatePlayerResourceViewModel()
     {
-        var resourceModel = new PlayerResourceModel();
+        PlayerResourceModel resourceModel = new PlayerResourceModel();
 
-        var resourceViewModel = new PlayerResourceViewModel(resourceModel);
-
+        _playerResourceViewModel = new PlayerResourceViewModel(resourceModel);
     }
 
     public void SetGoldOnLoad(long gold)

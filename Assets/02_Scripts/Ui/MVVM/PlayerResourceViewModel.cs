@@ -100,7 +100,7 @@
 
     public bool TryDecreaseExp(long amount)
     {
-        if(amount <= 0 ||  Exp > amount)
+        if(amount <= 0 ||  Exp < amount)
         {
             return false;
         }
@@ -120,7 +120,7 @@
 
     public bool TryDecreaseDiamond(uint amount)
     {
-        if(amount <= 0 || Diamond > amount)
+        if(amount <= 0 || Diamond < amount)
         {
             return false;
         }
