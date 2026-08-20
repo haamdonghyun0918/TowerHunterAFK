@@ -80,6 +80,9 @@ public class GameFlowManager : MonoBehaviour
             Debug.LogError("[GameFlowManager] MapManager가 없습니다.");
             return;
         }
+
+        await UiManager.Instance.OpenUi<MainUi>();
+
         Debug.Log("게임 세팅 완료 게임 화면 출력");
     }
 
