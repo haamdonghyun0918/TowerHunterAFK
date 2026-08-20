@@ -1,5 +1,5 @@
 ﻿using System;
-
+//일단 사용 중지
 public class EquipmentModel
 {
     private EquipmentSaveData _saveData;

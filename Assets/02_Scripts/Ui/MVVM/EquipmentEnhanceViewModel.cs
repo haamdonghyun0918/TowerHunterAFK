@@ -4,7 +4,7 @@
     {
         OnPropertyChanged(nameof(TargetEquipmentUniqueId));
         OnPropertyChanged(nameof(ItemName));
-        OnPropertyChanged(nameof(EnhanceLevelText));
+        OnPropertyChanged(nameof(EnhanceLevel));
         OnPropertyChanged(nameof(TotalAtkText));
         OnPropertyChanged(nameof(CostText));
     }
@@ -57,18 +57,18 @@
         }
     }
 
-    private string _enhanceLevelText;
-    public string EnhanceLevelText
+    private int _enhanceLevel;
+    public int EnhanceLevel
     {
-        get => _enhanceLevelText;
+        get => _enhanceLevel;
 
         set
         {
-            if (_enhanceLevelText != value)
+            if (_enhanceLevel != value)
             {
-                _enhanceLevelText = value;
+                _enhanceLevel = value;
 
-                OnPropertyChanged(nameof(EnhanceLevelText));
+                OnPropertyChanged(nameof(EnhanceLevel));
             }
         }
     }
@@ -85,6 +85,22 @@
                 _totalAtkText = value;
 
                 OnPropertyChanged(nameof(TotalAtkText));
+            }
+        }
+    }
+
+    private string _totalDefText;
+    public string TotalDefText
+    {
+        get => _totalDefText;
+
+        set
+        {
+            if (_totalDefText != value)
+            {
+                _totalDefText = value;
+
+                OnPropertyChanged(nameof(TotalDefText));
             }
         }
     }
