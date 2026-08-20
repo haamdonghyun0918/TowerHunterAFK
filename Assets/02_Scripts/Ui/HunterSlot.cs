@@ -35,11 +35,22 @@ public class HunterSlot : MonoBehaviour
                 _hunterIcon.gameObject.SetActive(false);
                 LoadIconAsync(data.IconPath, _cts.Token).Forget();
             }
+
+            else
+            {
+                _hunterIcon.sprite = null;
+                _hunterIcon.gameObject.SetActive(false);
+            }
         }
 
         else
         {
             _hunterName.text = "비어있음";
+            if (_hunterIcon != null)
+            {
+                _hunterIcon.sprite = null;
+                _hunterIcon.gameObject.SetActive(false);
+            }
         }
 
         if (_hunterSlotButton != null)
