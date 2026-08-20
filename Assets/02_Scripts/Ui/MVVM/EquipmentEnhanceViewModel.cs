@@ -1,13 +1,14 @@
 ﻿public class EquipmentEnhanceViewModel : ViewModelBase
 {
-    public void InvokeOnceOnInit()
-    {
-        OnPropertyChanged(nameof(TargetEquipmentUniqueId));
-        OnPropertyChanged(nameof(ItemName));
-        OnPropertyChanged(nameof(EnhanceLevel));
-        OnPropertyChanged(nameof(TotalAtkText));
-        OnPropertyChanged(nameof(CostText));
-    }
+    //비효율적이라 일단은 제외
+    //public void InvokeOnceOnInit()
+    //{
+    //    OnPropertyChanged(nameof(TargetEquipmentUniqueId));
+    //    OnPropertyChanged(nameof(ItemName));
+    //    OnPropertyChanged(nameof(EnhanceLevel));
+    //    OnPropertyChanged(nameof(TotalAtkText));
+    //    OnPropertyChanged(nameof(CostText));
+    //}
 
     private string _targetEquipmentUniqueId;
     public string TargetEquipmentUniqueId

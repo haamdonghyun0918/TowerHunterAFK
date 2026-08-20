@@ -32,6 +32,7 @@ public class EquipmentService
         var vm = GetEquipmentEnhanceViewModel();
 
         vm.TargetEquipmentUniqueId = uniqueId;
+        vm.ItemIconAddress = baseData.IconAddress;
         vm.ItemName = baseData.Name;
         vm.EnhanceLevel = saveData.EnhanceLevel;
 

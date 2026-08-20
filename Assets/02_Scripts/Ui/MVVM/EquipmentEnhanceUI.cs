@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Cysharp.Threading.Tasks;
+using System.ComponentModel;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,9 +8,9 @@ using UnityEngine.UI;
 public class EquipmentEnhanceUI : UiBase
 {
     [SerializeField] private TMP_Text Text_EquipmentName;
-    [SerializeField] private TMP_Text Text_TotalAtk;
-    [SerializeField] private TMP_Text Text_TotalDef;
+    [SerializeField] private TMP_Text Text_TotalStat;
     [SerializeField] private TMP_Text Text_EnhanceCost;
+    [SerializeField] private Image Image_ItemIcon;
     [SerializeField] private Button Button_EnhanceBtn;
 
     private int _equipmentLevel;
@@ -57,13 +59,16 @@ public class EquipmentEnhanceUI : UiBase
 
     private void UpdateEnhanceUI()
     {
-        if (_viewModel == null) return;
-
-        Text_EquipmentName.text = _viewModel.ItemName;
+        if (_viewModel == null)
+        {
+            return;
+        }
+        
         _equipmentLevel = _viewModel.EnhanceLevel;
-        Text_TotalAtk.text = _viewModel.TotalAtkText;
-        Text_TotalDef.text = _viewModel.TotalDefText;
-        Text_EnhanceCost.text = _viewModel.CostText;
+        Text_EquipmentName.text = $"{_viewModel.ItemName}+{_equipmentLevel}";
+        Text_TotalStat.text = $"공격력 : {_viewModel.TotalAtkText}\n방어력 : {_viewModel.TotalDefText}\n"; //속도는 일단 제외
+        Text_EnhanceCost.text = $"강화비용\n{_viewModel.CostText}";
+        LoadIconAsync().Forget();
     }
 
     private void OnClick_EnhanceBtn()
@@ -72,5 +77,19 @@ public class EquipmentEnhanceUI : UiBase
 
         string targetUid = _viewModel.TargetEquipmentUniqueId;
         NetworkManager.Instance.EquipmentService.RequestEnhance(targetUid);
+    }
+
+    private async UniTaskVoid LoadIconAsync()
+    {
+        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(_viewModel.ItemIconAddress);
+
+        if (loadedSprite != null)
+        {
+            Image_ItemIcon.sprite = loadedSprite;
+        }
+        else
+        {
+            Debug.LogWarning($"[HunterSlot] 아이콘 로드 실패: {_viewModel.ItemIconAddress}");
+        }
     }
 }
