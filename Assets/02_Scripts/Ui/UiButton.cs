@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class UiButton : MonoBehaviour
 {
@@ -46,19 +47,19 @@ public class UiButton : MonoBehaviour
         }
     }
 
-    public void BindOnClickButtonEvent(Action onClickCallback)
+    public void BindOnClickButtonEvent(UnityAction onClickCallback)
     {
         if (Button_Base == null) return;
 
-        Button_Base.onClick.AddListener(new UnityEngine.Events.UnityAction(onClickCallback));
+        Button_Base.onClick.AddListener(onClickCallback);
 
     }
 
-    public void UnBindOnClickButtonEvent(Action onClickCallback)
+    public void UnBindOnClickButtonEvent(UnityAction onClickCallback)
     {
         if (Button_Base == null) return;
 
-        Button_Base.onClick.RemoveListener(new UnityEngine.Events.UnityAction(onClickCallback));
+        Button_Base.onClick.RemoveListener(onClickCallback);
     }
 
     public void ChangeButtonText(string buttonStr)

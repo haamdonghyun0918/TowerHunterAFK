@@ -1,54 +1,62 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PartySetting
 {
     private const int _maxSlots = 3;
 
-    // 중복된 헌터를 파티에 넣을 경우 사용되는 메서드(시스템적으로)
-    public void SetCharacterToParty(int slotIndex, string uniqueId)
-    {
-        if (slotIndex < 0 || slotIndex >= _maxSlots)
-        {
-            return;
-        }
-
-        string[] currentParty = SaveManager.Instance.CurrentSaveData.CurrentPartyCharacterUids;
-
-        for (int i = 0; i < _maxSlots; i++)
-        {
-            if (currentParty[i] == uniqueId)
-            {
-                currentParty[i] = "";
-            }
-        }
-
-        currentParty[slotIndex] = uniqueId;
-        SaveManager.Instance.SaveCurrentData();
-    }
-
-    // 빈자리에 넣는 메서드(실제 플레이어가 버튼을 눌렀을 때 사용할 메서드)
     public bool AddCharacterToParty(string uniqueId)
     {
         string[] currentParty = SaveManager.Instance.CurrentSaveData.CurrentPartyCharacterUids;
-        
+
+        if (SaveManager.Instance.CharacterDict.TryGetValue(uniqueId, out var incomingData) == false)
+        {
+            return false;
+        }
+
+        string incomingBaseId = incomingData.BaseId;
+        int emptySlotIndex = -1;
+
         for (int i = 0; i < _maxSlots; i++)
         {
-            if (currentParty[i] == uniqueId)
+            string partyUid = currentParty[i];
+
+            if (string.IsNullOrEmpty(partyUid))
+            {
+
+                if (emptySlotIndex == -1)
+                {
+                    emptySlotIndex = i;
+                }
+
+                continue;
+            }
+
+
+            if (partyUid == uniqueId)
             {
                 Debug.LogWarning("이미 스쿼드에 편성된 헌터입니다.");
                 return false;
             }
+
+
+            if (SaveManager.Instance.CharacterDict.TryGetValue(partyUid, out var partyData))
+            {
+
+                if (partyData.BaseId == incomingBaseId)
+                {
+                    currentParty[i] = uniqueId;
+                    SaveManager.Instance.SaveCurrentData();
+                    Debug.Log($"[PartySetting] 이미 편성된 같은 종류의 헌터({incomingBaseId})를 교체했습니다.");
+                    return true;
+                }
+            }
         }
 
-        for (int i = 0; i < _maxSlots; i++)
+        if (emptySlotIndex != -1)
         {
-            if (string.IsNullOrEmpty(currentParty[i]))
-            {
-                currentParty[i] = uniqueId;
-                SaveManager.Instance.SaveCurrentData();
-                return true;
-            }
+            currentParty[emptySlotIndex] = uniqueId;
+            SaveManager.Instance.SaveCurrentData();
+            return true;
         }
 
         Debug.LogWarning("스쿼드가 가득 찼습니다 (총 인원수: 3명)");
@@ -120,7 +128,7 @@ public class PartySetting
 
             if (saveData.OwnedCharacters.Count > 0)
             {
-                SetCharacterToParty(0, saveData.OwnedCharacters[0].UniqueId);
+                AddCharacterToParty(saveData.OwnedCharacters[0].UniqueId);
             }
         }
     }
