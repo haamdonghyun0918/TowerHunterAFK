@@ -25,6 +25,22 @@
         }
     }
 
+    private string _itemIconAddress;
+    public string ItemIconAddress
+    {
+        get => _itemIconAddress;
+
+        set
+        {
+            if (_itemIconAddress != value)
+            {
+                _itemIconAddress = value;
+
+                OnPropertyChanged(nameof(ItemIconAddress));
+            }
+        }
+    }
+
     private string _itemName;
     public string ItemName
     {
