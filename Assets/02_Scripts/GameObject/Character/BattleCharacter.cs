@@ -8,7 +8,8 @@ public enum CharacterState
     Idle,
     Run,
     NormalAttack,
-    SkillAttack
+    SkillAttack,
+    Hit
 }
 
 public class BattleCharacter : MonoBehaviour
@@ -151,6 +152,11 @@ public class BattleCharacter : MonoBehaviour
             case CharacterState.Die:
                 {
                     _characterAnimator.SetBool("IsDead", true);
+                }
+                break;
+            case CharacterState.Hit:
+                {
+                    //_characterAnimator.SetBool("IsHit", true);
                 }
                 break;
         }
