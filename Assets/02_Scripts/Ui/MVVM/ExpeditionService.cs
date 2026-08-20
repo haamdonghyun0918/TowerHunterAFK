@@ -5,35 +5,23 @@ using Cysharp.Threading.Tasks;
 
 public class ExpeditionService
 {
-    private ExpeditionModel _expeditionModel;
     private ExpeditionViewModel _expeditionViewModel;
     private List<ExpeditionData> _expeditionsList;
 
     public ExpeditionViewModel GetExpeditionViewModel()
     {
-        if(_expeditionModel == null)
+        if(_expeditionViewModel == null)
         {
             CreateExpeditionViewModel();
         }
         return _expeditionViewModel;
     }
 
-    public ExpeditionModel GetExpeditionModel()
-    {
-        if(_expeditionModel == null || _expeditionViewModel == null)
-        {
-            CreateExpeditionViewModel();
-        }
-        return _expeditionModel;
-    }
-
     private void CreateExpeditionViewModel()
     {
-        var expeditionModel = new ExpeditionModel();
-        var expeditionViewModel = new ExpeditionViewModel(expeditionModel);
+        ExpeditionModel expeditionModel = new ExpeditionModel();
 
-        _expeditionModel = expeditionModel;
-        _expeditionViewModel = expeditionViewModel;
+        _expeditionViewModel = new ExpeditionViewModel(expeditionModel);
     }
 
     public void Init()
@@ -49,28 +37,24 @@ public class ExpeditionService
         string savedId = SaveManager.Instance.GetOngoingExpeditionId();
         string savedTime = SaveManager.Instance.GetExpeditionStartTime();
 
+        ExpeditionData savedExpedition = null;
+
         if(string.IsNullOrEmpty(savedId) == false && string.IsNullOrEmpty(savedTime) == false)
         {
             foreach(ExpeditionData data in _expeditionsList)
             {
                 if(data.Id == savedId)
                 {
-                    _expeditionModel.SelectedExpedition = data;
+                    savedExpedition = data;
                     break;
                 }
             }
 
-            if(_expeditionModel.SelectedExpedition != null)
+            if(savedExpedition != null && DateTime.TryParse(savedTime, out DateTime parsedTime))
             {
-                if(DateTime.TryParse(savedTime, out DateTime parsedTime))
-                {
-                    _expeditionModel.StartTime = parsedTime;
+                _expeditionViewModel.RestoreExpedition(savedExpedition, parsedTime);
 
-                    _expeditionModel.IsExpeditionStart = true;
-                    _expeditionViewModel.IsExpeditionStart = true;
-
-                    StartTimerLoop().Forget();
-                }
+                StartTimerLoop().Forget();
             }
         }
 
@@ -94,36 +78,38 @@ public class ExpeditionService
             return false;
         }
 
-        _expeditionModel.SelectedExpedition = targetExpedition;
-        Debug.Log($"[ExpeditionService] {_expeditionModel.SelectedExpedition.ExpeditionName}을 선택하였습니다.");
+        if(_expeditionViewModel.SelectExpedition(targetExpedition) == false)
+        {
+            return false;
+        }
+
+        Debug.Log($"[ExpeditionService] {targetExpedition.ExpeditionName}을 선택하였습니다.");
 
         return true;
     }
 
     public void RequestStartExpedition()
     {
-        if(_expeditionModel.SelectedExpedition == null)
+        if(_expeditionViewModel.SelectedExpedition == null)
         {
             Debug.LogError("[ExpeditionService] 원정대를 선택하지 않았습니다.");
             return;
         }
 
-        if(_expeditionModel.IsExpeditionStart == true)
+        if(_expeditionViewModel.IsExpeditionStart == true)
         {
             Debug.LogError("[ExpeditionService] 원정대를 보냈습니다.");
             return;
         }
 
-        _expeditionModel.IsExpeditionStart = true;
-        _expeditionViewModel.IsExpeditionStart = true;
+        DateTime startTime = DateTime.Now;
 
-        _expeditionModel.IsCompleted = false;
-        _expeditionViewModel.IsCompleted = false;
+        if(_expeditionViewModel.TryStartExpedition(startTime) == false)
+        {
+            return;
+        }
 
-        _expeditionModel.StartTime = DateTime.Now;
-
-        string timeStr = _expeditionModel.StartTime.ToString("O");
-        SaveManager.Instance.SaveExpeditionStart(_expeditionModel.SelectedExpedition.Id, timeStr);
+        SaveManager.Instance.SaveExpeditionStart(_expeditionViewModel.SelectedExpedition.Id, startTime.ToString("O"));
 
         Debug.Log("원정을 보냈습니다!");
         StartTimerLoop().Forget();
@@ -131,20 +117,22 @@ public class ExpeditionService
 
     public void RequestClaimReward()
     {
-        if(_expeditionModel.IsCompleted == false)
+        if(_expeditionViewModel.IsCompleted == false)
         {
             Debug.LogError("[ExpeditionService] 원정대가 완료되지 않았습니다.");
             return;
         }
 
-        if(_expeditionModel.SelectedExpedition == null)
+        ExpeditionData selectedExpedition = _expeditionViewModel.SelectedExpedition;
+
+        if(selectedExpedition == null)
         {
             Debug.LogError("[ExpeditionService] 원정대를 선택하지 않았습니다.");
             return;
         }
 
-        long rewardGold = _expeditionModel.SelectedExpedition.RewardGold;
-        string[] rewardEquipments = _expeditionModel.SelectedExpedition.RewardEquipments;
+        long rewardGold = selectedExpedition.RewardGold;
+        string[] rewardEquipments = selectedExpedition.RewardEquipments;
 
         if(rewardGold > 0)
         {
@@ -154,6 +142,7 @@ public class ExpeditionService
         if(rewardEquipments != null && rewardEquipments.Length > 0)
         {
             EquipmentUtils equipUtils = new EquipmentUtils();
+
             foreach(string equipId in rewardEquipments)
             {
                 equipUtils.AddEquipments(equipId);
@@ -162,14 +151,7 @@ public class ExpeditionService
 
         SaveManager.Instance.ClearExpedition();
 
-        _expeditionModel.IsExpeditionStart = false;
-        _expeditionViewModel.IsExpeditionStart = false;
-
-        _expeditionModel.IsCompleted = false;
-        _expeditionViewModel.IsCompleted = false;
-
-        _expeditionModel.SelectedExpedition = null;
-        _expeditionViewModel.RemainTimeString = "00:00:00";
+        _expeditionViewModel.ResetExpedition();
 
         Debug.Log("원정 보상을 수령하였습니다!");
     }
@@ -177,20 +159,25 @@ public class ExpeditionService
     private async UniTaskVoid StartTimerLoop()
     {
         // for문을 사용하는 것이 아니라 while을 사용한 이유: 몇 번 반복이 아닌 특정 시간(상태)를 체크해야 하므로
-        while(_expeditionModel.IsExpeditionStart == true && _expeditionModel.IsCompleted == false)
+        while(_expeditionViewModel.IsExpeditionStart == true && _expeditionViewModel.IsCompleted == false)
         {
-            DateTime endTime = _expeditionModel.StartTime.AddHours(_expeditionModel.SelectedExpedition.DurationHours);
+            ExpeditionData selectedExpedition = _expeditionViewModel.SelectedExpedition;
+
+            if(selectedExpedition == null)
+            {
+                break;
+            }
+
+            DateTime endTime = _expeditionViewModel.StartTime.AddHours(selectedExpedition.DurationHours);
             TimeSpan remainTime = endTime - DateTime.Now;
 
             if(remainTime.TotalSeconds <= 0)
             {
-                _expeditionModel.IsCompleted = true;
-                _expeditionViewModel.IsCompleted = true;
-                _expeditionViewModel.RemainTimeString = "00:00:00";
+                _expeditionViewModel.CompletedExpedition();
                 break;
             }
+            _expeditionViewModel.UpdateRemainTime(remainTime);
 
-            _expeditionViewModel.RemainTimeString = string.Format("{0:D2}:{1:D2}:{2:D2}", remainTime.Hours, remainTime.Minutes, remainTime.Seconds);
             // 1초 쉬지 않으면 무한루프에 들어갈 수 있으므로 1초정도 쉬게 함
             await UniTask.Delay(1000);
         }
