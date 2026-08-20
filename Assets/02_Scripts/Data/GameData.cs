@@ -26,6 +26,7 @@ public class CharacterData : GameDataBase
     public int DefPerLevel;
     public string CharacterType;
     public int GachaWeight;
+    public string IconPath;
 }
 
 [System.Serializable]
