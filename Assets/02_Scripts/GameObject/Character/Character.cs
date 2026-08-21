@@ -155,24 +155,28 @@ public class Character : BattleCharacter
     public async UniTask AtkTarget(Monster targetMonster, MonsterParty monsterParty)
     {
 
+
         if (targetMonster._isDead == true) return;
 
         var characterType = _characterData.CharacterType;
 
-        IncreaseCurrentSkillCost(1);
+        CheckSkillUseable();
 
         if (_isSkillUsable == false)
         {
             await UseNormalAttack(targetMonster);
             Debug.Log($"[일반공격] 타겟{targetMonster.name}에게 {_characterAtk} 데미지를 줍니다.");
+            IncreaseCurrentSkillCost(1);
         }
         else
         {
-            UseSkillCost(_skill.GetRequiredSkillCost());
             await UseSkill(targetMonster, monsterParty);
+            UseSkillCost(_skill.GetRequiredSkillCost());
         }
 
         ChangeState(CharacterState.Idle);
+
+        InvokeCostChangedEvent();
     }
 
     private void SetSingleTargetTransform(Monster targetMonster)
@@ -198,8 +202,6 @@ public class Character : BattleCharacter
             _currentSkillCost = _maxSkillCost;
         }
 
-        InvokeCostChangedEvent();
-        CheckSkillUseable();
     }
 
     public void UseSkillCost(int amount)
@@ -210,7 +212,6 @@ public class Character : BattleCharacter
         }
         _currentSkillCost -= amount;
 
-        InvokeCostChangedEvent();
     }
 
     private void CheckSkillUseable()
@@ -284,8 +285,6 @@ public class Character : BattleCharacter
     private void TestGetMaxSkillCost()
     {
         _currentSkillCost = _maxSkillCost;
-        CheckSkillUseable();
-        //추가
         InvokeCostChangedEvent();
     }
 
