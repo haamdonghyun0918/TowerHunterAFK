@@ -122,7 +122,11 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         _isPointerDown = true;
         _isLongPressTriggered = false;
         _isClickCanceled = false;
-
+        
+        if (_onLongPressSlot == null)
+        {
+            return;
+        }
         _longPressCts?.Cancel();
         _longPressCts?.Dispose();
         _longPressCts = new CancellationTokenSource();
