@@ -73,6 +73,26 @@ public class EquipmentEnhanceUI : UiBase
         LoadIconAsync().Forget();
     }
 
+    private async UniTaskVoid LoadIconAsync()
+    {
+        if (string.IsNullOrEmpty(_viewModel.ItemIconAddress))
+        {
+            Debug.LogWarning("[EquipmentEnhanceUI] 아이콘 주소가 Null이어서 로드를 생략합니다.");
+            return;
+        }
+
+        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(_viewModel.ItemIconAddress);
+
+        if (loadedSprite != null)
+        {
+            Image_ItemIcon.sprite = loadedSprite;
+        }
+        else
+        {
+            Debug.LogWarning($"[HunterSlot] 아이콘 로드 실패: {_viewModel.ItemIconAddress}");
+        }
+    }
+
     private void OnClick_EnhanceBtn()
     {
         if (_viewModel == null) return;
@@ -86,17 +106,5 @@ public class EquipmentEnhanceUI : UiBase
         UiManager.Instance.CloseUi<EquipmentEnhanceUI>();
     }
 
-    private async UniTaskVoid LoadIconAsync()
-    {
-        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(_viewModel.ItemIconAddress);
-
-        if (loadedSprite != null)
-        {
-            Image_ItemIcon.sprite = loadedSprite;
-        }
-        else
-        {
-            Debug.LogWarning($"[HunterSlot] 아이콘 로드 실패: {_viewModel.ItemIconAddress}");
-        }
-    }
+    
 }

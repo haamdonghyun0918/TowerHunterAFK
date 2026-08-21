@@ -22,7 +22,15 @@ public class EquipmentDetailUI : UiBase
         Button_Disassemble.onClick.AddListener(OnClick_DisassembleBtn);
         Button_CloseAll.onClick.AddListener(OnClick_CloseBtn);
 
-        UpdateDetailUIAsync().Forget();
+        //테스트용 더미 데이터 하드코딩
+        if (_viewModel != null)
+        {
+            _viewModel.TargetEquipmentUniqueId = "TEST_UID_001";
+            _viewModel.ItemName = "테스트용 짱센 검";
+            _viewModel.TotalStatText = "공격력 : 999\n방어력 : 50\n속도 : 10";
+        }
+
+        UpdateDetailUIAsync();
     }
 
     private void OnDisable()
@@ -57,23 +65,39 @@ public class EquipmentDetailUI : UiBase
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        UpdateDetailUIAsync().Forget();
+        UpdateDetailUIAsync();
     }
 
-    private async UniTaskVoid UpdateDetailUIAsync()
+    private void UpdateDetailUIAsync()
     {
-        if (_viewModel == null) return;
+        if (_viewModel == null)
+        {
+            return;
+        }
 
         Text_EquipmentName.text = _viewModel.ItemName;
         Text_TotalStat.text = _viewModel.TotalStatText;
 
-        if (!string.IsNullOrEmpty(_viewModel.ItemIconAddress))
+        LoadIconAsync().Forget();
+    }
+
+    private async UniTaskVoid LoadIconAsync()
+    {
+        if (string.IsNullOrEmpty(_viewModel.ItemIconAddress))
         {
-            Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(_viewModel.ItemIconAddress);
-            if (loadedSprite != null)
-            {
-                Image_ItemIcon.sprite = loadedSprite;
-            }
+            Debug.LogWarning("[EquipmentEnhanceUI] 아이콘 주소가 Null이어서 로드를 생략합니다.");
+            return;
+        }
+
+        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(_viewModel.ItemIconAddress);
+
+        if (loadedSprite != null)
+        {
+            Image_ItemIcon.sprite = loadedSprite;
+        }
+        else
+        {
+            Debug.LogWarning($"[HunterSlot] 아이콘 로드 실패: {_viewModel.ItemIconAddress}");
         }
     }
 

@@ -56,6 +56,18 @@ public class EquipmentService
         //테스트를 위해 일단은 골드만 요구하도록 로직 구현
         long cost = (saveData.EnhanceLevel + 1) * 10;
         vm.CostText = $"{cost} Gold";
+
+
+        //==================테스트용 하드코딩 데이터.
+        //사용시 본 메서드의 위쪽 코드 전부 주석처리 하고 사용할 것.
+        //아이콘 주소가 없어서 에러가 날 수도 있음.
+        //var vm = GetEquipmentEnhanceViewModel();
+
+        //vm.TargetEquipmentUniqueId = uniqueId;
+        //vm.ItemName = "테스트 장비";
+        //vm.EnhanceLevel = 5;
+        //vm.TotalAtkText = "공격력: 100";
+        //vm.CostText = "100 Gold";
     }
 
     public bool RequestEnhance(string uniqueId)
