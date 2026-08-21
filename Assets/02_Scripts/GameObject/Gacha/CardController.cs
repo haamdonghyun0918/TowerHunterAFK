@@ -56,10 +56,10 @@ public class CardController : MonoBehaviour
     {
         SetGradeColor(character);
         SetCardFrontImage(character.Rarity);
-        await SetCharacterCardIcon(character);
-        _characterName.text = character.Name;
 
-        await OpenCard();
+        await SetCharacterCardIcon(character);
+
+        _characterName.text = character.Name;
     }
 
     public async UniTask OpenCard()

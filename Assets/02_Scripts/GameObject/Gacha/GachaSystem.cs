@@ -119,7 +119,7 @@ public class GachaSystem : MonoBehaviour
             if (character == null)
                 return null;
 
-            await ShowGachaResult(character);
+            await ShowSingleGachaResult(character);
 
             return character;
         }
@@ -245,11 +245,11 @@ public class GachaSystem : MonoBehaviour
         return character;
     }
 
-    private async UniTask ShowGachaResult(CharacterData character)
+    private async UniTask ShowSingleGachaResult(CharacterData character)
     {
         GachaResultUI gachaResultUI = await UiManager.Instance.OpenUi<GachaResultUI>();
 
-        await gachaResultUI.SetGachaResult(character);
+        await gachaResultUI.SetSingleGachaResult(character);
     }
     private async UniTask ShowMultipleGachaResult(List<CharacterData> characters)
     {

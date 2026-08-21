@@ -20,7 +20,7 @@ public class GachaResultUI : UiBase
         CloseUI();
     }
 
-    public async UniTask SetGachaResult(CharacterData character)
+    public async UniTask SetSingleGachaResult(CharacterData character)
     {
         if (_isAnimPlaying == true) return;
 
@@ -53,15 +53,30 @@ public class GachaResultUI : UiBase
         {
             ClearCards();
 
-            List<UniTask> cardTasks = new List<UniTask>();
+            List<CardController> cards = new List<CardController>();
+            List<UniTask> loadTasks = new List<UniTask>();
 
             foreach (CharacterData character in characters)
             {
-                _currentCard = Instantiate(Prefab_Card, Root_Card);
-                cardTasks.Add(_currentCard.SetCard(character));
+                CardController card = Instantiate(Prefab_Card, Root_Card);
+
+                cards.Add(card);
+
+                loadTasks.Add(card.SetCard(character));
             }
 
-            await UniTask.WhenAll(cardTasks);
+            await UniTask.WhenAll(loadTasks);
+
+            List<UniTask> animationTasks = new List<UniTask>();
+
+            foreach (CardController card in cards)
+            {
+                animationTasks.Add(card.OpenCard());
+
+                await UniTask.Delay(120);
+            }
+
+            await UniTask.WhenAll(animationTasks);
         }
 
         finally
