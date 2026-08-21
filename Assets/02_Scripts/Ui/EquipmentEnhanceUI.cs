@@ -13,14 +13,12 @@ public class EquipmentEnhanceUI : UiBase
     [SerializeField] private Button Button_EnhanceBtn;
     [SerializeField] private Button Button_CloseAll;
 
-
     private int _equipmentLevel;
 
     private EquipmentEnhanceViewModel _viewModel;
 
     private void OnEnable()
     {
-        _viewModel = NetworkManager.Instance.EquipmentService.GetEquipmentEnhanceViewModel();
         Bind();
         Button_EnhanceBtn.onClick.AddListener(OnClick_EnhanceBtn);
         Button_CloseAll.onClick.AddListener(OnClick_CloseAll);
@@ -35,6 +33,8 @@ public class EquipmentEnhanceUI : UiBase
 
     private void Bind()
     {
+        _viewModel = NetworkManager.Instance.EquipmentService.GetEquipmentEnhanceViewModel();
+
         if (_viewModel == null)
         {
             return;
@@ -68,9 +68,29 @@ public class EquipmentEnhanceUI : UiBase
         
         _equipmentLevel = _viewModel.EnhanceLevel;
         Text_EquipmentName.text = $"{_viewModel.ItemName}+{_equipmentLevel}";
-        Text_TotalStat.text = $"공격력 : {_viewModel.TotalAtkText}\n방어력 : {_viewModel.TotalDefText}\n"; //속도는 일단 제외
+        Text_TotalStat.text = $"{_viewModel.TotalAtkText}\n{_viewModel.TotalDefText}\n"; //속도는 일단 제외
         Text_EnhanceCost.text = $"강화비용\n{_viewModel.CostText}";
         LoadIconAsync().Forget();
+    }
+
+    private async UniTaskVoid LoadIconAsync()
+    {
+        if (string.IsNullOrEmpty(_viewModel.ItemIconAddress))
+        {
+            Debug.LogWarning("[EquipmentEnhanceUI] 아이콘 주소가 Null이어서 로드를 생략합니다.");
+            return;
+        }
+
+        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(_viewModel.ItemIconAddress);
+
+        if (loadedSprite != null)
+        {
+            Image_ItemIcon.sprite = loadedSprite;
+        }
+        else
+        {
+            Debug.LogWarning($"[HunterSlot] 아이콘 로드 실패: {_viewModel.ItemIconAddress}");
+        }
     }
 
     private void OnClick_EnhanceBtn()
@@ -86,17 +106,5 @@ public class EquipmentEnhanceUI : UiBase
         UiManager.Instance.CloseUi<EquipmentEnhanceUI>();
     }
 
-    private async UniTaskVoid LoadIconAsync()
-    {
-        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(_viewModel.ItemIconAddress);
-
-        if (loadedSprite != null)
-        {
-            Image_ItemIcon.sprite = loadedSprite;
-        }
-        else
-        {
-            Debug.LogWarning($"[HunterSlot] 아이콘 로드 실패: {_viewModel.ItemIconAddress}");
-        }
-    }
+    
 }

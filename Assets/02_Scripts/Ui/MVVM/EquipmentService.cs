@@ -13,6 +13,17 @@ public class EquipmentService
         return _equipmentEnhanceViewModel;
     }
 
+    private EquipmentDetailViewModel _equipmentDetailViewModel;
+
+    public EquipmentDetailViewModel GetEquipmentDetailViewModel()
+    {
+        if (_equipmentDetailViewModel == null)
+        {
+            _equipmentDetailViewModel = new EquipmentDetailViewModel();
+        }
+        return _equipmentDetailViewModel;
+    }
+
     public void SetEnhanceTarget(string uniqueId)
     {
         if (SaveManager.Instance.EquipmentDict.TryGetValue(uniqueId, out EquipmentSaveData saveData) == false)
@@ -45,6 +56,18 @@ public class EquipmentService
         //테스트를 위해 일단은 골드만 요구하도록 로직 구현
         long cost = (saveData.EnhanceLevel + 1) * 10;
         vm.CostText = $"{cost} Gold";
+
+
+        //==================테스트용 하드코딩 데이터.
+        //사용시 본 메서드의 위쪽 코드 전부 주석처리 하고 사용할 것.
+        //아이콘 주소가 없어서 에러가 날 수도 있음.
+        //var vm = GetEquipmentEnhanceViewModel();
+
+        //vm.TargetEquipmentUniqueId = uniqueId;
+        //vm.ItemName = "테스트 장비";
+        //vm.EnhanceLevel = 5;
+        //vm.TotalAtkText = "공격력: 100";
+        //vm.CostText = "100 Gold";
     }
 
     public bool RequestEnhance(string uniqueId)
@@ -82,7 +105,29 @@ public class EquipmentService
         return true;
     }
 
+    public void SetDetailTarget(string uniqueId)
+    {
+        if (SaveManager.Instance.EquipmentDict.TryGetValue(uniqueId, out EquipmentSaveData saveData) == false)
+        {
+            Debug.LogError($"[EquipmentService] 해당 UID의 장비를 찾을 수 없습니다: {uniqueId}");
+            return;
+        }
 
+        EquipMentData baseData = GameDataManager.Instance.GetData<EquipMentData>(saveData.BaseId);
+        if (baseData == null) return;
+
+        var vm = GetEquipmentDetailViewModel();
+
+        vm.TargetEquipmentUniqueId = uniqueId;
+        vm.ItemIconAddress = baseData.IconAddress;
+        vm.ItemName = baseData.Name;
+
+        int totalAtk = baseData.BuffAtk + (saveData.EnhanceLevel * 5);
+        int totalDef = baseData.BuffDef + (saveData.EnhanceLevel * 3);
+        int totalSpd = baseData.BuffAtkSpeed; 
+
+        vm.TotalStatText = $"공격력 : {totalAtk}\n방어력 : {totalDef}\n속도 : {totalSpd}";
+    }
 
 
 }
