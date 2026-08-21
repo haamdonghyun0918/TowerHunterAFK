@@ -43,7 +43,7 @@ public class HunterInventoryUi : UiBase
             if (string.IsNullOrEmpty(partyUid) == false && SaveManager.Instance.CharacterDict.TryGetValue(partyUid, out var charData))
             {
                 var data = GameDataManager.Instance.GetData<CharacterData>(charData.BaseId);
-                _partySlots[i].SetUp(data, partyUid, OnClickPartySlot);
+                _partySlots[i].SetUp(data, partyUid, OnClickPartySlot, OnLongPressSlot);
             }
 
             else
@@ -88,7 +88,7 @@ public class HunterInventoryUi : UiBase
             {
                 var data = GameDataManager.Instance.GetData<CharacterData>(waitChars[i].BaseId);
   
-                _createdSlots[i].SetUp(data, waitChars[i].UniqueId, OnClickSlot);
+                _createdSlots[i].SetUp(data, waitChars[i].UniqueId, OnClickSlot, OnLongPressSlot);
                 _createdSlots[i].gameObject.SetActive(true);
             }
 
@@ -120,6 +120,25 @@ public class HunterInventoryUi : UiBase
         {
             ReLoadHunterInventoryUi().Forget();
         }
+    }
+
+    private async UniTaskVoid OpenHunterInfo(string uniqueId)
+    {
+        if (SaveManager.Instance.CharacterDict.TryGetValue(uniqueId, out var charSaveData))
+        {
+            HunterInfoUi HunterinfoUi = await UiManager.Instance.OpenUi<HunterInfoUi>();
+
+            if (HunterinfoUi != null)
+            {
+                HunterinfoUi.SetUp(uniqueId, charSaveData.BaseId).Forget();
+            }
+        }
+    }
+
+
+    private void OnLongPressSlot(string uniqueId)
+    {
+        OpenHunterInfo(uniqueId).Forget();
     }
 
     private void CloseHunterInventory()
