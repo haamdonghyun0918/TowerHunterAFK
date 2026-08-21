@@ -615,6 +615,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3834948644457826051, guid: cea3744920a8f7743858faf8a064be65, type: 3}
+      propertyPath: _cardController
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4156630862953748821, guid: cea3744920a8f7743858faf8a064be65, type: 3}
       propertyPath: m_Name
       value: ManagerContainer
