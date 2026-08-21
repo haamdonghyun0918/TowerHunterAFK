@@ -33,6 +33,8 @@ public class GachaResultUI : UiBase
             _currentCard = Instantiate(Prefab_Card, Root_Card);
 
             await _currentCard.SetCard(character);
+
+            await _currentCard.OpenCard();
         }
 
         finally
