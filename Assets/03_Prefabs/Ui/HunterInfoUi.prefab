@@ -3204,6 +3204,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 625519703551101824}
+  - component: {fileID: 1633661035838044197}
   m_Layer: 5
   m_Name: HunterInfoUi
   m_TagString: Untagged
@@ -3232,6 +3233,29 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1633661035838044197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8216458631807027883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f26dea8f42df406459787dc1b0bf2db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HunterInfoUi
+  _hunterProfileImage: {fileID: 1130891971504489327}
+  _textName: {fileID: 8165935819533565780}
+  _textHp: {fileID: 79807042623615720}
+  _textAtk: {fileID: 1072134310572837049}
+  _textDef: {fileID: 4637311560623021401}
+  _textSpd: {fileID: 589522818935597793}
+  _textCost: {fileID: 703278458266337088}
+  _textTier: {fileID: 4007004970569583141}
+  _textRank: {fileID: 2674981922470141415}
+  _textLevel: {fileID: 1666681561367418050}
+  _buttonClose: {fileID: 5041591860269126400}
 --- !u!1 &8441441506704053198
 GameObject:
   m_ObjectHideFlags: 0
