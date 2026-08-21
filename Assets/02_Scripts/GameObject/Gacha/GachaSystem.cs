@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GachaSystem : MonoBehaviour
@@ -6,18 +7,19 @@ public class GachaSystem : MonoBehaviour
     private List<CharacterData> _allCharacterData = new List<CharacterData>();
     private List<CharacterData> _HigherCharacterData = new List<CharacterData>();
 
-    public static GachaSystem _Instance;
+    public static GachaSystem Instance;
 
     private int _drawCharacterCount;
-    private bool _isDrawTenCharacter;
+    private bool _isHigherGacha;
     private int _totalHigherGachaWeight;
     private int _totalGachaWeight;
+    private bool _isCardDrawing;
 
     private void Awake()
     {
-        if (_Instance == null)
+        if (Instance == null)
         {
-            _Instance = this;
+            Instance = this;
         }
         else
         {
@@ -29,7 +31,8 @@ public class GachaSystem : MonoBehaviour
     private void SetVariable()
     {
         _drawCharacterCount = 0;
-        _isDrawTenCharacter = false;
+        _isHigherGacha = false;
+        _isCardDrawing = false;
     }
 
     private void GetAllCharacterData()
@@ -40,6 +43,8 @@ public class GachaSystem : MonoBehaviour
 
     private void SetTotalGachaWeight()
     {
+        _totalGachaWeight = 0;
+
         foreach (var characterData in _allCharacterData)
         {
             _totalGachaWeight += characterData.GachaWeight;
@@ -70,61 +75,107 @@ public class GachaSystem : MonoBehaviour
 
     private void SetHigherTotalGachaWeight()
     {
+        _totalHigherGachaWeight = 0;
+
         foreach (var characterData in _HigherCharacterData)
         {
             _totalHigherGachaWeight += characterData.GachaWeight;
         }
     }
 
-    private CharacterData DrawSingleCharacter()
+    private async UniTask<CharacterData> DrawSingleCharacter()
     {
-        if (_allCharacterData == null || _allCharacterData.Count == 0)
+        if (_isCardDrawing == true) return null;
+
+        _isCardDrawing = true;
+
+        try
         {
-            GetAllCharacterData();
-        }
+            PrepareGachaData();
 
-        if (_HigherCharacterData == null || _HigherCharacterData.Count == 0)
+            if (_allCharacterData == null || _allCharacterData.Count == 0)
+            {
+                Debug.LogError("[GachaSystem] 캐릭터 데이터를 불러오지 못했습니다.");
+                return null;
+            }
+
+            CheckDrawHigherCharacters();
+
+            int totalGachaWeight;
+
+            if (_isHigherGacha)
+            {
+                totalGachaWeight = _totalHigherGachaWeight;
+            }
+            else
+            {
+                totalGachaWeight = _totalGachaWeight;
+            }
+
+            int randomValue = DrawRandomValue(totalGachaWeight);
+
+            CharacterData character = DrawCharacter(randomValue);
+
+            if (character == null)
+                return null;
+
+            await ShowGachaResult(character);
+
+            return character;
+        }
+        finally
         {
-            GetHigherCharacterData();
+            _isCardDrawing = false;
         }
-
-        if (_allCharacterData == null || _allCharacterData.Count == 0)
-        {
-            Debug.LogError($"[GachaSystem] 캐릭터 데이터를 불러오지 못했습니다.");
-            return null;
-        }
-
-        int totalGachaWeight = 0;
-
-        if (_isDrawTenCharacter == true)
-        {
-            totalGachaWeight = _totalHigherGachaWeight;
-        }
-
-        else
-        {
-            totalGachaWeight = _totalGachaWeight;
-        }
-
-        int randomValue = DrawRandomValue(totalGachaWeight);
-
-        return DrawCharacter(randomValue);
     }
 
-    private List<CharacterData> DrawMultipleCharacter(int count = 10)
+    private async UniTask<List<CharacterData>> DrawMultipleCharacter(int count = 10)
     {
+        if (_isCardDrawing == true) return null;
+
+        _isCardDrawing = true;
+
         List<CharacterData> characters = new List<CharacterData>();
 
-        for (int i = 0; i < count; i++)
+        try
         {
-            var drawnCharacter = DrawSingleCharacter();
-            if (drawnCharacter != null)
+            PrepareGachaData();
+
+            for (int i = 0; i < count; i++)
             {
-                characters.Add(drawnCharacter);
+                CheckDrawHigherCharacters();
+
+                int totalGachaWeight;
+
+                if (_isHigherGacha == true)
+                {
+                    totalGachaWeight = _totalHigherGachaWeight;
+                }
+                else
+                {
+                    totalGachaWeight = _totalGachaWeight;
+                }
+
+                int randomValue = DrawRandomValue(totalGachaWeight);
+
+                var drawnCharacter = DrawCharacter(randomValue);
+
+                if (drawnCharacter != null)
+                {
+                    characters.Add(drawnCharacter);
+                }
             }
+            Debug.Log($"10연차 결과: {characters.Count}개");
+
+            await ShowMultipleGachaResult(characters);
+
+            return characters;
         }
 
-        return characters;
+        finally
+        {
+            _isCardDrawing = false;
+        }
     }
 
     private int DrawRandomValue(int totalWeight)
@@ -136,7 +187,7 @@ public class GachaSystem : MonoBehaviour
     {
         int currentWeightSum = 0;
 
-        if (_isDrawTenCharacter == true)
+        if (_isHigherGacha == true)
         {
             foreach (var character in _HigherCharacterData)
             {
@@ -163,6 +214,19 @@ public class GachaSystem : MonoBehaviour
         return null;
     }
 
+    private void PrepareGachaData()
+    {
+        if (_allCharacterData == null || _allCharacterData.Count == 0)
+        {
+            GetAllCharacterData();
+        }
+
+        if (_HigherCharacterData == null || _HigherCharacterData.Count == 0)
+        {
+            GetHigherCharacterData();
+        }
+    }
+
     private CharacterData DrawnCharacter(int currentWeightSum, int randomValue, CharacterData character)
     {
         LogDrawnCharacter(character);
@@ -178,13 +242,20 @@ public class GachaSystem : MonoBehaviour
         _drawCharacterCount++;
         Debug.Log($"{_drawCharacterCount}개의 캐릭터를 뽑았습니다.");
 
-        if (_isDrawTenCharacter == true)
-        {
-            _drawCharacterCount = 0;
-        }
-
-        CheckDrawTenCharacters();
         return character;
+    }
+
+    private async UniTask ShowGachaResult(CharacterData character)
+    {
+        GachaResultUI gachaResultUI = await UiManager.Instance.OpenUi<GachaResultUI>();
+
+        await gachaResultUI.SetGachaResult(character);
+    }
+    private async UniTask ShowMultipleGachaResult(List<CharacterData> characters)
+    {
+        GachaResultUI gachaResultUI = await UiManager.Instance.OpenUi<GachaResultUI>();
+
+        await gachaResultUI.SetMultipleGachaResult(characters);
     }
 
     private void OpenCharacterCardUI(CharacterData character)
@@ -227,34 +298,34 @@ public class GachaSystem : MonoBehaviour
 
     private void LogDrawnCharacter(CharacterData character)
     {
-        string prefix = _isDrawTenCharacter ? "[최소 등급 보장] " : "";
+        string prefix = _isHigherGacha ? "[최소 등급 보장] " : "";
         Debug.Log($"{prefix}뽑힌 캐릭터: {character.Id}, 등급: {character.Rarity}");
     }
 
-    private void CheckDrawTenCharacters()
+    private void CheckDrawHigherCharacters()
     {
-        if (_drawCharacterCount == 9)
+        if (_drawCharacterCount % 10 == 9)
         {
-            _isDrawTenCharacter = true;
+            _isHigherGacha = true;
             return;
         }
 
-        _isDrawTenCharacter = false;
+        _isHigherGacha = false;
     }
 
 
     // 테스트용 치트 함수 ==============================================
 
-    private void Update()
+    private async void Update()
     {
         if (Input.GetKeyDown(KeyCode.D))
         {
-            DrawSingleCharacter();
+            await DrawSingleCharacter();
         }
 
         if (Input.GetKeyDown(KeyCode.U))
         {
-            DrawMultipleCharacter();
+            await DrawMultipleCharacter();
         }
     }
 }
