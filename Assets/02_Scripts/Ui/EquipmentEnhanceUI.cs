@@ -13,14 +13,12 @@ public class EquipmentEnhanceUI : UiBase
     [SerializeField] private Button Button_EnhanceBtn;
     [SerializeField] private Button Button_CloseAll;
 
-
     private int _equipmentLevel;
 
     private EquipmentEnhanceViewModel _viewModel;
 
     private void OnEnable()
     {
-        _viewModel = NetworkManager.Instance.EquipmentService.GetEquipmentEnhanceViewModel();
         Bind();
         Button_EnhanceBtn.onClick.AddListener(OnClick_EnhanceBtn);
         Button_CloseAll.onClick.AddListener(OnClick_CloseAll);
@@ -35,6 +33,8 @@ public class EquipmentEnhanceUI : UiBase
 
     private void Bind()
     {
+        _viewModel = NetworkManager.Instance.EquipmentService.GetEquipmentEnhanceViewModel();
+
         if (_viewModel == null)
         {
             return;
@@ -68,7 +68,7 @@ public class EquipmentEnhanceUI : UiBase
         
         _equipmentLevel = _viewModel.EnhanceLevel;
         Text_EquipmentName.text = $"{_viewModel.ItemName}+{_equipmentLevel}";
-        Text_TotalStat.text = $"공격력 : {_viewModel.TotalAtkText}\n방어력 : {_viewModel.TotalDefText}\n"; //속도는 일단 제외
+        Text_TotalStat.text = $"{_viewModel.TotalAtkText}\n{_viewModel.TotalDefText}\n"; //속도는 일단 제외
         Text_EnhanceCost.text = $"강화비용\n{_viewModel.CostText}";
         LoadIconAsync().Forget();
     }
