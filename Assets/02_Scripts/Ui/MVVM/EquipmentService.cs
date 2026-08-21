@@ -13,6 +13,17 @@ public class EquipmentService
         return _equipmentEnhanceViewModel;
     }
 
+    private EquipmentDetailViewModel _equipmentDetailViewModel;
+
+    public EquipmentDetailViewModel GetEquipmentDetailViewModel()
+    {
+        if (_equipmentDetailViewModel == null)
+        {
+            _equipmentDetailViewModel = new EquipmentDetailViewModel();
+        }
+        return _equipmentDetailViewModel;
+    }
+
     public void SetEnhanceTarget(string uniqueId)
     {
         if (SaveManager.Instance.EquipmentDict.TryGetValue(uniqueId, out EquipmentSaveData saveData) == false)
@@ -82,7 +93,29 @@ public class EquipmentService
         return true;
     }
 
+    public void SetDetailTarget(string uniqueId)
+    {
+        if (SaveManager.Instance.EquipmentDict.TryGetValue(uniqueId, out EquipmentSaveData saveData) == false)
+        {
+            Debug.LogError($"[EquipmentService] 해당 UID의 장비를 찾을 수 없습니다: {uniqueId}");
+            return;
+        }
 
+        EquipMentData baseData = GameDataManager.Instance.GetData<EquipMentData>(saveData.BaseId);
+        if (baseData == null) return;
+
+        var vm = GetEquipmentDetailViewModel();
+
+        vm.TargetEquipmentUniqueId = uniqueId;
+        vm.ItemIconAddress = baseData.IconAddress;
+        vm.ItemName = baseData.Name;
+
+        int totalAtk = baseData.BuffAtk + (saveData.EnhanceLevel * 5);
+        int totalDef = baseData.BuffDef + (saveData.EnhanceLevel * 3);
+        int totalSpd = baseData.BuffAtkSpeed; 
+
+        vm.TotalStatText = $"공격력 : {totalAtk}\n방어력 : {totalDef}\n속도 : {totalSpd}";
+    }
 
 
 }
