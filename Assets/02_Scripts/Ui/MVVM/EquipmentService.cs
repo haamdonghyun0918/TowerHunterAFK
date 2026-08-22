@@ -2,6 +2,17 @@
 
 public class EquipmentService
 {
+    private EquipmentDetailViewModel _equipmentDetailViewModel;
+
+    public EquipmentDetailViewModel GetEquipmentDetailViewModel()
+    {
+        if (_equipmentDetailViewModel == null)
+        {
+            _equipmentDetailViewModel = new EquipmentDetailViewModel();
+        }
+        return _equipmentDetailViewModel;
+    }
+
     private EquipmentEnhanceViewModel _equipmentEnhanceViewModel;
 
     public EquipmentEnhanceViewModel GetEquipmentEnhanceViewModel()
@@ -13,15 +24,39 @@ public class EquipmentService
         return _equipmentEnhanceViewModel;
     }
 
-    private EquipmentDetailViewModel _equipmentDetailViewModel;
+    private EquipmentDisassembleViewModel _equipmentDisassembleViewModel;
 
-    public EquipmentDetailViewModel GetEquipmentDetailViewModel()
+    public EquipmentDisassembleViewModel GetEquipmentDisassembleViewModel()
     {
-        if (_equipmentDetailViewModel == null)
+        if (_equipmentDisassembleViewModel == null)
         {
-            _equipmentDetailViewModel = new EquipmentDetailViewModel();
+            _equipmentDisassembleViewModel = new EquipmentDisassembleViewModel();
         }
-        return _equipmentDetailViewModel;
+        return _equipmentDisassembleViewModel;
+    }
+
+    public void SetDetailTarget(string uniqueId)
+    {
+        if (SaveManager.Instance.EquipmentDict.TryGetValue(uniqueId, out EquipmentSaveData saveData) == false)
+        {
+            Debug.LogError($"[EquipmentService] 해당 UID의 장비를 찾을 수 없습니다: {uniqueId}");
+            return;
+        }
+
+        EquipMentData baseData = GameDataManager.Instance.GetData<EquipMentData>(saveData.BaseId);
+        if (baseData == null) return;
+
+        var vm = GetEquipmentDetailViewModel();
+
+        vm.TargetEquipmentUniqueId = uniqueId;
+        vm.ItemIconAddress = baseData.IconAddress;
+        vm.ItemName = baseData.Name;
+
+        int totalAtk = baseData.BuffAtk + (saveData.EnhanceLevel * 5);
+        int totalDef = baseData.BuffDef + (saveData.EnhanceLevel * 3);
+        int totalSpd = baseData.BuffAtkSpeed;
+
+        vm.TotalStatText = $"공격력 : {totalAtk}\n방어력 : {totalDef}\n속도 : {totalSpd}";
     }
 
     public void SetEnhanceTarget(string uniqueId)
@@ -105,7 +140,7 @@ public class EquipmentService
         return true;
     }
 
-    public void SetDetailTarget(string uniqueId)
+    public void SetDisassembleTarget(string uniqueId)
     {
         if (SaveManager.Instance.EquipmentDict.TryGetValue(uniqueId, out EquipmentSaveData saveData) == false)
         {
@@ -114,20 +149,62 @@ public class EquipmentService
         }
 
         EquipMentData baseData = GameDataManager.Instance.GetData<EquipMentData>(saveData.BaseId);
-        if (baseData == null) return;
 
-        var vm = GetEquipmentDetailViewModel();
+        if (baseData == null)
+        {
+            Debug.LogError($"[EquipmentService] 해당 baseData의 장비를 찾을 수 없습니다: {baseData}");
+            return;
+        }
+
+        var vm = GetEquipmentDisassembleViewModel();
 
         vm.TargetEquipmentUniqueId = uniqueId;
         vm.ItemIconAddress = baseData.IconAddress;
         vm.ItemName = baseData.Name;
 
-        int totalAtk = baseData.BuffAtk + (saveData.EnhanceLevel * 5);
-        int totalDef = baseData.BuffDef + (saveData.EnhanceLevel * 3);
-        int totalSpd = baseData.BuffAtkSpeed; 
-
-        vm.TotalStatText = $"공격력 : {totalAtk}\n방어력 : {totalDef}\n속도 : {totalSpd}";
+        //테스트용 임시 획득 재화(골드) 나중에 마석 관련 데이터, 로직 나오면 바꿀 것.
+        long reward = (baseData.Price) / 10;
+        vm.RewardText = $"장비 분해 시 획득 재화\n{reward} Gold\n(테스트용 골드 지급/추후 마석으로 바꿀 것)";
+        
     }
 
+    public bool RequestDisassemble(string uniqueId)
+    {
+        if (SaveManager.Instance.EquipmentDict.TryGetValue(uniqueId, out EquipmentSaveData saveData) == false)
+        {
+            Debug.LogError($"[EquipmentService] 해당 UID의 장비를 찾을 수 없습니다: {uniqueId}");
+            return false;
+        }
+
+        EquipMentData baseData = GameDataManager.Instance.GetData<EquipMentData>(saveData.BaseId);
+        if (baseData == null)
+        {
+            Debug.LogError($"[EquipmentService] 해당 장비의 BaseData를 찾을 수 없습니다: {saveData.BaseId}");
+            return false;
+        }
+
+        long reward = (baseData.Price) / 10;
+
+        //이게 장비 아이템 제거하는 함수인지 불명확함. 물어볼것.
+        NetworkManager.Instance.PlayerResourceService.RequestUseEquipments(saveData.UniqueId);
+
+        //이건 직접 세이브 매니저를 통해서 제거하는 코드인데
+        //인벤토리 통해서 제거하는게 나을 것 같으니 테스트 용에서만 사용할것.
+        //SaveManager.Instance.EquipmentDict.Remove(uniqueId);
+        //var equipList = SaveManager.Instance.CurrentSaveData.OwnedEquipments;
+        //var targetEquip = equipList.Find(e => e.UniqueId == uniqueId);
+        //if (targetEquip != null)
+        //{
+        //    equipList.Remove(targetEquip);
+        //}
+
+        NetworkManager.Instance.PlayerResourceService.RequestAddGold(reward);
+
+        SaveManager.Instance.SaveCurrentData();
+
+        Debug.Log("분해 성공");
+
+        return true;
+    }
 
 }
