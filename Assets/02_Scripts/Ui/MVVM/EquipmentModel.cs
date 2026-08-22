@@ -2,8 +2,8 @@
 //일단 사용 중지
 public class EquipmentModel
 {
-    private EquipmentSaveData _saveData;
-    private EquipMentData _baseData;
+    private readonly EquipmentSaveData _saveData;
+    private readonly EquipMentData _baseData;
 
     public EquipmentModel(EquipmentSaveData saveData, EquipMentData baseData)
     {
@@ -18,21 +18,45 @@ public class EquipmentModel
     public EquipmentTier Tier => _baseData.Tier;
     public EquipmentRange Range => _baseData.Range;
     public string IconAddress => _baseData.IconAddress;
+    public string Position => _baseData.Position;
+    public int Rank => _baseData.Rank;
+    public int BuffAtk => _baseData.BuffAtk;
+    public int BuffHp => _baseData.BuffHp;
+    public int BuffAtkSpeed => _baseData.BuffAtkSpeed;
+    public int BuffDef => _baseData.BuffDef;
+    public int Price => _baseData.Price;
 
     public int GetEquipmentTotalAtk()
     {
-        int enhanceBonus = _saveData.EnhanceLevel * 5;
-        return _baseData.BuffAtk + enhanceBonus;
+        int enhanceBonus = EnhanceLevel * 5;
+        return BuffAtk + enhanceBonus;
+    }
+
+    public int GetEquipmentTotalHp()
+    {
+        return BuffHp;
+    }
+
+    public int GetEquipmentTotalAtakSpeed()
+    {
+        return BuffAtkSpeed;
     }
 
     public int GetEquipmentTotalDef()
     {
-        int enhanceBonus = _saveData.EnhanceLevel * 3;
-        return _baseData.BuffDef + enhanceBonus;
+        int enhanceBonus = EnhanceLevel * 3;
+
+        return BuffDef + enhanceBonus;
     }
 
     public void AddEquipmentEnhanceLevel(int amount = 1)
     {
+        if(amount <= 0)
+        {
+            return;
+        }
+
         _saveData.EnhanceLevel += amount;
     }
+
 }
