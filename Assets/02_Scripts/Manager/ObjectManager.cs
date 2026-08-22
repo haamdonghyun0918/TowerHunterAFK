@@ -285,4 +285,14 @@ public class ObjectManager : MonoBehaviour
 
         _monsterPartyList.Clear();
     }
+
+    public void ClearPlayerParty()
+    {
+        if (_currentPlayerParty != null)
+        {
+            Destroy(_currentPlayerParty.gameObject);
+            _currentPlayerParty = null;
+        }
+    }
+
 }
