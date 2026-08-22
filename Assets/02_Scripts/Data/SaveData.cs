@@ -41,6 +41,7 @@ public class SaveData
     public uint RecentEquipmentUid = 0;
 
     public string[] CurrentPartyCharacterUids = new string[3] { "", "", "" };
+    public string[] ExpeditionPartyUids = new string[3] { "", "", "" };
 
     public string OngoingExpeditionId = "";
     public string ExpeditionStartTime = "";
