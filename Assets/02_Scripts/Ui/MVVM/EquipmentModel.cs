@@ -3,9 +3,9 @@
 public class EquipmentModel
 {
     private readonly EquipmentSaveData _saveData;
-    private readonly EquipMentData _baseData;
+    private readonly EquipmentData _baseData;
 
-    public EquipmentModel(EquipmentSaveData saveData, EquipMentData baseData)
+    public EquipmentModel(EquipmentSaveData saveData, EquipmentData baseData)
     {
         _saveData = saveData;
         _baseData = baseData;

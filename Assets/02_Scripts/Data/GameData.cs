@@ -87,7 +87,7 @@ public enum EquipmentRange
 }
 
 [System.Serializable]
-public class EquipMentData: GameDataBase
+public class EquipmentData: GameDataBase
 {
     public string Name;
     public string Position;

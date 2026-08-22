@@ -4,7 +4,7 @@ public class EquipmentUtils
 {
     public void AddEquipments(string baseEquipmentId)
     {
-        EquipMentData equipData = GameDataManager.Instance.GetData<EquipMentData>(baseEquipmentId);
+        EquipmentData equipData = GameDataManager.Instance.GetData<EquipmentData>(baseEquipmentId);
 
         if (equipData == null)
         {
