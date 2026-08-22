@@ -45,7 +45,6 @@ public class PartySetting
                 if (partyData.BaseId == incomingBaseId)
                 {
                     currentParty[i] = uniqueId;
-                    SaveManager.Instance.SaveCurrentData();
                     Debug.Log($"[PartySetting] 이미 편성된 같은 종류의 헌터({incomingBaseId})를 교체했습니다.");
                     return true;
                 }
@@ -55,7 +54,6 @@ public class PartySetting
         if (emptySlotIndex != -1)
         {
             currentParty[emptySlotIndex] = uniqueId;
-            SaveManager.Instance.SaveCurrentData();
             return true;
         }
 
@@ -88,7 +86,6 @@ public class PartySetting
             if (currentParty[i] == uniqueId)
             {
                 currentParty[i] = "";
-                SaveManager.Instance.SaveCurrentData();
                 return true;
             }
         }
@@ -128,7 +125,8 @@ public class PartySetting
 
             if (saveData.OwnedCharacters.Count > 0)
             {
-                AddCharacterToParty(saveData.OwnedCharacters[0].UniqueId);
+                currentParty[0] = saveData.OwnedCharacters[0].UniqueId;
+                SaveManager.Instance.SaveCurrentData();
             }
         }
     }
