@@ -70,13 +70,6 @@ public class ExpeditionService
         }
 
         ExpeditionData targetExpedition = _expeditionsList[index];
-        int currentPlayerLevel = SaveManager.Instance.GetPlayerLevel();
-
-        if(currentPlayerLevel < targetExpedition.LimitLevel)
-        {
-            Debug.Log($"[ExpeditionService] 제한 레벨 부족! 필요레벨: {targetExpedition.LimitLevel}");
-            return false;
-        }
 
         if(_expeditionViewModel.SelectExpedition(targetExpedition) == false)
         {
@@ -84,7 +77,6 @@ public class ExpeditionService
         }
 
         Debug.Log($"[ExpeditionService] {targetExpedition.ExpeditionName}을 선택하였습니다.");
-
         return true;
     }
 
@@ -99,6 +91,14 @@ public class ExpeditionService
         if(_expeditionViewModel.IsExpeditionStart == true)
         {
             Debug.LogError("[ExpeditionService] 원정대를 보냈습니다.");
+            return;
+        }
+
+        int currentPlayerLevel = SaveManager.Instance.GetPlayerLevel();
+        int limitLevel = _expeditionViewModel.SelectedExpedition.LimitLevel;
+        if (currentPlayerLevel < limitLevel)
+        {
+            Debug.LogWarning($"[ExpeditionService] 원정 시작 불가: 플레이어 레벨이 부족합니다! (필요 레벨: {limitLevel})");
             return;
         }
 

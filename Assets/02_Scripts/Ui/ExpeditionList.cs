@@ -20,7 +20,21 @@ public class ExpeditionList : MonoBehaviour
         {
             _expeditionListButton.BindOnClickButtonEvent(OnClickExpedition);
         }
+        BindButton();
+    }
 
+    private void OnEnable()
+    {
+        BindButton();
+    }
+
+    private void BindButton()
+    {
+        if (_expeditionListButton != null && _onClickList != null)
+        {
+            _expeditionListButton.UnBindOnClickButtonEvent(OnClickExpedition);
+            _expeditionListButton.BindOnClickButtonEvent(OnClickExpedition);
+        }
     }
 
     private void OnClickExpedition()
