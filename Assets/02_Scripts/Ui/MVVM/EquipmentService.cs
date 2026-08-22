@@ -60,4 +60,61 @@ public class EquipmentService
 
         return true;
     }
+
+    public bool ContainsEquipment(string uniqueId)
+    {
+        if (string.IsNullOrEmpty(uniqueId) || SaveManager.Instance == null)
+        {
+            return false;
+        }
+
+        return SaveManager.Instance.EquipmentDict.ContainsKey(uniqueId);
+    }
+
+    public IReadOnlyList<EquipmentModel> GetOwenedEquipmentModels()
+    {
+        List<EquipmentModel> equipmentModels = new List<EquipmentModel>();
+
+        if(SaveManager.Instance == null || SaveManager.Instance.CurrentSaveData == null)
+        {
+            return equipmentModels;
+        }
+
+        List<EquipmentSaveData> ownedEquipments = SaveManager.Instance.CurrentSaveData.OwnedEquipments;
+
+        if(ownedEquipments == null)
+        {
+            return equipmentModels;
+        }
+
+        for(int i = 0; i < ownedEquipments.Count; i++)
+        {
+            EquipmentSaveData saveData = ownedEquipments[i];
+
+            if(saveData == null)
+            {
+                continue;
+            }
+
+            if(TryGetEuipmentModel(saveData.UniqueId, out EquipmentModel equipmentModel))
+            {
+                equipmentModels.Add(equipmentModel);
+            }
+        }
+
+        return equipmentModels;
+    }
+
+    public long GetEnhanceCost(EquipmentModel equipmentModel)
+    {
+        if(equipmentModel == null)
+        {
+            return 0;
+        }
+
+        //ToDo_DataDriven - JU
+        //추후 강화 레벨별 비용 데이터로 교체한다.
+        //현재는 하드코딩
+        return (equipmentModel.EnhanceLevel + 1) * 10;
+    }
 }
