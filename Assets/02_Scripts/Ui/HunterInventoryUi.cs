@@ -119,7 +119,7 @@ public class HunterInventoryUi : UiBase
     private void OnClickSlot(string uniqueId)
     {
         PartySetting partySetting = new PartySetting();
-        bool isSuccess = partySetting.AddCharacterToParty(uniqueId);
+        bool isSuccess = partySetting.AddHunterToParty(uniqueId);
         
         if (isSuccess)
         {
@@ -207,6 +207,8 @@ public class HunterInventoryUi : UiBase
                 MapManager.Instance.StartNewStage(rollBackStage).Forget();
             }
         }
+
+        UiManager.Instance.CloseUi<HunterInventoryUi>();
     }
 
     private void CloseHunterInventory()

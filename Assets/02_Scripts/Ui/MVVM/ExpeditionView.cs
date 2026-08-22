@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using TMPro;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class ExpeditionView : MonoBehaviour
 {
@@ -23,7 +25,9 @@ public class ExpeditionView : MonoBehaviour
     [SerializeField] private TMP_Text _remainTime;
     [SerializeField] private UiButton _buttonStart;
     [SerializeField] private UiButton _buttonClaimReward;
-    
+
+    [Header("Hunter Party Slots")]
+    [SerializeField] private HunterSlot[] _expeditionSlots = new HunterSlot[3];
 
     private ExpeditionViewModel _expeditionViewModel;
     private List<ExpeditionData> _expeditionList;
@@ -80,6 +84,8 @@ public class ExpeditionView : MonoBehaviour
         _expeditionViewModel = NetworkManager.Instance.ExpeditionService.GetExpeditionViewModel();
         Bind();
 
+        ExpeditionPartySetting.OnPartyChanged += UpdateExpeditionPartySlots;
+
         ExpeditionData selectedExpedition = _expeditionViewModel.SelectedExpedition;
 
         if (selectedExpedition != null && _expeditionViewModel.IsExpeditionStart)
@@ -110,6 +116,7 @@ public class ExpeditionView : MonoBehaviour
     private void OnDisable()
     {
         UnBind();
+        ExpeditionPartySetting.OnPartyChanged -= UpdateExpeditionPartySlots;
     }
 
     private void Bind()
@@ -244,6 +251,7 @@ public class ExpeditionView : MonoBehaviour
         }
 
         UpdateButton();
+        UpdateExpeditionPartySlots();
     }
 
     private void UpdateButton()
@@ -266,6 +274,46 @@ public class ExpeditionView : MonoBehaviour
         {
             _buttonClaimReward.gameObject.SetActive(isStarted && isCompleted);
         }
+    }
+
+    private void UpdateExpeditionPartySlots()
+    {
+        string[] expParty = SaveManager.Instance.CurrentSaveData.ExpeditionPartyUids;
+        bool isStarted = _expeditionViewModel.IsExpeditionStart;
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (_expeditionSlots[i] == null) continue;
+
+            string uid = expParty[i];
+
+            if (string.IsNullOrEmpty(uid) == false && SaveManager.Instance.CharacterDict.TryGetValue(uid, out var charData))
+            {
+                var data = GameDataManager.Instance.GetData<CharacterData>(charData.BaseId);
+                Action<string> onClickAction = isStarted ? (Action<string>)null : OnClickExpeditionSlotRemove;
+                _expeditionSlots[i].SetUp(data, uid, onClickAction, null);
+            }
+
+            else
+            {
+                Action<string> onClickAction = isStarted ? (Action<string>)null : OnClickExpeditionSlotAdd;
+                _expeditionSlots[i].SetUp(null, "", onClickAction, null);
+            }
+        }
+    }
+
+    private void OnClickExpeditionSlotRemove(string uid)
+    {
+        ExpeditionPartySetting setting = new ExpeditionPartySetting();
+        if (setting.RemoveCharacterFromExpedition(uid))
+        {
+            UpdateView();
+        }
+    }
+
+    private void OnClickExpeditionSlotAdd(string emptyUid)
+    {
+        UiManager.Instance.OpenUi<ExpeditionPartyUi>().Forget();
     }
 
     private void OnClickStartExpedition()

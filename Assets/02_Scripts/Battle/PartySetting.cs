@@ -4,9 +4,27 @@ public class PartySetting
 {
     private const int _maxSlots = 3;
 
-    public bool AddCharacterToParty(string uniqueId)
+    public bool AddHunterToParty(string uniqueId)
     {
         string[] currentParty = SaveManager.Instance.CurrentSaveData.CurrentPartyCharacterUids;
+        string[] expParty = SaveManager.Instance.CurrentSaveData.ExpeditionPartyUids;
+        
+        bool isInExpParty = false;
+
+        for (int i = 0; i < expParty.Length; i++)
+        {
+            if (expParty[i] == uniqueId)
+            {
+                isInExpParty = true;
+                break;
+            }
+        }
+
+        if (isInExpParty)
+        {
+            Debug.LogWarning("현재 원정대 스쿼드에 편성된 헌터는 메인 스쿼드에 넣을 수 없습니다!");
+            return false;
+        }
 
         if (SaveManager.Instance.CharacterDict.TryGetValue(uniqueId, out var incomingData) == false)
         {

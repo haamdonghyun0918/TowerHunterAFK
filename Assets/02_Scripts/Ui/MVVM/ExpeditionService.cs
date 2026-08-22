@@ -82,78 +82,83 @@ public class ExpeditionService
 
     public void RequestStartExpedition()
     {
-        if(_expeditionViewModel.SelectedExpedition == null)
+        if (_expeditionViewModel.SelectedExpedition == null)
         {
             Debug.LogError("[ExpeditionService] 원정대를 선택하지 않았습니다.");
             return;
         }
 
-        if(_expeditionViewModel.IsExpeditionStart == true)
+        if (_expeditionViewModel.IsExpeditionStart == true)
         {
-            Debug.LogError("[ExpeditionService] 원정대를 보냈습니다.");
+            Debug.LogError("[ExpeditionService] 이미 원정대를 보냈습니다.");
             return;
         }
 
         int currentPlayerLevel = SaveManager.Instance.GetPlayerLevel();
         int limitLevel = _expeditionViewModel.SelectedExpedition.LimitLevel;
+
         if (currentPlayerLevel < limitLevel)
         {
-            Debug.LogWarning($"[ExpeditionService] 원정 시작 불가: 플레이어 레벨이 부족합니다! (필요 레벨: {limitLevel})");
+            Debug.LogError($"[ExpeditionService] 원정 시작 불가: 레벨이 부족합니다! (필요 레벨: {limitLevel})");
+            return;
+        }
+
+        int hunterCount = 0;
+        string[] currentExpParty = SaveManager.Instance.CurrentSaveData.ExpeditionPartyUids;
+        for (int i = 0; i < currentExpParty.Length; i++)
+        {
+            if (string.IsNullOrEmpty(currentExpParty[i]) == false)
+            {
+                hunterCount++;
+            }
+        }
+
+        if (hunterCount < 3)
+        {
+            Debug.LogError("[ExpeditionService] 원정 시작 불가: 원정대 스쿼드에 반드시 3명의 헌터를 편성해야 합니다!");
             return;
         }
 
         DateTime startTime = DateTime.Now;
 
-        if(_expeditionViewModel.TryStartExpedition(startTime) == false)
+        if (_expeditionViewModel.TryStartExpedition(startTime) == false)
         {
             return;
         }
 
         SaveManager.Instance.SaveExpeditionStart(_expeditionViewModel.SelectedExpedition.Id, startTime.ToString("O"));
-
         Debug.Log("원정을 보냈습니다!");
         StartTimerLoop().Forget();
     }
 
     public void RequestClaimReward()
     {
-        if(_expeditionViewModel.IsCompleted == false)
-        {
-            Debug.LogError("[ExpeditionService] 원정대가 완료되지 않았습니다.");
-            return;
-        }
+        if (_expeditionViewModel.IsCompleted == false) return;
 
         ExpeditionData selectedExpedition = _expeditionViewModel.SelectedExpedition;
-
-        if(selectedExpedition == null)
-        {
-            Debug.LogError("[ExpeditionService] 원정대를 선택하지 않았습니다.");
-            return;
-        }
+        if (selectedExpedition == null) return;
 
         long rewardGold = selectedExpedition.RewardGold;
         string[] rewardEquipments = selectedExpedition.RewardEquipments;
 
-        if(rewardGold > 0)
-        {
-            NetworkManager.Instance.PlayerResourceService.RequestAddGold(rewardGold);
-        }
-
-        if(rewardEquipments != null && rewardEquipments.Length > 0)
+        if (rewardGold > 0) NetworkManager.Instance.PlayerResourceService.RequestAddGold(rewardGold);
+        if (rewardEquipments != null && rewardEquipments.Length > 0)
         {
             EquipmentUtils equipUtils = new EquipmentUtils();
-
-            foreach(string equipId in rewardEquipments)
-            {
-                equipUtils.AddEquipments(equipId);
-            }
+            foreach (string equipId in rewardEquipments) equipUtils.AddEquipments(equipId);
         }
 
         SaveManager.Instance.ClearExpedition();
-
         _expeditionViewModel.ResetExpedition();
 
-        Debug.Log("원정 보상을 수령하였습니다!");
+        for (int i = 0; i < 3; i++)
+        {
+            SaveManager.Instance.CurrentSaveData.ExpeditionPartyUids[i] = "";
+        }
+        SaveManager.Instance.SaveCurrentData();
+        ExpeditionPartySetting.OnPartyChanged?.Invoke();
+
+        Debug.Log("원정 보상을 수령하였고, 원정대 스쿼드가 완벽히 초기화되었습니다!");
     }
 
     private async UniTaskVoid StartTimerLoop()
