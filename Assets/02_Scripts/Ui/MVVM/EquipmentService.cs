@@ -117,4 +117,29 @@ public class EquipmentService
         //현재는 하드코딩
         return (equipmentModel.EnhanceLevel + 1) * 10;
     }
+
+    public bool RequestEnhance(string uniqueId)
+    {
+        if(TryGetEuipmentModel(uniqueId, out EquipmentModel equipmentModel) == false)
+        {
+            return false;
+        }
+
+        if(NetworkManager.Instance == null || NetworkManager.Instance.PlayerResourceService == null)
+        {
+            Debug.LogError("[EquipmentService] PlayerResourceService가 없습니다.");
+
+            return false;
+        }
+
+        long enhanceCost = GetEnhanceCost(equipmentModel);
+
+        if(enhanceCost <= 0)
+        {
+            Debug.LogError("[EquipmentService] 강화 비용이 올바르지 않습니다.");
+            return false;
+        }
+        //ToDo - 마석으로 강화하는 로직을 짤 대 수정할 것. JU
+        bool isGoldUsed = NetworkManager.Instance.PlayerResourceService.RequestUseGold(enhanceCost);
+    }
 }
