@@ -160,7 +160,7 @@ public class EquipmentService
 
         vm.TargetEquipmentUniqueId = uniqueId;
         vm.ItemIconAddress = baseData.IconAddress;
-        vm.ItemName = baseData.Name;
+        vm.ItemName = $"{baseData.Name}+{saveData.EnhanceLevel}";
 
         //테스트용 임시 획득 재화(골드) 나중에 마석 관련 데이터, 로직 나오면 바꿀 것.
         long reward = (baseData.Price) / 10;
