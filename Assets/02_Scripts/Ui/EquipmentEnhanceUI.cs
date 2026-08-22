@@ -29,6 +29,7 @@ public class EquipmentEnhanceUI : UiBase
     {
         Unbind();
         Button_EnhanceBtn.onClick.RemoveListener(OnClick_EnhanceBtn);
+        Button_CloseAll.onClick.RemoveListener(OnClick_CloseAll);
     }
 
     private void Bind()
