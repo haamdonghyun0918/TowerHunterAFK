@@ -37,7 +37,7 @@ public class EquipmentModel
         return BuffHp;
     }
 
-    public int GetEquipmentTotalAtakSpeed()
+    public int GetEquipmentTotalAtkSpeed()
     {
         return BuffAtkSpeed;
     }
