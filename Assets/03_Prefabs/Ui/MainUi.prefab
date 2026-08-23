@@ -1921,6 +1921,7 @@ MonoBehaviour:
   Text_Gold: {fileID: 4143446085604295783}
   Text_Exp: {fileID: 1469448914224883640}
   Text_Diamond: {fileID: 4285821705211599308}
+  Text_MagicStone: {fileID: 7818659068071861125}
 --- !u!1 &6278895935405543706
 GameObject:
   m_ObjectHideFlags: 0
