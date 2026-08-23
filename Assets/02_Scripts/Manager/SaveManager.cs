@@ -150,6 +150,12 @@ public class SaveManager : MonoBehaviour
         SaveToFile(CurrentSaveData);
     }
 
+    public void SaveMagicStone(long magicStone)
+    {
+        CurrentSaveData.MagicStone = magicStone;
+        SaveToFile(CurrentSaveData);
+    }
+
     public void SaveEquipments(List<EquipmentSaveData> equipments)
     {
         if (equipments == null)
