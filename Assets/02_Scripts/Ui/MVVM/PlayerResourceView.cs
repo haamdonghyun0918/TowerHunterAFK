@@ -6,6 +6,7 @@ public class PlayerResourceView : MonoBehaviour
     [SerializeField] private TMP_Text Text_Gold;
     [SerializeField] private TMP_Text Text_Exp;
     [SerializeField] private TMP_Text Text_Diamond;
+    [SerializeField] private TMP_Text Text_MagicStone;
 
     private PlayerResourceViewModel _playerResourceViewModel;
 
@@ -45,6 +46,12 @@ public class PlayerResourceView : MonoBehaviour
         if (Text_Diamond == null)
         {
             Debug.LogError("[PlayerResourceView] Text_Diamond가 연결되지 않았습니다.");
+            return;
+        }
+
+        if(Text_MagicStone == null)
+        {
+            Debug.LogError("[PlayerResourceView] Text_MagicStone이 연결되지 않았습니다.");
             return;
         }
 
@@ -99,6 +106,7 @@ public class PlayerResourceView : MonoBehaviour
         Text_Gold.text = _playerResourceViewModel.Gold.ToString("N0");
         Text_Exp.text = _playerResourceViewModel.Exp.ToString("N0");
         Text_Diamond.text = _playerResourceViewModel.Diamond.ToString("N0");
+        Text_MagicStone.text = _playerResourceViewModel.MagicStone.ToString("N0");
 
     }
 }
