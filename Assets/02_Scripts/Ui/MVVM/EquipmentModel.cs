@@ -26,7 +26,7 @@ public class EquipmentModel
     public int BuffDef => _baseData.BuffDef;
     public int Price => _baseData.Price;
 
-    public EquipmentSlot slot
+    public EquipmentSlot Slot
     {
         get
         {
