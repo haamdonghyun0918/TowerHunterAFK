@@ -10,7 +10,7 @@
 	"BuffHp": 0,
 	"BuffAtkSpeed": 0,
 	"BuffDef": 0,
-	"IconAddress": "",
+	"IconAddress": "weapon_1",
 	"Price": 100
   },
   {
@@ -24,7 +24,7 @@
 	"BuffHp": 0,
 	"BuffAtkSpeed": 0,
 	"BuffDef": 0,
-	"IconAddress": "",
+	"IconAddress": "weapon_2",
 	"Price": 500
   },
   {
@@ -38,7 +38,7 @@
 	"BuffHp": 0,
 	"BuffAtkSpeed": 2,
 	"BuffDef": 0,
-	"IconAddress": "",
+	"IconAddress": "weapon_3",
 	"Price": 550
   },
   {
@@ -52,7 +52,7 @@
 	"BuffHp": 0,
 	"BuffAtkSpeed": 5,
 	"BuffDef": 0,
-	"IconAddress": "",
+	"IconAddress": "weapon_4",
 	"Price": 250
   },
   {
@@ -66,7 +66,7 @@
 	"BuffHp": 0,
 	"BuffAtkSpeed": 10,
 	"BuffDef": 0,
-	"IconAddress": "",
+	"IconAddress": "weapon_5",
 	"Price": 3500
   },
   {
@@ -94,7 +94,7 @@
 	"BuffHp": 200,
 	"BuffAtkSpeed": 0,
 	"BuffDef": 30,
-	"IconAddress": "",
+	"IconAddress": "armor_1",
 	"Price": 2000
   },
   {
@@ -122,7 +122,7 @@
 	"BuffHp": 0,
 	"BuffAtkSpeed": 8,
 	"BuffDef": 0,
-	"IconAddress": "",
+	"IconAddress": "accessories_2",
 	"Price": 3500
   },
   {
@@ -136,7 +136,7 @@
 	"BuffHp": 200,
 	"BuffAtkSpeed": 0,
 	"BuffDef": 40,
-	"IconAddress": "",
+	"IconAddress": "accessories_3",
 	"Price": 3000
   },
   {
@@ -150,7 +150,7 @@
 	"BuffHp": 50,
 	"BuffAtkSpeed": 0,
 	"BuffDef": 5,
-	"IconAddress": "",
+	"IconAddress": "armor_2",
 	"Price": 100
   },
   {
@@ -164,7 +164,7 @@
 	"BuffHp": 150,
 	"BuffAtkSpeed": 0,
 	"BuffDef": 35,
-	"IconAddress": "",
+	"IconAddress": "armor_3",
 	"Price": 1500
   },
   {
@@ -178,7 +178,7 @@
 	"BuffHp": 0,
 	"BuffAtkSpeed": 10,
 	"BuffDef": 0,
-	"IconAddress": "",
+	"IconAddress": "weapon_7",
 	"Price": 3500
   },
   {
@@ -192,7 +192,7 @@
 	"BuffHp": 0,
 	"BuffAtkSpeed": 0,
 	"BuffDef": 10,
-	"IconAddress": "",
+	"IconAddress": "accessories_4",
 	"Price": 1300
   },
   {
@@ -206,7 +206,7 @@
 	"BuffHp": 10,
 	"BuffAtkSpeed": 3,
 	"BuffDef": 10,
-	"IconAddress": "",
+	"IconAddress": "accessories_5",
 	"Price": 1000
   },
   {
@@ -220,7 +220,7 @@
 	"BuffHp": 500,
 	"BuffAtkSpeed": 0,
 	"BuffDef": 50,
-	"IconAddress": "",
+	"IconAddress": "armor_4",
 	"Price": 10000
   },
   {
@@ -234,7 +234,7 @@
 	"BuffHp": 20,
 	"BuffAtkSpeed": 0,
 	"BuffDef": 15,
-	"IconAddress": "",
+	"IconAddress": "weapon_8",
 	"Price": 9000
   }
 ]
