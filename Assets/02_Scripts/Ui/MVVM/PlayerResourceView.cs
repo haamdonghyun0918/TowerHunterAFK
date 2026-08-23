@@ -98,7 +98,7 @@ public class PlayerResourceView : MonoBehaviour
 
     private void UpdateView()
     {
-        if (_playerResourceViewModel == null || Text_Gold == null || Text_Exp == null || Text_Diamond == null || Text_MagicStone)
+        if (_playerResourceViewModel == null || Text_Gold == null || Text_Exp == null || Text_Diamond == null || Text_MagicStone == null)
         {
             return;
         }

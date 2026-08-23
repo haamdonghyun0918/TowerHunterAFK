@@ -26,8 +26,30 @@ public class EquipmentModel
     public int BuffDef => _baseData.BuffDef;
     public int Price => _baseData.Price;
 
+    public EquipmentSlot slot
+    {
+        get
+        {
+            if(string.Equals(Position, "weapon", StringComparison.OrdinalIgnoreCase))
+            {
+                return EquipmentSlot.Weapon;
+            }
+            if(string.Equals(Position, "armor", StringComparison.OrdinalIgnoreCase))
+            {
+                return EquipmentSlot.Armor;
+            }
+            if(string.Equals(Position, "accessory", StringComparison.OrdinalIgnoreCase)|| string.Equals(Position, "accessories", StringComparison.OrdinalIgnoreCase))
+            {
+                return EquipmentSlot.Accessory;
+            }
+
+            return EquipmentSlot.None;
+        }
+    }
+
     public int GetEquipmentTotalAtk()
     {
+        //Todo Datadriven 강화 단계 데이터셋 추가 시 교체 JU
         int enhanceBonus = EnhanceLevel * 5;
         return BuffAtk + enhanceBonus;
     }
@@ -44,6 +66,7 @@ public class EquipmentModel
 
     public int GetEquipmentTotalDef()
     {
+        //Todo Datadriven 강화 단계 데이터셋 추가 시 교체 JU
         int enhanceBonus = EnhanceLevel * 3;
 
         return BuffDef + enhanceBonus;
