@@ -16,7 +16,7 @@ public enum EquipmentSelectionResult
 public class EquipmentInventoryViewModel : ViewModelBase
 {
     private readonly EquipmentService _equipmentService;
-    private readonly List<EquipmentItemViewModel> _equipments = new List<EquipmentItemViewModel>();
+    private readonly List<EquipmentSlotViewModel> _equipments = new List<EquipmentSlotViewModel>();
 
     private EquipmentInventoryMode _mode;
     private string _targetCharacterUniqueId = "";
@@ -27,7 +27,7 @@ public class EquipmentInventoryViewModel : ViewModelBase
         _equipmentService = equipmentService;
     }
 
-    public IReadOnlyList<EquipmentItemViewModel> Equipments
+    public IReadOnlyList<EquipmentSlotViewModel> Equipments
     {
         get
         {
@@ -82,7 +82,7 @@ public class EquipmentInventoryViewModel : ViewModelBase
                 }
             }
 
-            EquipmentItemViewModel itemViewModel = new EquipmentItemViewModel(equipmentModel);
+            EquipmentSlotViewModel itemViewModel = new EquipmentSlotViewModel(equipmentModel);
             _equipments.Add(itemViewModel);
         }
 
