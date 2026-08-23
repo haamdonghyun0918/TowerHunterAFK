@@ -109,5 +109,56 @@ public class EquipmentService
         return (equipmentModel.EnhanceLevel + 1) * 10;
     }
 
-  
+    public bool RequestEnhance(string uniqueId)
+    {
+        if(TryGetEquipmentModel(uniqueId, out EquipmentModel equipmentModel) == false)
+        {
+            return false;
+        }
+
+        PlayerResourceService resourceService = GetPlayerResourceService();
+
+        if(resourceService == null)
+        {
+            return false;
+        }
+        long enhanceCost = GetEnhanceCost(equipmentModel);
+
+        if(enhanceCost <= 0)
+        {
+            Debug.LogError("[EquipmentService] 강화 비용이 올바르지 않습니다.");
+            return false;
+        }
+
+        bool isMagicStoneUsed = resourceService.RequestUseMagicStone(enhanceCost);
+
+        if(isMagicStoneUsed == false)
+        {
+            Debug.LogWarning("[EquipmentService] 마석이 부족합니다.");
+            return false;
+        }
+
+        equipmentModel.AddEquipmentEnhanceLevel();
+
+        SaveManager.Instance.SaveCurrentData();
+
+        EquipmentChanged?.Invoke(uniqueId);
+
+        Debug.Log($"[EquipmentService] 강화 성공: {uniqueId}, 사용 마석: {enhanceCost}");
+
+        return true;
+    }
+
+    private PlayerResourceService GetPlayerResourceService()
+    {
+        if(NetworkManager.Instance == null || NetworkManager.Instance.PlayerResourceService == null)
+        {
+            Debug.LogError("[EquipmentService] PlayerResourceService가 없습니다.");
+            return null;
+        }
+        
+        return NetworkManager.Instance.PlayerResourceService;
+    }
+
+
 }
