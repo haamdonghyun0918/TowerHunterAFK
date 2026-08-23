@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEditor.Overlays;
 using UnityEngine;
@@ -56,5 +57,57 @@ public class EquipmentService
         return true;
     }
 
-    
+    public bool ContainsEquipment(string uniqueId)
+    {
+        if(string.IsNullOrEmpty(uniqueId) || SaveManager.Instance == null)
+        {
+            return false;
+        }
+
+        return SaveManager.Instance.EquipmentDict.ContainsKey(uniqueId);
+    }
+
+    public IReadOnlyList<EquipmentModel> GetOwnedEquipmentModels()
+    {
+        List<EquipmentModel> equipmentModels = new List<EquipmentModel>();
+
+        if(SaveManager.Instance == null || SaveManager.Instance.CurrentSaveData == null)
+        {
+            return equipmentModels;
+        }
+
+        List<EquipmentSaveData> ownedEquipments = SaveManager.Instance.CurrentSaveData.OwnedEquipments;
+
+        if(ownedEquipments == null)
+        {
+            return equipmentModels;
+        }
+
+        for(int i = 0; i < ownedEquipments.Count; i++)
+        {
+            EquipmentSaveData saveData = ownedEquipments[i];
+            if(saveData == null)
+            {
+                continue;
+            }
+            if(TryGetEquipmentModel(saveData.UniqueId, out EquipmentModel equipmentModel))
+            {
+                equipmentModels.Add(equipmentModel);
+            }
+        }
+        return equipmentModels;
+    }
+
+    public long GetEnhanceCost(EquipmentModel equipmentModel)
+    {
+        if(equipmentModel == null)
+        {
+            return 0;
+        }
+        //Todo DataDriven JU
+        //추후 강화 레벨별 마석 데이터로 교체
+        return (equipmentModel.EnhanceLevel + 1) * 10;
+    }
+
+  
 }
