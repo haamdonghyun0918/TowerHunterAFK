@@ -100,7 +100,7 @@
         }
         if(SaveManager.Instance != null)
         {
-            SaveManager.Instance.
+            SaveManager.Instance.SaveMagicStone(viewModel.MagicStone);
         }
     }
 
@@ -152,10 +152,25 @@
         return true;
     }
 
+    public bool RequestUseMagicStone(long magicStone)
+    {
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+        if(viewModel.TryDecreaseMagicStone(magicStone) == false)
+        {
+            return false;
+        }
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.SaveMagicStone(viewModel.MagicStone);
+        }
+        return true;
+    }
+
 
 
 
     //ToDo 장비 아이템 데이터
+    //아마 다른 곳으로 이전될 가능성이 높음
     public void RequestAddEquipment(string[] equipments)
     {
         if (equipments == null || equipments.Length == 0)
