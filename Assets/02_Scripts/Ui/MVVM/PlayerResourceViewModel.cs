@@ -78,7 +78,7 @@
     {
         Diamond = diamond;
     }
-    public void SetMagicStoneOnLoad(uint magicStone)
+    public void SetMagicStoneOnLoad(long magicStone)
     {
         MagicStone = magicStone;
     }
@@ -148,7 +148,7 @@
 
     public bool TryDecreaseMagicStone(long amount)
     {
-        if (amount <= 0 || Gold < amount)
+        if (amount <= 0 || MagicStone < amount)
         {
             return false;
         }

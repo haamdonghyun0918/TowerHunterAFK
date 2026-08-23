@@ -90,7 +90,7 @@ public class PlayerResourceView : MonoBehaviour
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs eventArgs)
     {
-        if (eventArgs.PropertyName == nameof(PlayerResourceViewModel.Gold) || eventArgs.PropertyName == nameof(PlayerResourceViewModel.Exp) || eventArgs.PropertyName == nameof(PlayerResourceViewModel.Diamond))
+        if (eventArgs.PropertyName == nameof(PlayerResourceViewModel.Gold) || eventArgs.PropertyName == nameof(PlayerResourceViewModel.Exp) || eventArgs.PropertyName == nameof(PlayerResourceViewModel.Diamond) || eventArgs.PropertyName == nameof(PlayerResourceViewModel.MagicStone)
         {
             UpdateView();
         }
@@ -98,7 +98,7 @@ public class PlayerResourceView : MonoBehaviour
 
     private void UpdateView()
     {
-        if (_playerResourceViewModel == null || Text_Gold == null || Text_Exp == null || Text_Diamond == null)
+        if (_playerResourceViewModel == null || Text_Gold == null || Text_Exp == null || Text_Diamond == null || Text_MagicStone)
         {
             return;
         }
