@@ -1,67 +1,120 @@
-﻿using UnityEngine;
-
-public class EquipmentDetailViewModel : ViewModelBase
+﻿public class EquipmentDetailViewModel : ViewModelBase
 {
-    private string _targetEquipmentUniqueId;
+    private readonly EquipmentService _equipmentService;
+    private EquipmentModel _targetEquipment;
+
+    public EquipmentDetailViewModel(EquipmentService equipmentService)
+    {
+        _equipmentService = equipmentService;
+    }
+
+    public bool HasTarget
+    {
+        get
+        {
+            return _targetEquipment != null;
+        }
+    }
+
     public string TargetEquipmentUniqueId
     {
-        get => _targetEquipmentUniqueId;
-
-        set
+        get
         {
-            if (_targetEquipmentUniqueId != value)
+            if (HasTarget)
             {
-                _targetEquipmentUniqueId = value;
-                OnPropertyChanged(nameof(TargetEquipmentUniqueId));
+                return _targetEquipment.UniqueId;
             }
+
+            return "";
         }
     }
 
-    private string _itemIconAddress;
     public string ItemIconAddress
     {
-        get => _itemIconAddress;
-
-        set
+        get
         {
-            if (_itemIconAddress != value)
+            if (HasTarget)
             {
-                _itemIconAddress = value;
-
-                OnPropertyChanged(nameof(ItemIconAddress));
+                return _targetEquipment.IconAddress;
             }
+
+            return "";
         }
     }
 
-    private string _itemName;
     public string ItemName
     {
-        get => _itemName;
-
-        set
+        get
         {
-            if (_itemName != value)
+            if (HasTarget)
             {
-                _itemName = value;
-
-                OnPropertyChanged(nameof(ItemName));
+                return _targetEquipment.Name;
             }
+
+            return "";
         }
     }
 
-    private string _totalStatText;
     public string TotalStatText
     {
-        get => _totalStatText;
-
-        set
+        get
         {
-            if (_totalStatText != value)
+            if (HasTarget == false)
             {
-                _totalStatText = value;
-
-                OnPropertyChanged(nameof(TotalStatText));
+                return "";
             }
+
+            string totalAtk = _targetEquipment.GetEquipmentTotalAtk().ToString("N0");
+            string totalHp = _targetEquipment.GetEquipmentTotalHp().ToString("N0");
+            string totalAtkSpeed = _targetEquipment.GetEquipmentTotalAtkSpeed().ToString("N0");
+            string totalDef = _targetEquipment.GetEquipmentTotalDef().ToString("N0");
+
+            return $"공격력 : {totalAtk}\n체력 : {totalHp}\n공격속도 : {totalAtkSpeed}\n방어력 : {totalDef}";
         }
+    }
+
+    public void SetTarget(EquipmentModel equipmentModel)
+    {
+        _targetEquipment = equipmentModel;
+        NotifyAllChanged();
+    }
+
+    public void ClearTarget()
+    {
+        _targetEquipment = null;
+        NotifyAllChanged();
+    }
+
+    public bool RequestOpenEnhance()
+    {
+        if (HasTarget == false)
+        {
+            return false;
+        }
+
+        return _equipmentService.TrySetEnhanceTarget(_targetEquipment.UniqueId);
+    }
+
+    public bool RequestOpenDisassemble()
+    {
+        if (HasTarget == false)
+        {
+            return false;
+        }
+
+        return _equipmentService.TrySetDisassembleTarget(_targetEquipment.UniqueId);
+    }
+
+    public void NotifyEquipmentChanged(string uniqueId)
+    {
+        if (HasTarget && _targetEquipment.UniqueId == uniqueId)
+        {
+            NotifyAllChanged();
+        }
+    }
+
+    private void NotifyAllChanged()
+    {
+        OnPropertyChanged(string.Empty);
     }
 }

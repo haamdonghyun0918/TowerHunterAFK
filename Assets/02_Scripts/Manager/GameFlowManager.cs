@@ -5,7 +5,7 @@ public class GameFlowManager : MonoBehaviour
 {
     public static GameFlowManager Instance { get; private set; }
     public HunterInventory HunterInven { get; private set; }
-    public EquipmentInventory EquipInven { get; private set; }
+    //public EquipmentInventory EquipInven { get; private set; }
 
     private float _inactivityTimer = 0f;
     private const float _sleepModeTimer = 60f;
@@ -56,12 +56,14 @@ public class GameFlowManager : MonoBehaviour
         NetworkManager.Instance.PlayerResourceService.SetGoldOnLoad(SaveManager.Instance.CurrentSaveData.Gold);
         NetworkManager.Instance.PlayerResourceService.SetDiamondOnLoad(SaveManager.Instance.CurrentSaveData.Diamond);
         NetworkManager.Instance.PlayerResourceService.SetExpOnLoad(SaveManager.Instance.CurrentSaveData.Exp);
+        NetworkManager.Instance.PlayerResourceService.SetMagicStoneOnLoad(SaveManager.Instance.CurrentSaveData.MagicStone);
 
         HunterInven = new HunterInventory();
         HunterInven.Init();
 
-        EquipInven = new EquipmentInventory();
-        EquipInven.Init();
+        //일단은 비활성화. 모델과 서비스 등이 완성되고 나서 수정 계획할지도 JU
+        //EquipInven = new EquipmentInventory();
+        //EquipInven.Init();
 
         if (ExpeditionManager.Instance != null)
         {

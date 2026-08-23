@@ -1,7 +1,9 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using Cysharp.Threading.Tasks;
+using System.ComponentModel;
 using TMPro;
-using Cysharp.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class HunterInfoUi : UiBase
 {
@@ -19,104 +21,292 @@ public class HunterInfoUi : UiBase
     [SerializeField] private TMP_Text _textRank;
     [SerializeField] private TMP_Text _textLevel;
 
+    [Header("Equipment")]
+    [SerializeField] private Image _weaponEquipmentImage;
+    [SerializeField] private Image _armorEquipmentImage;
+    [SerializeField] private Image _accessoryEquipmentImage;
+    [SerializeField] private UiButton _buttonWeaponEquipment;
+    [SerializeField] private UiButton _buttonArmorEquipment;
+    [SerializeField] private UiButton _buttonAccessoryEquipment;
+
     [Header("Buttons")]
     [SerializeField] private UiButton _buttonClose;
 
+    private CharacterEquipmentViewModel _equipmentViewModel;
+    private CharacterData _characterData;
+    private BaseStatData _baseStatData;
+    private CharacterSaveData _characterSaveData;
+
+    private Sprite _defaultWeaponSprite;
+    private Sprite _defaultArmorSprite;
+    private Sprite _defaultAccessorySprite;
+
+    private int _currentLevel = 1;
+
+    private void Awake()
+    {
+        if (_weaponEquipmentImage != null)
+        {
+            _defaultWeaponSprite = _weaponEquipmentImage.sprite;
+        }
+
+        if (_armorEquipmentImage != null)
+        {
+            _defaultArmorSprite = _armorEquipmentImage.sprite;
+        }
+
+        if (_accessoryEquipmentImage != null)
+        {
+            _defaultAccessorySprite = _accessoryEquipmentImage.sprite;
+        }
+    }
+
     private void OnEnable()
     {
-        if (_buttonClose != null)
-        {
-            _buttonClose.UnBindOnClickButtonEvent(CloseHunterInfoUi);
-            _buttonClose.BindOnClickButtonEvent(CloseHunterInfoUi);
-        }
+        BindButton(_buttonClose, CloseHunterInfoUi);
+        BindButton(_buttonWeaponEquipment, OnClickWeaponEquipment);
+        BindButton(_buttonArmorEquipment, OnClickArmorEquipment);
+        BindButton(_buttonAccessoryEquipment, OnClickAccessoryEquipment);
+    }
+
+    private void OnDisable()
+    {
+        UnbindViewModel();
+
+        UnbindButton(_buttonClose, CloseHunterInfoUi);
+        UnbindButton(_buttonWeaponEquipment, OnClickWeaponEquipment);
+        UnbindButton(_buttonArmorEquipment, OnClickArmorEquipment);
+        UnbindButton(_buttonAccessoryEquipment, OnClickAccessoryEquipment);
+
+        _equipmentViewModel = null;
     }
 
     public async UniTaskVoid SetUp(string uniqueId, string baseId)
     {
-        CharacterData huntData = GameDataManager.Instance.GetData<CharacterData>(baseId);
-        BaseStatData baseStat = GameDataManager.Instance.GetData<BaseStatData>(huntData.BaseStatDataId);
+        CharacterData characterData = GameDataManager.Instance.GetData<CharacterData>(baseId);
 
-        if (huntData == null || baseStat == null)
+        if (characterData == null)
         {
-            Debug.LogError("헌터의 데이터가 없거나 헌터의 기본 스텟이 없습니다.");
+            Debug.LogError("[HunterInfoUi] 헌터 데이터를 찾을 수 없습니다.");
             return;
         }
 
-        if (SaveManager.Instance.CharacterDict.TryGetValue(uniqueId, out var saveData))
+        BaseStatData baseStatData = GameDataManager.Instance.GetData<BaseStatData>(characterData.BaseStatDataId);
+
+        if (baseStatData == null)
         {
-            //TODO: 캐릭터 레벨을 위하여 경험치 작업 해야함 현재는 하드코딩으로 1로 고정
-            int currentLevel = 1;
-            int currentRank = saveData.Rank;
-            //TODO: 장비까지 나중에 추가되면 바로 연동되도록 계산식 후에 추가하기
-            int finalAtk = baseStat.BaseAtk + (huntData.AtkPerLevel * (currentLevel - 1));
-            int finalHp = baseStat.BaseHp + (huntData.HpPerLevel * (currentLevel - 1));
-            int finalDef = baseStat.BaseDef + (huntData.DefPerLevel * (currentLevel - 1));
-            int finalSpd = baseStat.BaseAtkSpeed;
+            Debug.LogError("[HunterInfoUi] 헌터 기본 능력치를 찾을 수 없습니다.");
+            return;
+        }
 
-            if (_textName != null)
-            {
-                _textName.text = huntData.Name;
-            }
+        if (SaveManager.Instance.CharacterDict.TryGetValue(uniqueId, out CharacterSaveData characterSaveData) == false)
+        {
+            Debug.LogError("[HunterInfoUi] 헌터 저장 데이터를 찾을 수 없습니다.");
+            return;
+        }
 
-            if (_textHp != null)
-            {
-                _textHp.text = finalHp.ToString();
-            }
+        if (NetworkManager.Instance == null || NetworkManager.Instance.EquipmentService == null)
+        {
+            Debug.LogError("[HunterInfoUi] EquipmentService가 없습니다.");
+            return;
+        }
 
-            if (_textAtk != null)
-            {
-                _textAtk.text = finalAtk.ToString();
-            }
-            if (_textDef != null)
-            {
-                _textDef.text = finalDef.ToString();
-            }
+        _characterData = characterData;
+        _baseStatData = baseStatData;
+        _characterSaveData = characterSaveData;
 
-            if (_textSpd != null)
-            {
-                _textSpd.text = finalSpd.ToString();
-            }
+        _currentLevel = 1;
 
-            if (_textCost != null)
-            {
-                _textCost.text = huntData.MaxSkillCost.ToString();
-            }
+        UnbindViewModel();
 
-            if (_textTier != null)
-            {
-                _textTier.text = huntData.Rarity;
-            }
+        _equipmentViewModel = NetworkManager.Instance.EquipmentService.GetCharacterEquipmentViewModel();
+        _equipmentViewModel.SetCharacterTarget(uniqueId);
 
-            if (_textRank != null)
-            {
-                _textRank.text = $"{currentRank} / 10";
-            }
+        BindViewModel();
+        UpdateHunterInfo();
 
-            if (_textLevel != null)
-            {
-                _textLevel.text = $"{currentLevel} / 10";
-            }
+        await LoadHunterProfileAsync();
+    }
 
-            if (string.IsNullOrEmpty(huntData.IconPath) == false)
-            {
-                Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(huntData.IconPath);
+    private void BindViewModel()
+    {
+        if (_equipmentViewModel == null)
+        {
+            return;
+        }
 
-                if (loadedSprite != null && _hunterProfileImage != null)
-                {
-                    _hunterProfileImage.sprite = loadedSprite;
-                    _hunterProfileImage.gameObject.SetActive(true);
-                }
-            }
+        _equipmentViewModel.PropertyChanged -= OnEquipmentChanged;
+        _equipmentViewModel.PropertyChanged += OnEquipmentChanged;
+    }
 
-            else
-            {
-                if (_hunterProfileImage != null)
-                {
-                    _hunterProfileImage.sprite = null;
-                    _hunterProfileImage.gameObject.SetActive(false);
-                }
-            }
+    private void UnbindViewModel()
+    {
+        if (_equipmentViewModel != null)
+        {
+            _equipmentViewModel.PropertyChanged -= OnEquipmentChanged;
+        }
+    }
 
+    private void OnEquipmentChanged(object sender, PropertyChangedEventArgs eventArgs)
+    {
+        UpdateHunterStats();
+        UpdateEquipmentIcons();
+    }
+
+    private void UpdateHunterInfo()
+    {
+        SetText(_textName, _characterData.Name);
+        SetText(_textCost, _characterData.MaxSkillCost.ToString());
+        SetText(_textTier, _characterData.Rarity);
+        SetText(_textRank, $"{_characterSaveData.Rank} / 10");
+        SetText(_textLevel, $"{_currentLevel} / 10");
+
+        UpdateHunterStats();
+        UpdateEquipmentIcons();
+    }
+
+    private void UpdateHunterStats()
+    {
+        if (_characterData == null || _baseStatData == null)
+        {
+            return;
+        }
+
+        EquipmentStatBonus equipmentBonus = new EquipmentStatBonus();
+
+        if (_equipmentViewModel != null)
+        {
+            equipmentBonus = _equipmentViewModel.TotalBonus;
+        }
+
+        int finalAtk = _baseStatData.BaseAtk + (_characterData.AtkPerLevel * (_currentLevel - 1)) + equipmentBonus.Atk;
+        int finalHp = _baseStatData.BaseHp + (_characterData.HpPerLevel * (_currentLevel - 1)) + equipmentBonus.Hp;
+        int finalDef = _baseStatData.BaseDef + (_characterData.DefPerLevel * (_currentLevel - 1)) + equipmentBonus.Def;
+        int finalSpd = _baseStatData.BaseAtkSpeed + equipmentBonus.AtkSpeed;
+
+        SetText(_textAtk, finalAtk.ToString());
+        SetText(_textHp, finalHp.ToString());
+        SetText(_textDef, finalDef.ToString());
+        SetText(_textSpd, finalSpd.ToString());
+    }
+
+    private void UpdateEquipmentIcons()
+    {
+        if (_equipmentViewModel == null)
+        {
+            return;
+        }
+
+        LoadEquipmentIconAsync(_weaponEquipmentImage, _defaultWeaponSprite, _equipmentViewModel.WeaponIconAddress).Forget();
+        LoadEquipmentIconAsync(_armorEquipmentImage, _defaultArmorSprite, _equipmentViewModel.ArmorIconAddress).Forget();
+        LoadEquipmentIconAsync(_accessoryEquipmentImage, _defaultAccessorySprite, _equipmentViewModel.AccessoryIconAddress).Forget();
+    }
+
+    private async UniTask LoadEquipmentIconAsync(Image targetImage, Sprite defaultSprite, string iconAddress)
+    {
+        if (targetImage == null)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(iconAddress))
+        {
+            targetImage.sprite = defaultSprite;
+            return;
+        }
+
+        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(iconAddress);
+
+        if (loadedSprite != null)
+        {
+            targetImage.sprite = loadedSprite;
+        }
+        else
+        {
+            targetImage.sprite = defaultSprite;
+        }
+    }
+
+    private async UniTask LoadHunterProfileAsync()
+    {
+        if (_hunterProfileImage == null)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_characterData.IconPath))
+        {
+            _hunterProfileImage.sprite = null;
+            _hunterProfileImage.gameObject.SetActive(false);
+            return;
+        }
+
+        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(_characterData.IconPath);
+
+        if (loadedSprite != null)
+        {
+            _hunterProfileImage.sprite = loadedSprite;
+            _hunterProfileImage.gameObject.SetActive(true);
+        }
+    }
+
+    private void OnClickWeaponEquipment()
+    {
+        OpenEquipmentInventoryAsync(EquipmentSlot.Weapon).Forget();
+    }
+
+    private void OnClickArmorEquipment()
+    {
+        OpenEquipmentInventoryAsync(EquipmentSlot.Armor).Forget();
+    }
+
+    private void OnClickAccessoryEquipment()
+    {
+        OpenEquipmentInventoryAsync(EquipmentSlot.Accessory).Forget();
+    }
+
+    private async UniTask OpenEquipmentInventoryAsync(EquipmentSlot slot)
+    {
+        if (_equipmentViewModel == null)
+        {
+            return;
+        }
+
+        bool canBeginEquip = _equipmentViewModel.RequestBeginEquip(slot);
+
+        if (canBeginEquip == false)
+        {
+            return;
+        }
+
+        await UiManager.Instance.OpenUi<EquipmentInventoryUi>();
+
+    }
+
+    private void BindButton(UiButton button, UnityAction buttonAction)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        button.UnBindOnClickButtonEvent(buttonAction);
+        button.BindOnClickButtonEvent(buttonAction);
+    }
+
+    private void UnbindButton(UiButton button, UnityAction buttonAction)
+    {
+        if (button != null)
+        {
+            button.UnBindOnClickButtonEvent(buttonAction);
+        }
+    }
+
+    private void SetText(TMP_Text targetText, string value)
+    {
+        if (targetText != null)
+        {
+            targetText.text = value;
         }
     }
 
