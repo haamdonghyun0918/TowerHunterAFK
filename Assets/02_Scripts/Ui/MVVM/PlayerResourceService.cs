@@ -40,6 +40,12 @@
         viewModel.SetDiamondOnLoad(diamond);
     }
 
+    public void SetMagicStoneOnLoad(long magicStone)
+    {
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+        viewModel.SetMagicStoneOnLoad(magicStone);
+    }
+
     public void RequestAddGold(long addGold)
     {
         PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
@@ -82,6 +88,19 @@
         if( SaveManager.Instance != null)
         {
             SaveManager.Instance.SaveExp(viewModel.Exp);
+        }
+    }
+
+    public void RequestAddMagicStone(long magicStone)
+    {
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+        if(viewModel.TryIncreaseMagicStone(magicStone) == false)
+        {
+            return;
+        }
+        if(SaveManager.Instance != null)
+        {
+            SaveManager.Instance.
         }
     }
 
