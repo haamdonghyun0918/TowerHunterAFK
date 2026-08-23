@@ -63,7 +63,7 @@ public class ObjectManager : MonoBehaviour
 
                         if (SaveManager.Instance.CharacterDict.TryGetValue(partyUid, out CharacterSaveData targetData))
                         {
-                            bool isSpawned = await SpawnHunter(targetData.BaseId);
+                            bool isSpawned = await SpawnHunter(targetData.BaseId, targetData.UniqueId);
 
                             if (isSpawned == true)
                             {
@@ -158,7 +158,7 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    private async UniTask<bool> SpawnHunter(string characterId)
+    private async UniTask<bool> SpawnHunter(string characterId, string characterUniqueId)
     {
         var data = GameDataManager.Instance.GetData<CharacterData>(characterId);
         if (data == null)
@@ -185,7 +185,7 @@ public class ObjectManager : MonoBehaviour
         {
             GameObject hunterObj = Instantiate(hunterPrefab);
             Character newHunter = hunterObj.GetComponent<Character>();
-            newHunter.InitCharacter(data);
+            newHunter.InitCharacter(data, characterUniqueId);
             _currentPlayerParty.AddHunter(newHunter);
             return true;
         }

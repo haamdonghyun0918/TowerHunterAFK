@@ -24,6 +24,11 @@ public class EquipmentUtils
         SaveManager.Instance.EquipmentDict[newEquipment.UniqueId] = newEquipment;
         SaveManager.Instance.SaveCurrentData();
 
+        if (NetworkManager.Instance != null && NetworkManager.Instance.EquipmentService != null)
+        {
+            NetworkManager.Instance.EquipmentService.RefreshEquipmentInventory();
+        }
+
         Debug.Log($"[EquipmentUtils] 장비 획득! 장비 이름: {equipData.Name}, 게임 상 장비 아이디: {newEquipment.UniqueId}");
     }
 
