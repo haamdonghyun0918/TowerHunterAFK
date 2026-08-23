@@ -17,61 +17,81 @@ public class EquipmentDetailUI : UiBase
 
     private void OnEnable()
     {
-        Bind();
-        Button_Enhance.onClick.AddListener(OnClick_EnhanceBtn);
-        Button_Disassemble.onClick.AddListener(OnClick_DisassembleBtn);
-        Button_CloseAll.onClick.AddListener(OnClick_CloseBtn);
-
-        //테스트용 더미 데이터 하드코딩
-        if (_viewModel != null)
+        if (NetworkManager.Instance == null)
         {
-            _viewModel.TargetEquipmentUniqueId = "TEST_UID_001";
-            _viewModel.ItemName = "테스트용 짱센 검";
-            _viewModel.TotalStatText = "공격력 : 999\n방어력 : 50\n속도 : 10";
+            Debug.LogError("[EquipmentDetailUI] NetworkManager가 없습니다.");
+            return;
         }
 
-        UpdateDetailUIAsync();
+        if (NetworkManager.Instance.EquipmentService == null)
+        {
+            Debug.LogError("[EquipmentDetailUI] EquipmentService가 없습니다.");
+            return;
+        }
+
+        _viewModel = NetworkManager.Instance.EquipmentService.GetEquipmentDetailViewModel();
+
+        if (_viewModel == null)
+        {
+            Debug.LogError("[EquipmentDetailUI] EquipmentDetailViewModel을 가져오지 못했습니다.");
+            return;
+        }
+
+        BindViewModel();
+        BindButtons();
+        UpdateDetailUI();
     }
 
     private void OnDisable()
     {
-        Unbind();
-        Button_Enhance.onClick.RemoveListener(OnClick_EnhanceBtn);
-        Button_Disassemble.onClick.RemoveListener(OnClick_DisassembleBtn);
-        Button_CloseAll.onClick.RemoveListener(OnClick_CloseBtn);
+        UnbindViewModel();
+        UnbindButtons();
+        _viewModel = null;
     }
 
-    private void Bind()
+    private void BindViewModel()
     {
-        _viewModel = NetworkManager.Instance.EquipmentService.GetEquipmentDetailViewModel();
-        if (_viewModel == null)
-        {
-            return;
-        }
-
         _viewModel.PropertyChanged -= OnPropertyChanged;
         _viewModel.PropertyChanged += OnPropertyChanged;
     }
 
-    private void Unbind()
+    private void UnbindViewModel()
     {
-        if (_viewModel == null)
+        if (_viewModel != null)
         {
-            return;
+            _viewModel.PropertyChanged -= OnPropertyChanged;
         }
-
-        _viewModel.PropertyChanged -= OnPropertyChanged;
     }
 
-    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void BindButtons()
     {
-        UpdateDetailUIAsync();
+        Button_Enhance.onClick.RemoveListener(OnClickEnhanceButton);
+        Button_Enhance.onClick.AddListener(OnClickEnhanceButton);
+
+        Button_Disassemble.onClick.RemoveListener(OnClickDisassembleButton);
+        Button_Disassemble.onClick.AddListener(OnClickDisassembleButton);
+
+        Button_CloseAll.onClick.RemoveListener(OnClickCloseButton);
+        Button_CloseAll.onClick.AddListener(OnClickCloseButton);
     }
 
-    private void UpdateDetailUIAsync()
+    private void UnbindButtons()
     {
-        if (_viewModel == null)
+        Button_Enhance.onClick.RemoveListener(OnClickEnhanceButton);
+        Button_Disassemble.onClick.RemoveListener(OnClickDisassembleButton);
+        Button_CloseAll.onClick.RemoveListener(OnClickCloseButton);
+    }
+
+    private void OnPropertyChanged(object sender, PropertyChangedEventArgs eventArgs)
+    {
+        UpdateDetailUI();
+    }
+
+    private void UpdateDetailUI()
+    {
+        if (_viewModel == null || _viewModel.HasTarget == false)
         {
+            ClearDetailUI();
             return;
         }
 
@@ -81,46 +101,89 @@ public class EquipmentDetailUI : UiBase
         LoadIconAsync().Forget();
     }
 
+    private void ClearDetailUI()
+    {
+        Text_EquipmentName.text = "";
+        Text_TotalStat.text = "";
+        Image_ItemIcon.sprite = null;
+        Image_ItemIcon.gameObject.SetActive(false);
+    }
+
     private async UniTaskVoid LoadIconAsync()
     {
-        if (string.IsNullOrEmpty(_viewModel.ItemIconAddress))
+        string iconAddress = _viewModel.ItemIconAddress;
+
+        if (string.IsNullOrEmpty(iconAddress))
         {
-            Debug.LogWarning("[EquipmentEnhanceUI] 아이콘 주소가 Null이어서 로드를 생략합니다.");
+            Image_ItemIcon.sprite = null;
+            Image_ItemIcon.gameObject.SetActive(false);
             return;
         }
 
-        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(_viewModel.ItemIconAddress);
-
-        if (loadedSprite != null)
+        if (ResourceManager.Instance == null)
         {
-            Image_ItemIcon.sprite = loadedSprite;
+            Debug.LogError("[EquipmentDetailUI] ResourceManager가 없습니다.");
+            Image_ItemIcon.sprite = null;
+            Image_ItemIcon.gameObject.SetActive(false);
+            return;
         }
-        else
+
+        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(iconAddress);
+
+        if (isActiveAndEnabled == false || _viewModel == null)
         {
-            Debug.LogWarning($"[HunterSlot] 아이콘 로드 실패: {_viewModel.ItemIconAddress}");
+            return;
+        }
+
+        if (_viewModel.ItemIconAddress != iconAddress)
+        {
+            return;
+        }
+
+        if (loadedSprite == null)
+        {
+            Debug.LogWarning($"[EquipmentDetailUI] 아이콘 로드에 실패했습니다: {iconAddress}");
+            Image_ItemIcon.sprite = null;
+            Image_ItemIcon.gameObject.SetActive(false);
+            return;
+        }
+
+        Image_ItemIcon.sprite = loadedSprite;
+        Image_ItemIcon.gameObject.SetActive(true);
+    }
+
+    private void OnClickEnhanceButton()
+    {
+        if (_viewModel == null)
+        {
+            return;
+        }
+
+        bool canOpenEnhance = _viewModel.RequestOpenEnhance();
+
+        if (canOpenEnhance)
+        {
+            UiManager.Instance.OpenUi<EquipmentEnhanceUI>().Forget();
         }
     }
 
-    private void OnClick_EnhanceBtn()
+    private void OnClickDisassembleButton()
     {
-        if (_viewModel == null) return;
+        if (_viewModel == null)
+        {
+            return;
+        }
 
-        string targetUid = _viewModel.TargetEquipmentUniqueId;
+        bool canOpenDisassemble = _viewModel.RequestOpenDisassemble();
 
-        NetworkManager.Instance.EquipmentService.SetEnhanceTarget(targetUid);
-
-        UiManager.Instance.OpenUi<EquipmentEnhanceUI>().Forget();
+        if (canOpenDisassemble)
+        {
+            UiManager.Instance.OpenUi<EquipmentDisassembleUI>().Forget();
+        }
     }
 
-    private void OnClick_DisassembleBtn()
-    {
-        //[TODO] EquipmentDisassembleUI 구현 후 주석 해제
-        //UiManager.Instance.OpenUi<EquipmentDisassembleUI>().Forget();
-    }
-
-    private void OnClick_CloseBtn()
+    private void OnClickCloseButton()
     {
         UiManager.Instance.CloseUi<EquipmentDetailUI>();
     }
 }
-
