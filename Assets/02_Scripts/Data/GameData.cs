@@ -27,6 +27,8 @@ public class CharacterData : GameDataBase
     public string CharacterType;
     public int GachaWeight;
     public string IconPath;
+
+    public EquipmentRange WeaponRange;
 }
 
 [System.Serializable]
@@ -84,6 +86,14 @@ public enum EquipmentRange
     None = 0,
     Melee = 1,
     Ranged = 2 
+}
+
+public enum EquipmentSlot
+{
+    None = 0,
+    Weapon = 1,
+    Armor = 2,
+    Accessory = 3,
 }
 
 [System.Serializable]
