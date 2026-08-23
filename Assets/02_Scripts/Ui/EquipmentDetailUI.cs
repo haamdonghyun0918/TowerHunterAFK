@@ -65,21 +65,21 @@ public class EquipmentDetailUI : UiBase
 
     private void BindButtons()
     {
-        Button_Enhance.onClick.RemoveListener(OnClickEnhanceButton);
-        Button_Enhance.onClick.AddListener(OnClickEnhanceButton);
+        Button_Enhance.onClick.RemoveListener(OnClick_DisassembleBtn);
+        Button_Enhance.onClick.AddListener(OnClick_DisassembleBtn);
 
         Button_Disassemble.onClick.RemoveListener(OnClickDisassembleButton);
         Button_Disassemble.onClick.AddListener(OnClickDisassembleButton);
 
-        Button_CloseAll.onClick.RemoveListener(OnClickCloseButton);
-        Button_CloseAll.onClick.AddListener(OnClickCloseButton);
+        Button_CloseAll.onClick.RemoveListener(OnClick_CloseBtn);
+        Button_CloseAll.onClick.AddListener(OnClick_CloseBtn);
     }
 
     private void UnbindButtons()
     {
-        Button_Enhance.onClick.RemoveListener(OnClickEnhanceButton);
+        Button_Enhance.onClick.RemoveListener(OnClick_DisassembleBtn);
         Button_Disassemble.onClick.RemoveListener(OnClickDisassembleButton);
-        Button_CloseAll.onClick.RemoveListener(OnClickCloseButton);
+        Button_CloseAll.onClick.RemoveListener(OnClick_CloseBtn);
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs eventArgs)
@@ -152,7 +152,7 @@ public class EquipmentDetailUI : UiBase
         Image_ItemIcon.gameObject.SetActive(true);
     }
 
-    private void OnClickEnhanceButton()
+    private void OnClick_DisassembleBtn()
     {
         if (_viewModel == null)
         {
@@ -182,7 +182,7 @@ public class EquipmentDetailUI : UiBase
         }
     }
 
-    private void OnClickCloseButton()
+    private void OnClick_CloseBtn()
     {
         UiManager.Instance.CloseUi<EquipmentDetailUI>();
     }
