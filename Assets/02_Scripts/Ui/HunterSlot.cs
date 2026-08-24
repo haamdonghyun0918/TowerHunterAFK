@@ -9,6 +9,8 @@ using UnityEngine.EventSystems;
 public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
     [SerializeField] private TMP_Text _hunterName;
+    [SerializeField] private TMP_Text _textLevel;
+    [SerializeField] private TMP_Text _textEnhanceRank;
     [SerializeField] private UiButton _hunterSlotButton;
     [SerializeField] private Image _hunterIcon;
     [SerializeField] private Image _progressRing;
@@ -22,6 +24,8 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     private bool _isPointerDown = false;
     private bool _isLongPressTriggered = false;
+
+    private const long LevelUpExp = 2000;
 
     private bool _isClickCanceled = false;
     private const float TapThreshold = 0.2f;
@@ -41,6 +45,8 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         {
             _hunterName.text = data.Name;
 
+            UpdateSlotInfo(uniqueId);
+
             if (string.IsNullOrEmpty(data.IconPath) == false)
             {
                 _hunterIcon.sprite = null;
@@ -58,6 +64,17 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         else
         {
             _hunterName.text = "비어있음";
+
+            if (_textLevel != null)
+            {
+                _textLevel.text = "";
+            }
+
+            if (_textEnhanceRank != null)
+            {
+                _textEnhanceRank.text = "";
+            }
+
             if (_hunterIcon != null)
             {
                 _hunterIcon.sprite = null;
@@ -75,6 +92,51 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         {
             _progressRing.fillAmount = 0f;
             _progressRing.gameObject.SetActive(false);
+        }
+    }
+
+    private void UpdateSlotInfo(string uniqueId)
+    {
+        if (SaveManager.Instance == null || SaveManager.Instance.CharacterDict.TryGetValue(uniqueId, out var saveData) == false)
+        {
+            return;
+        }
+
+        if (_textLevel != null)
+        {
+            int currentLevel = 1 + (int)(saveData.Exp / LevelUpExp);
+            _textLevel.text = $"Lv.{currentLevel}";
+        }
+
+        if (_textEnhanceRank != null)
+        {
+            int rank = saveData.Rank;
+
+            if (rank <= 0)
+            {
+                _textEnhanceRank.text = "";
+            }
+
+            else
+            {
+                _textEnhanceRank.text = $"+{rank}";
+
+                if (rank == 1 || rank == 2)
+                {
+                    // 브론즈 색상 (구리빛)
+                    _textEnhanceRank.color = new Color32(205, 127, 50, 255);
+                }
+                else if (rank == 3 || rank == 4)
+
+                {
+                    _textEnhanceRank.color = new Color32(192, 192, 192, 255);
+                }
+
+                else if (rank >= 5)
+                {
+                    _textEnhanceRank.color = new Color32(255, 215, 0, 255);
+                }
+            }
         }
     }
 
