@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPartyController : PlayerPartyControllerBase
+public class PlayerPartyControllerForBoss : PlayerPartyControllerBase
 {
     private float moveSpeed = 10.0f;
 
     public bool _isBattling = false;
     public bool _isMovable = false;
 
-    public Transform[] _playerSlots = new Transform[3];
-    private Character[] _hunters = new Character[3];
+    public Transform[] _playerSlots = new Transform[5];
+    private Character[] _hunters = new Character[5];
 
     
     private void Update()
