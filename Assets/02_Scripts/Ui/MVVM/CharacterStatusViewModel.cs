@@ -16,6 +16,7 @@
     public int MaxSkillCost => _characterStatusModel.MaxSkillCost;
     public bool IsActive => _characterStatusModel.IsActive;
     public bool IsDead => _characterStatusModel.IsDead;
+    public string Name => _characterStatusModel.Name;
 
     public float HpRatio
     {
@@ -37,7 +38,8 @@
         int currentSkillCost,
         int maxSkillCost,
         bool isActive,
-        bool isDead)
+        bool isDead,
+        string name)
     {
         bool characterIdChanged = (CharacterId != characterId);
         bool currentHpChanged = (CurrentHp != currentHp);
@@ -46,6 +48,7 @@
         bool maxSkillCostChanged = (MaxSkillCost != maxSkillCost);
         bool isActiveChanged = (IsActive != isActive);
         bool isDeadChanged = (IsDead != isDead);
+        bool isNameChanged = (Name != name);
 
         _characterStatusModel.CharacterId = characterId;
         _characterStatusModel.CurrentHp = currentHp;
@@ -54,6 +57,7 @@
         _characterStatusModel.MaxSkillCost = maxSkillCost;
         _characterStatusModel.IsActive = isActive;
         _characterStatusModel.IsDead = isDead;
+        _characterStatusModel.Name = name;
 
         if (characterIdChanged)
         {
@@ -86,6 +90,10 @@
         if(isDeadChanged)
         {
             OnPropertyChanged(nameof(IsDead));
+        }
+        if(isNameChanged)
+        {
+            OnPropertyChanged(nameof(Name));
         }
 
     }
@@ -145,7 +153,7 @@
 
     public void Reset()
     {
-        SetCharacterStatus("", 0, 0, 0, 0, false, false);
+        SetCharacterStatus("", 0, 0, 0, 0, false, false, "");
     }
 
 }
