@@ -10,6 +10,8 @@ public class CharacterStatusView : MonoBehaviour
     [SerializeField] private GameObject Root_CharacterStatus;
     [SerializeField] private Slider Slider_Hp;
 
+    [SerializeField] private TMP_Text Text_HunterName;
+
     private CharacterStatusViewModel _characterStatusViewModel;
 
     [SerializeField] private List<GameObject> SkillCostList = new List<GameObject>();
@@ -43,6 +45,11 @@ public class CharacterStatusView : MonoBehaviour
         if (Slider_Hp == null)
         {
             Debug.LogError("[CharacterStatusView]: Slider_Hp가 연결되지 않았습니다.");
+            return;
+        }
+        if (Text_HunterName == null)
+        {
+            Debug.LogError($"[CharacterStatusView] Text_HunterName이 연결되지 않았습니다. SlotIndex: {_slotIndex}");
             return;
         }
 
@@ -93,7 +100,8 @@ public class CharacterStatusView : MonoBehaviour
             || eventArgs.PropertyName == nameof(CharacterStatusViewModel.HpRatio)
             || eventArgs.PropertyName == nameof(CharacterStatusViewModel.IsActive)
             || eventArgs.PropertyName == nameof(CharacterStatusViewModel.CurrentSkillCost)
-            || eventArgs.PropertyName == nameof(CharacterStatusViewModel.MaxSkillCost))
+            || eventArgs.PropertyName == nameof(CharacterStatusViewModel.MaxSkillCost)
+            || eventArgs.PropertyName == nameof(CharacterStatusViewModel.Name))
         {
             UpdateView();
         }
@@ -101,7 +109,7 @@ public class CharacterStatusView : MonoBehaviour
 
     private void UpdateView()
     {
-        if (_characterStatusViewModel == null || Root_CharacterStatus == null || Slider_Hp == null)
+        if (_characterStatusViewModel == null || Root_CharacterStatus == null || Slider_Hp == null || Text_HunterName == null)
         {
             return;
         }
@@ -113,6 +121,7 @@ public class CharacterStatusView : MonoBehaviour
             return;
         }
         Slider_Hp.normalizedValue = Mathf.Clamp01(_characterStatusViewModel.HpRatio);
+        Text_HunterName.text = _characterStatusViewModel.Name;
 
         UpdateSkillCostView();
     }
