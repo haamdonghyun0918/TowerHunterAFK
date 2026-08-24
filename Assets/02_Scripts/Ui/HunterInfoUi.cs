@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using System;
 
 public class HunterInfoUi : UiBase
 {
@@ -46,6 +47,8 @@ public class HunterInfoUi : UiBase
     private Sprite _defaultWeaponSprite;
     private Sprite _defaultArmorSprite;
     private Sprite _defaultAccessorySprite;
+
+    public static event Action OnHunterEnhanced;
 
     private int _currentLevel = 1;
     private const long _levelUpExp = 2000;
@@ -301,6 +304,7 @@ public class HunterInfoUi : UiBase
         SaveManager.Instance.SaveCurrentData();
 
         Debug.Log($"{_characterData.Name}이(가) {_characterSaveData.Rank}강으로 강화되었습니다!");
+        OnHunterEnhanced?.Invoke();
         UpdateHunterInfo();
     }
 
