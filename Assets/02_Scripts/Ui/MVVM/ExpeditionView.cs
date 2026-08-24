@@ -220,7 +220,22 @@ public class ExpeditionView : MonoBehaviour
         {
             if (data.RewardEquipments != null && data.RewardEquipments.Length > 0)
             {
-                _rewardEquipment.text = string.Join(",", data.RewardEquipments);
+                List<string> equipNames = new List<string>();
+                foreach (string equipId in data.RewardEquipments)
+                {
+                    EquipmentData equipData = GameDataManager.Instance.GetData<EquipmentData>(equipId);
+
+                    if (equipData != null)
+                    {
+                        equipNames.Add(equipData.Name);
+                    }
+
+                    else
+                    {
+                        equipNames.Add(equipId);
+                    }
+                }
+                _rewardEquipment.text = string.Join(", ", equipNames);
             }
 
             else
