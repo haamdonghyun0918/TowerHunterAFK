@@ -20,12 +20,29 @@ public class BattleManager : MonoBehaviour
         }
     }
     
-    public void StartBattle(PlayerPartyController playerParty, GameObject monsterParty)
+    public void StartBattle(PlayerPartyControllerBase playerParty, GameObject monsterParty)
     {
-        Debug.Log("전투 시작!");
+        if (playerParty == null)
+        {
+            Debug.LogWarning("[BattleManager] 플레이어 파티가 널입니다.");
+            return;
+        }
+
         MonsterParty enemyParty = monsterParty.GetComponent<MonsterParty>();
 
-        AutoBattleRoutine(playerParty, enemyParty).Forget();
+        if (playerParty is PlayerPartyController normalParty)
+        {
+            Debug.Log("일반 전투 시작");
+            AutoBattleRoutine(normalParty, enemyParty).Forget();
+        }
+
+        if (playerParty is PlayerPartyControllerForBoss bossParty)
+        {
+            Debug.Log("보스 전투 시작");
+            BossBattleRoutine(bossParty, enemyParty).Forget();
+        }
+
+
     }
 
     private async UniTaskVoid AutoBattleRoutine(PlayerPartyController playerParty, MonsterParty enemyParty)
@@ -155,6 +172,11 @@ public class BattleManager : MonoBehaviour
         }
 
         EndBattle(playerParty, enemyParty.gameObject);
+    }
+
+    private async UniTaskVoid BossBattleRoutine(PlayerPartyControllerForBoss playerParty, MonsterParty enemyParty)
+    {
+
     }
 
     private int CompareActionOrder(BattleCharacter a, BattleCharacter b)
