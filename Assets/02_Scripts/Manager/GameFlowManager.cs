@@ -122,10 +122,12 @@ public class GameFlowManager : MonoBehaviour
 
         stageService.UpdateMaxClearedStage(MapManager.Instance.CurrentStage);
 
-        NetworkManager.Instance.PlayerResourceService.RequestAddGold(1000);
-        Debug.Log("클리어 보상 1000골드 지급!");
-
         int currentClearedStage = stageService.CurrentStage;
+        int increasedReward = currentClearedStage * 500;
+        NetworkManager.Instance.PlayerResourceService.RequestAddGold(increasedReward);
+        NetworkManager.Instance.PlayerResourceService.RequestAddExp(increasedReward);
+        Debug.Log("클리어 보상 지급!");
+
         if (currentClearedStage % 10 == 0)
         {
             NetworkManager.Instance.PlayerResourceService.RequestAddDiamond(500);
