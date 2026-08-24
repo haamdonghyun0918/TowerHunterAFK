@@ -46,5 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectManager
   Prefab_PlayerParty: {fileID: 5465056043778994344, guid: 3d1cc8dda9eda8a44b73bb3363bb0f2a, type: 3}
   Prefab_MonsterParty: {fileID: 7232210954827779428, guid: c11b3a3516ca45b4cacf0488dfcbdb18, type: 3}
+  Prefab_BossPlayerParty: {fileID: 5465056043778994344, guid: ccd6a1c676bc63d45837cc0cd02ce2a4, type: 3}
   Prefab_TestDefaultPlayer: {fileID: 6728282569092023605, guid: e6435bce0d5a34541a76e2bbed9908cb, type: 3}
   Prefab_TestDefaultMonster: {fileID: 8667355644962449738, guid: 1389aca36d76c724086fad8023acc9d5, type: 3}

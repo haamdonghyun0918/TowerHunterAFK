@@ -7,9 +7,7 @@ public class ObjectManager : MonoBehaviour
 {
     [SerializeField] private GameObject Prefab_PlayerParty;
     [SerializeField] private GameObject Prefab_MonsterParty;
-
-    [SerializeField] private GameObject Prefab_TestDefaultPlayer;
-    [SerializeField] private GameObject Prefab_TestDefaultMonster;
+    [SerializeField] private GameObject Prefab_BossPlayerParty;
 
     private PlayerPartyController _currentPlayerParty;
     private List<MonsterParty> _monsterPartyList = new List<MonsterParty>();
@@ -167,7 +165,7 @@ public class ObjectManager : MonoBehaviour
             return false;
         }
 
-        GameObject hunterPrefab = Prefab_TestDefaultPlayer;
+        GameObject hunterPrefab = null;
         if (string.IsNullOrEmpty(data.PrefabPath) == false)
         {
             GameObject loadedPrefab = await Addressables.LoadAssetAsync<GameObject>(data.PrefabPath);
@@ -177,7 +175,8 @@ public class ObjectManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"[ObjectManager] {data.PrefabPath} 경로에서 프리팹을 찾을 수 없습니다. 기본 프리팹을 사용합니다.");
+                Debug.LogWarning($"[ObjectManager] hunterPrefab이 null입니다!.");
+                return false;
             }
         }
 
@@ -211,7 +210,7 @@ public class ObjectManager : MonoBehaviour
             return;
         }
 
-        GameObject prefabToSpawn = Prefab_TestDefaultMonster;
+        GameObject prefabToSpawn = null;
 
         if (string.IsNullOrEmpty(data.PrefabPath) == false)
         {
@@ -219,6 +218,11 @@ public class ObjectManager : MonoBehaviour
             if (loadedPrefab != null)
             {
                 prefabToSpawn = loadedPrefab;
+            }
+            else
+            {
+                Debug.LogWarning("몬스터 프리팹이 널입니다.");
+                return;
             }
         }
 
