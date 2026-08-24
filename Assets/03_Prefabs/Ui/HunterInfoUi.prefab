@@ -3255,6 +3255,12 @@ MonoBehaviour:
   _textTier: {fileID: 4007004970569583141}
   _textRank: {fileID: 2674981922470141415}
   _textLevel: {fileID: 1666681561367418050}
+  _weaponEquipmentImage: {fileID: 2083054101986229096}
+  _armorEquipmentImage: {fileID: 5501627239233849514}
+  _accessoryEquipmentImage: {fileID: 5825408046072124728}
+  _buttonWeaponEquipment: {fileID: 6225456764345394734}
+  _buttonArmorEquipment: {fileID: 7802191618752861706}
+  _buttonAccessoryEquipment: {fileID: 1105847285438917625}
   _buttonClose: {fileID: 5041591860269126400}
 --- !u!1 &8441441506704053198
 GameObject:
