@@ -11,6 +11,8 @@ public class EquipmentInventoryUi : UiBase
     private const string EquipmentSlotAddress = "EquipmentSlot";
     private readonly List<EquipmentSlotView> _createdSlots = new List<EquipmentSlotView>();
 
+    private const int _firstSlotCount = 30;
+
     private EquipmentInventoryViewModel _viewModel;
     private bool _isRefreshing;
     private bool _refreshRequested;
@@ -138,7 +140,10 @@ public class EquipmentInventoryUi : UiBase
 
         IReadOnlyList<EquipmentSlotViewModel> equipments = _viewModel.Equipments;
 
-        while (_createdSlots.Count < equipments.Count)
+        int targetSlotCount = Mathf.Max(_firstSlotCount, equipments.Count);
+        int currentCount = _createdSlots.Count;
+
+        for (int i = currentCount; i < targetSlotCount; i++)
         {
             GameObject slotObject = await ResourceManager.Instance.Instantiate(EquipmentSlotAddress, Content_Equipment);
 
@@ -171,6 +176,7 @@ public class EquipmentInventoryUi : UiBase
             }
             else
             {
+                slotView.SetUp(null, null);
                 slotView.gameObject.SetActive(false);
             }
         }
