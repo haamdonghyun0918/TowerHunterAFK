@@ -11,13 +11,13 @@ public class PlayerPartyController : PlayerPartyControllerBase
     private void OnEnable()
     {
         MainUi.OnBossRaidStart += PauseMovement;
-        //TODO: 보스레이드 끝났을 때 이벤트 구독
+        MainUi.OnBossRaidEnd += ResumeMovement;
     }
 
     private void OnDisable()
     {
         MainUi.OnBossRaidStart -= PauseMovement;
-        //TODO: 보스레이드 끝났을 때 이벤트 해제
+        MainUi.OnBossRaidEnd -= ResumeMovement;
     }
 
     public void PauseMovement()
