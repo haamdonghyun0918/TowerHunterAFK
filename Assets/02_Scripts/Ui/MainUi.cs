@@ -1,11 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class MainUi : UiBase
 {
     [SerializeField] private UiButton _buttonExpedition;
     [SerializeField] private UiButton _buttonHunterInventory;
     [SerializeField] private UiButton _buttonEquipmentInventory;
+    [SerializeField] private UiButton _buttonBossRaid;
 
+    public static event Action OnEnterBossRaid;
 
     private void OnEnable()
     {
@@ -22,6 +25,11 @@ public class MainUi : UiBase
         if ( _buttonEquipmentInventory)
         {
             _buttonEquipmentInventory.BindOnClickButtonEvent(OpenEquipmentInventory);
+        }
+
+        if (_buttonBossRaid)
+        {
+            _buttonBossRaid.BindOnClickButtonEvent(OpenBossRaidUi);
         }
     }
 
@@ -41,6 +49,11 @@ public class MainUi : UiBase
         {
             OpenEquipmentInventory();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            OpenBossRaidUi();
+        }
     }
 
     private async void OpenExpedition()
@@ -56,5 +69,11 @@ public class MainUi : UiBase
     private async void OpenEquipmentInventory()
     {
         await UiManager.Instance.OpenUi<EquipmentInventoryUi>();
+    }
+
+    private async void OpenBossRaidUi()
+    {
+        //await UiManager.Instance.OpenUI<BossRaidUi>();
+        OnEnterBossRaid?.Invoke();
     }
 }
