@@ -106,6 +106,17 @@ public class Character : BattleCharacter
         return _characterId;
     }
 
+    public string GetCharacterName()
+    {
+        if( _characterData == null)
+        {
+            Debug.LogWarning("[Character] 캐릭터 데이터가 없어 이름을 가져올 수 없습니다.");
+            return "";
+        }
+
+        return _characterData.Name;
+    }
+
     //추가
     public string GetCharacterUniqueId()
     {
