@@ -82,6 +82,20 @@ public class Character : BattleCharacter
         _characterId = _characterData.Id;
         _maxSkillCost = _characterData.MaxSkillCost;
 
+        if (SaveManager.Instance != null && SaveManager.Instance.CharacterDict.TryGetValue(characterUniqueId, out var saveData))
+        {
+            _characterEnhancement = saveData.Rank;
+            _characterCurrentExp = (int)saveData.Exp;
+            _characterLevel = 1 + (_characterCurrentExp / _needExpForLevelUp);
+        }
+
+        else
+        {
+            _characterEnhancement = 0;
+            _characterCurrentExp = 0;
+            _characterLevel = 1;
+        }
+
         InitializeSkill();
         SetStatData(true);
         BindEquipmentChangedEvent();
@@ -151,12 +165,15 @@ public class Character : BattleCharacter
         int previousMaxHp = _characterMaxHp;
         int previousHp = _characterHp;
 
-        _characterAtk = baseStatData.BaseAtk + equipmentBonus.Atk;
+        int levelBonusAtk = _characterData.AtkPerLevel * (_characterLevel - 1);
+        int levelBonusHp = _characterData.HpPerLevel * (_characterLevel - 1);
+        int levelBonusDef = _characterData.DefPerLevel * (_characterLevel - 1);
+
+        _characterAtk = baseStatData.BaseAtk + equipmentBonus.Atk + levelBonusAtk;
         _characterAtkSpeed = baseStatData.BaseAtkSpeed + equipmentBonus.AtkSpeed;
-        _characterMaxHp = baseStatData.BaseHp + equipmentBonus.Hp;
+        _characterMaxHp = baseStatData.BaseHp + equipmentBonus.Hp + levelBonusHp;
         _characterHp = _characterMaxHp;
-        _characterDefense = baseStatData.BaseDef + equipmentBonus.Def;
-        _characterCurrentExp = _characterData.Exp + _needExpForLevelUp;
+        _characterDefense = baseStatData.BaseDef + equipmentBonus.Def + levelBonusDef;
 
         if (restoreHp || previousMaxHp <= 0)
         {

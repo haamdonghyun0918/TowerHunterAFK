@@ -59,7 +59,7 @@ public class PlayerInfo : MonoBehaviour
                     _textRank.color = new Color32(255, 195, 0, 255);
                     break;
                 default:
-                    _textRank.color = Color.white; // 기본 색상
+                    _textRank.color = Color.white;
                     break;
             }
         }

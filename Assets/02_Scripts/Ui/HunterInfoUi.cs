@@ -32,6 +32,12 @@ public class HunterInfoUi : UiBase
     [Header("Buttons")]
     [SerializeField] private UiButton _buttonClose;
 
+    [Header("GrowUp")]
+    [SerializeField] private TMP_Text _textEnhanceRequirement;
+    [SerializeField] private TMP_Text _textLevelUpRequirement;
+    [SerializeField] private UiButton _buttonEnhance;
+    [SerializeField] private UiButton _buttonLevelUp;
+
     private CharacterEquipmentViewModel _equipmentViewModel;
     private CharacterData _characterData;
     private BaseStatData _baseStatData;
@@ -42,7 +48,7 @@ public class HunterInfoUi : UiBase
     private Sprite _defaultAccessorySprite;
 
     private int _currentLevel = 1;
-
+    private const long _levelUpExp = 2000;
     private void Awake()
     {
         if (_weaponEquipmentImage != null)
@@ -67,6 +73,8 @@ public class HunterInfoUi : UiBase
         BindButton(_buttonWeaponEquipment, OnClickWeaponEquipment);
         BindButton(_buttonArmorEquipment, OnClickArmorEquipment);
         BindButton(_buttonAccessoryEquipment, OnClickAccessoryEquipment);
+        BindButton(_buttonEnhance, OnClickEnhance);
+        BindButton(_buttonLevelUp, OnClickLevelUp);
     }
 
     private void OnDisable()
@@ -77,7 +85,8 @@ public class HunterInfoUi : UiBase
         UnbindButton(_buttonWeaponEquipment, OnClickWeaponEquipment);
         UnbindButton(_buttonArmorEquipment, OnClickArmorEquipment);
         UnbindButton(_buttonAccessoryEquipment, OnClickAccessoryEquipment);
-
+        UnbindButton(_buttonEnhance, OnClickEnhance);
+        UnbindButton(_buttonLevelUp, OnClickLevelUp);
         _equipmentViewModel = null;
     }
 
@@ -158,11 +167,137 @@ public class HunterInfoUi : UiBase
         SetText(_textName, _characterData.Name);
         SetText(_textCost, _characterData.MaxSkillCost.ToString());
         SetText(_textTier, _characterData.Rarity);
-        SetText(_textRank, $"{_characterSaveData.Rank} / 10");
-        SetText(_textLevel, $"{_currentLevel} / 10");
-
+       
+        UpdateUpgradeUI();
         UpdateHunterStats();
         UpdateEquipmentIcons();
+    }
+
+    private int GetMaxLevel(string rarity, int rank)
+    {
+        int maxLevel = 5;
+        switch (rarity)
+        {
+            case "C": maxLevel = 5 + (rank * 4); break;
+            case "B": maxLevel = 10 + (rank * 4); break;
+            case "A": maxLevel = 15 + (rank * 5); break;
+            case "S": maxLevel = 25 + (rank * 5); break;
+        }
+        return maxLevel;
+    }
+
+    private int GetOwnedDuplicatesCount()
+    {
+        int count = 0;
+        foreach (var character in SaveManager.Instance.CurrentSaveData.OwnedCharacters)
+        {
+            if (character.BaseId == _characterSaveData.BaseId && character.UniqueId != _characterSaveData.UniqueId)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void UpdateUpgradeUI()
+    {
+        int maxLevel = GetMaxLevel(_characterData.Rarity, _characterSaveData.Rank);
+
+        _currentLevel = 1 + (int)(_characterSaveData.Exp / _levelUpExp);
+        if (_currentLevel > maxLevel) _currentLevel = maxLevel;
+
+        SetText(_textLevel, $"{_currentLevel} / {maxLevel}");
+        SetText(_textRank, $"{_characterSaveData.Rank} / 5");
+
+        if (_characterSaveData.Rank >= 5)
+        {
+            SetText(_textEnhanceRequirement, "최대강화");
+        }
+
+        else
+        {
+            int requiredDuplicates = _characterSaveData.Rank + 1;
+            int ownedDuplicates = GetOwnedDuplicatesCount();
+            SetText(_textEnhanceRequirement, $"{ownedDuplicates} / {requiredDuplicates}");
+        }
+
+        if (_currentLevel >= maxLevel)
+        {
+            SetText(_textLevelUpRequirement, "최대레벨");
+        }
+
+        else
+        {
+            long ownedExp = SaveManager.Instance.CurrentSaveData.Exp;
+            long requiredExp = _levelUpExp;
+            SetText(_textLevelUpRequirement, $"{ownedExp} / {requiredExp}");
+        }
+    }
+
+    private void OnClickEnhance()
+    {
+        if (_characterSaveData.Rank >= 5)
+        {
+            Debug.LogWarning("이미 최대 강화 단계입니다.");
+            return;
+        }
+
+        int required = _characterSaveData.Rank + 1;
+        int owned = GetOwnedDuplicatesCount();
+
+        if (owned < required)
+        {
+            Debug.LogError($"강화 재료가 부족합니다. (필요: {required}, 보유: {owned})");
+            return;
+        }
+
+        int consumed = 0;
+
+        for (int i = SaveManager.Instance.CurrentSaveData.OwnedCharacters.Count - 1; i >= 0; i--)
+        {
+            var character = SaveManager.Instance.CurrentSaveData.OwnedCharacters[i];
+
+            if (character.BaseId == _characterSaveData.BaseId && character.UniqueId != _characterSaveData.UniqueId)
+            {
+                SaveManager.Instance.CurrentSaveData.OwnedCharacters.RemoveAt(i);
+                SaveManager.Instance.CharacterDict.Remove(character.UniqueId);
+                consumed++;
+
+                if (consumed >= required) break;
+            }
+        }
+
+        _characterSaveData.Rank++;
+        SaveManager.Instance.SaveCurrentData();
+
+        Debug.Log($"{_characterData.Name}이(가) {_characterSaveData.Rank}강으로 강화되었습니다!");
+        UpdateHunterInfo();
+    }
+
+    private void OnClickLevelUp()
+    {
+        int maxLevel = GetMaxLevel(_characterData.Rarity, _characterSaveData.Rank);
+
+        if (_currentLevel >= maxLevel)
+        {
+            Debug.LogError("최대 레벨이므로 더 이상 경험치를 사용할 수 없습니다.");
+            return;
+        }
+
+        long ownedExp = SaveManager.Instance.CurrentSaveData.Exp;
+
+        if (ownedExp < _levelUpExp)
+        {
+            Debug.LogWarning($"경험치가 부족합니다. (보유: {ownedExp} / 필요: {_levelUpExp})");
+            return;
+        }
+
+        SaveManager.Instance.CurrentSaveData.Exp -= _levelUpExp;
+        _characterSaveData.Exp += _levelUpExp;
+        SaveManager.Instance.SaveCurrentData();
+
+        Debug.Log($"{_characterData.Name} 레벨 업! (현재 레벨: {_currentLevel + 1})");
+        UpdateHunterInfo();
     }
 
     private void UpdateHunterStats()
