@@ -1,23 +1,50 @@
 ﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GachaResultUI : UiBase
 {
     [SerializeField] private Transform Root_Card;
     [SerializeField] private CardController Prefab_Card;
+    [SerializeField] public Button Button_CloseScreen;
+    [SerializeField] private Button Button_Close;
+    
 
     private CardController _currentCard;
     private bool _isAnimPlaying = false;
 
     private void OnEnable()
     {
-
+        Button_CloseScreen.gameObject.SetActive(false);
+        BindButtons();
     }
 
     private void OnDisable()
     {
-        CloseUI();
+        UnbindButtons();
+        Button_CloseScreen.gameObject.SetActive(false);
+    }
+    private void BindButtons()
+    {
+        Button_CloseScreen.onClick.RemoveListener(OnClick_CloseUi);
+        Button_CloseScreen.onClick.AddListener(OnClick_CloseUi);
+
+        Button_Close.onClick.RemoveListener(OnClick_CloseUi);
+        Button_Close.onClick.AddListener(OnClick_CloseUi);
+    }
+
+    private void UnbindButtons()
+    {
+        Button_CloseScreen.onClick.RemoveListener(OnClick_CloseUi);
+
+        Button_Close.onClick.RemoveListener(OnClick_CloseUi);
+    }
+
+    private void OnClick_CloseUi()
+    {
+        Debug.Log("창닫기");
+        UiManager.Instance.CloseUi<GachaResultUI>();
     }
 
     public async UniTask SetSingleGachaResult(CharacterData character)
@@ -91,10 +118,5 @@ public class GachaResultUI : UiBase
         {
             Destroy(currentCard.gameObject);
         }
-    }
-
-    private void CloseUI()
-    {
-        UiManager.Instance.CloseUi<GachaResultUI>();
     }
 }
