@@ -250,12 +250,16 @@ public class GachaSystem : MonoBehaviour
         GachaResultUI gachaResultUI = await UiManager.Instance.OpenUi<GachaResultUI>();
 
         await gachaResultUI.SetSingleGachaResult(character);
+
+        gachaResultUI.Button_CloseScreen.gameObject.SetActive(true);
     }
     private async UniTask ShowMultipleGachaResult(List<CharacterData> characters)
     {
         GachaResultUI gachaResultUI = await UiManager.Instance.OpenUi<GachaResultUI>();
 
         await gachaResultUI.SetMultipleGachaResult(characters);
+
+        gachaResultUI.Button_CloseScreen.gameObject.SetActive(true);
     }
 
     private void OpenCharacterCardUI(CharacterData character)
