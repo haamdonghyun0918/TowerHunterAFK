@@ -8,4 +8,5 @@
     public int MaxSkillCost { get; set; }
     public bool IsActive { get; set; }
     public bool IsDead { get; set; }
+    public string Name { get; set; } = "";
 }

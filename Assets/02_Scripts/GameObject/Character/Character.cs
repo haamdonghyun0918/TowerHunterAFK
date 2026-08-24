@@ -11,19 +11,28 @@ public enum NormalAttackType{
 
 public class Character : BattleCharacter
 {
+    CharacterLevelManager _characterLevelManager = new CharacterLevelManager();
+
     [Header("스킬 관련")]
     private int _currentSkillCost;
     private int _maxSkillCost;
 
     //캐릭터 스탯 서비스에 현재 코스트와 최대 코스트를 전달하기 위함
     private event Action<int, int> _onSkillCostChange;
+    private event Action<int> _onCharacterLevelChange;
     public Transform _targetMonsterTransform { get; private set; }
 
     [Header("데이터 관련")]
     private CharacterData _characterData;
     private string _characterId;
+    private int _characterCurrentExp;
 
     private string _characterUniqueId;
+    private int _characterLevel;
+    private int _needExpForLevelUp = 2000;
+    private int _maxLevelForRarity;
+
+    private int _characterEnhancement;
 
     [Header("전투 관련")]
     private Skill _skill;
@@ -73,6 +82,20 @@ public class Character : BattleCharacter
         _characterId = _characterData.Id;
         _maxSkillCost = _characterData.MaxSkillCost;
 
+        if (SaveManager.Instance != null && SaveManager.Instance.CharacterDict.TryGetValue(characterUniqueId, out var saveData))
+        {
+            _characterEnhancement = saveData.Rank;
+            _characterCurrentExp = (int)saveData.Exp;
+            _characterLevel = 1 + (_characterCurrentExp / _needExpForLevelUp);
+        }
+
+        else
+        {
+            _characterEnhancement = 0;
+            _characterCurrentExp = 0;
+            _characterLevel = 1;
+        }
+
         InitializeSkill();
         SetStatData(true);
         BindEquipmentChangedEvent();
@@ -81,6 +104,17 @@ public class Character : BattleCharacter
     public string GetCharacterId()
     {
         return _characterId;
+    }
+
+    public string GetCharacterName()
+    {
+        if( _characterData == null)
+        {
+            Debug.LogWarning("[Character] 캐릭터 데이터가 없어 이름을 가져올 수 없습니다.");
+            return "";
+        }
+
+        return _characterData.Name;
     }
 
     //추가
@@ -149,11 +183,15 @@ public class Character : BattleCharacter
         int previousMaxHp = _characterMaxHp;
         int previousHp = _characterHp;
 
-        _characterAtk = baseStatData.BaseAtk + equipmentBonus.Atk;
+        int levelBonusAtk = _characterData.AtkPerLevel * (_characterLevel - 1);
+        int levelBonusHp = _characterData.HpPerLevel * (_characterLevel - 1);
+        int levelBonusDef = _characterData.DefPerLevel * (_characterLevel - 1);
+
+        _characterAtk = baseStatData.BaseAtk + equipmentBonus.Atk + levelBonusAtk;
         _characterAtkSpeed = baseStatData.BaseAtkSpeed + equipmentBonus.AtkSpeed;
-        _characterMaxHp = baseStatData.BaseHp + equipmentBonus.Hp;
+        _characterMaxHp = baseStatData.BaseHp + equipmentBonus.Hp + levelBonusHp;
         _characterHp = _characterMaxHp;
-        _characterDefense = baseStatData.BaseDef + equipmentBonus.Def;
+        _characterDefense = baseStatData.BaseDef + equipmentBonus.Def + levelBonusDef;
 
         if (restoreHp || previousMaxHp <= 0)
         {
@@ -320,6 +358,77 @@ public class Character : BattleCharacter
         }
     }
 
+    public int GetCharacterLevel()
+    {
+        _characterLevel = (_characterCurrentExp / _needExpForLevelUp);
+        return _characterLevel;
+    }
+
+    public void LevelUp()
+    {
+        CheckMaxLevelForRarity();
+
+        if (_characterLevel >= _maxLevelForRarity) return;
+        int expForLevelUp = _characterLevelManager.UseExpForLevelUp();
+        _characterCurrentExp += expForLevelUp;
+        _characterLevel = (_characterCurrentExp / _needExpForLevelUp);
+        if (_characterLevel >= _maxLevelForRarity)
+        {
+            _characterLevel = _maxLevelForRarity;
+        }
+        InvokeLevelChangedEvent();
+    }
+
+    private void CheckMaxLevelForRarity()
+    {
+        switch (_characterData.Rarity)
+        {
+            case "C":
+                {
+                    _maxLevelForRarity = 5 + CheckCharacterUpgrade(4);
+                }
+                break;
+            case "B":
+                {
+                    _maxLevelForRarity = 10 + CheckCharacterUpgrade(4);
+                }
+                break;
+            case "A":
+                {
+                    _maxLevelForRarity = 15 + CheckCharacterUpgrade(5);
+                }
+                break;
+            case "S":
+                {
+                    _maxLevelForRarity = 25 + CheckCharacterUpgrade(5);
+                }
+                break;
+        }
+    }
+
+    private int CheckCharacterUpgrade(int increaseAmount)
+    {
+        return _characterEnhancement * increaseAmount;
+    }
+
+    public void UpgradeCharacter()
+    {
+        if (_characterEnhancement >= 5)
+        {
+            Debug.Log($"{_characterId} 캐릭터는 이미 최대 강화 상태입니다.");
+            return;
+        }
+        _characterEnhancement += 1;
+        Debug.Log($"{_characterId} 캐릭터가 강화되었습니다.");
+    }
+
+    private void IncreaseStatPerLevel()
+    {
+        _characterMaxHp += (_characterData.HpPerLevel * _characterLevel);
+        _characterAtk += (_characterData.AtkPerLevel * _characterLevel);
+        _characterDefense += (_characterData.DefPerLevel * _characterLevel);
+    }
+
     // 테스트용 치트 함수 =======================================================
 
     private void Update()   // 테스트용으로만 업데이트 사용
@@ -327,6 +436,23 @@ public class Character : BattleCharacter
         if (Input.GetKeyDown(KeyCode.C))
         {
             TestGetMaxSkillCost();
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            _characterLevelManager.AddExp(5000);
+            Debug.Log($"경험치 5000증가, 현재 경험치: {_characterLevelManager.GetCurrentExp()}");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            LevelUp();
+            Debug.Log($"[{_characterId}]\n현재레벨: {_characterLevel}\n현재경험치: {_characterCurrentExp}\n현재강화단계: {_characterEnhancement}");
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            UpgradeCharacter();
         }
     }
 
@@ -417,5 +543,16 @@ public class Character : BattleCharacter
     private void InvokeCostChangedEvent()
     {
         _onSkillCostChange?.Invoke(_currentSkillCost, _maxSkillCost);
+    }
+
+    private void BindOnLevelChangedEvent(Action<int> levelChangedEventCallBack)
+    {
+        _onCharacterLevelChange += levelChangedEventCallBack;
+    }
+
+    private void InvokeLevelChangedEvent()
+    {
+        _onCharacterLevelChange?.Invoke(_characterLevel);
+        IncreaseStatPerLevel();
     }
 }

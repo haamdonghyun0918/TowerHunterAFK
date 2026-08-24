@@ -25,6 +25,8 @@ public class CharacterSaveData
 [Serializable]
 public class SaveData
 {
+    public string GuildRank = "F";
+
     public int CurrentStage = 1;
     public int MaxClearedStage = 0;
 

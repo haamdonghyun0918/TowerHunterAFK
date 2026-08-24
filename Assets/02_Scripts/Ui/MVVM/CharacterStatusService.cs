@@ -172,6 +172,7 @@ public class CharacterStatusService
                 character.GetCurrentSkillCost(),
                 character.GetMaxSkillCost(),
                 true,
-                character._isDead);
+                character._isDead,
+                character.GetCharacterName());
     }
 }
