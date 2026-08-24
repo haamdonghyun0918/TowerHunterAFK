@@ -8,13 +8,36 @@ public class PlayerPartyController : MonoBehaviour
     public bool _isBattling = false;
     public bool _isMovable = false;
 
+    public bool _isPaused = false;
+
     public Transform[] _playerSlots = new Transform[3];
     private Character[] _hunters = new Character[3];
 
-    
+    private void OnEnable()
+    {
+        MainUi.OnBossRaidStart += PauseMovement;
+        //TODO: 보스레이드 끝났을 때 이벤트 구독
+    }
+
+    private void OnDisable()
+    {
+        MainUi.OnBossRaidStart -= PauseMovement;
+        //TODO: 보스레이드 끝났을 때 이벤트 해제
+    }
+
+    public void PauseMovement()
+    {
+        _isPaused = true;
+    }
+
+    public void ResumeMovement()
+    {
+        _isPaused = false;
+    }
+
     private void Update()
     {
-        if ((_isBattling == false) && (_isMovable == true))
+        if ((_isPaused == false) && (_isBattling == false) && (_isMovable == true))
         {
             transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
         }

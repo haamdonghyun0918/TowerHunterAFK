@@ -8,7 +8,8 @@ public class MainUi : UiBase
     [SerializeField] private UiButton _buttonEquipmentInventory;
     [SerializeField] private UiButton _buttonBossRaid;
 
-    public static event Action OnEnterBossRaid;
+    public static event Action OnBossRaidStart;
+    // public static event ActionBossRaidEnd; //TODO: 보스레이드 끝나는 부분에 추가해야 할 것
 
     private void OnEnable()
     {
@@ -74,6 +75,6 @@ public class MainUi : UiBase
     private async void OpenBossRaidUi()
     {
         //await UiManager.Instance.OpenUI<BossRaidUi>();
-        OnEnterBossRaid?.Invoke();
+        OnBossRaidStart?.Invoke();
     }
 }
