@@ -22,8 +22,6 @@ public class BattleManager : MonoBehaviour
         }
     }
     
-    public void StartBattle(PlayerPartyControllerBase playerParty, GameObject monsterParty)
-
     private void OnEnable()
     {
         MainUi.OnBossRaidStart += PauseBattle;
@@ -51,7 +49,7 @@ public class BattleManager : MonoBehaviour
         return _isPaused == false;
     }
 
-    public void StartBattle(PlayerPartyController playerParty, GameObject monsterParty)
+    public void StartBattle(PlayerPartyControllerBase playerParty, GameObject monsterParty)
     {
         if (playerParty == null)
         {
@@ -72,8 +70,6 @@ public class BattleManager : MonoBehaviour
             Debug.Log("보스 전투 시작");
             BossBattleRoutine(bossParty, enemyParty).Forget();
         }
-
-
     }
 
     private async UniTaskVoid AutoBattleRoutine(PlayerPartyController playerParty, MonsterParty enemyParty)
@@ -209,7 +205,139 @@ public class BattleManager : MonoBehaviour
 
     private async UniTaskVoid BossBattleRoutine(PlayerPartyControllerForBoss playerParty, MonsterParty enemyParty)
     {
+        List<BattleCharacter> turnQueue = new List<BattleCharacter>();
 
+        for (int i = 0; i < 5; i++)
+        {
+            Character hunter = playerParty.GetHunter(i);
+            if ((hunter != null) && (hunter._isDead == false))
+            {
+                turnQueue.Add(hunter);
+            }
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            Monster monster = enemyParty.GetMonster(i);
+            if ((monster != null) && (monster._isDead == false))
+            {
+                turnQueue.Add(monster);
+            }
+        }
+
+        turnQueue.Sort(CompareActionOrder);
+
+        while ((playerParty.GetCurrentHunterCount() > 0) && (enemyParty.GetCurrentMonsterCount() > 0))
+        {
+            foreach (BattleCharacter curUnit in turnQueue)
+            {
+                if (curUnit._isDead == true)
+                {
+                    continue;
+                }
+
+                if ((playerParty.GetCurrentHunterCount() == 0) || (enemyParty.GetCurrentMonsterCount() == 0))
+                {
+                    break;
+                }
+
+                Transform attackerTransform = curUnit.transform;
+                Transform targetTransform = null;
+
+                if (curUnit is Character hunter)
+                {
+                    Monster target = FindMonsterTarget(enemyParty, -1);
+                    if (target == null)
+                    {
+                        continue;
+                    }
+
+                    targetTransform = target.transform;
+                    Vector3 originPos = attackerTransform.position;
+                    attackerTransform.position = (originPos + targetTransform.position) / 2f;
+
+                    if (hunter._isDead == true)
+                    {
+                        continue;
+                    }
+
+                    await UniTask.Delay(300);
+                    await hunter.AtkTarget(target, enemyParty);
+
+                    if (hunter._isDead == false)
+                    {
+                        await UniTask.Delay(300);
+                        attackerTransform.position = originPos;
+                        await UniTask.Delay(500);
+                    }
+                }
+                else if (curUnit is Monster monster)
+                {
+                    Character target = null;
+                    if (monster.GetIsMonsterBoss())
+                    {
+                        target = FindLowestHPHunter(playerParty);
+                    }
+                    else
+                    {
+                        target = FindHunterTarget(playerParty, -1); 
+                    }
+
+                    targetTransform = target.transform;
+                    Vector3 originPos = attackerTransform.position;
+                    attackerTransform.position = (originPos + targetTransform.position) / 2f;
+                    await UniTask.Delay(300);
+
+                    if (monster._isDead == true)
+                    {
+                        continue;
+                    }
+
+                    monster.AtkTarget(target);
+                    await UniTask.Delay(300);
+
+                    if (monster._isDead == false)
+                    {
+                        attackerTransform.position = originPos;
+                        await UniTask.Delay(300);
+                    }
+                }
+            }
+        }
+
+        bool isWin = false;
+
+        if (playerParty.GetCurrentHunterCount() == 0)
+        {
+            Debug.Log("보스 토벌 실패. 파티가 전멸했습니다.");
+            isWin = true;
+            // [TODO] 방치형 스테이지 카메라로 복귀 또는 결과창 띄우기
+        }
+        else if (enemyParty.GetCurrentMonsterCount() == 0)
+        {
+            Debug.Log("보스 토벌 성공.");
+            isWin = false;
+            // [TODO] 길드 등급업 처리 및 보상 지급
+        }
+
+        EndBossBattle(playerParty, enemyParty.gameObject);
+        MainUi.TriggerBossRaidEnd(isWin);
+    }
+    
+    public void EndBossBattle(PlayerPartyControllerForBoss playerParty, GameObject monsterParty)
+    {
+        Debug.Log("보스 전투 종료 로직 실행");
+        monsterParty.SetActive(false);
+
+        if (monsterParty != null)
+        {
+            Destroy(monsterParty);
+        }
+
+        if (playerParty != null)
+        {
+            Destroy(playerParty.gameObject);
+        }
     }
 
     private int CompareActionOrder(BattleCharacter a, BattleCharacter b)
@@ -258,9 +386,9 @@ public class BattleManager : MonoBehaviour
         return null;
     }
 
-    private Character FindHunterTarget(PlayerPartyController playerParty, int attackerIndex)
+    private Character FindHunterTarget(PlayerPartyControllerBase playerParty, int attackerIndex)
     {
-        if (attackerIndex >= 0 && attackerIndex < 3)
+        if (attackerIndex >= 0 && attackerIndex < playerParty.MaxPartySize)
         {
             Character frontTarget = playerParty.GetHunter(attackerIndex);
             if (frontTarget != null && frontTarget._isDead == false)
@@ -279,6 +407,27 @@ public class BattleManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    private Character FindLowestHPHunter(PlayerPartyControllerForBoss playerParty)
+    {
+        Character lowestHpHunter = null;
+        int minHp = int.MaxValue;
+
+        for (int i = 0; i < playerParty.MaxPartySize; i++)
+        {
+            Character target = playerParty.GetHunter(i);
+            if ((target != null) && (target._isDead == false))
+            {
+                if (target.GetCharacterCurHP() < minHp)
+                {
+                    minHp = target.GetCharacterCurHP();
+                    lowestHpHunter = target;
+                }
+            }
+        }
+
+        return lowestHpHunter;
     }
 
     public void EndBattle(PlayerPartyController playerParty, GameObject monsterParty)
