@@ -7,11 +7,11 @@
     "Rank": 0,
     "Range": 1,
     "BuffAtk": 5,
-    "BuffHp": 0,
-    "BuffAtkSpeed": 0,
-    "BuffDef": 0,
-    "IconAddress": "",
-    "Price": 100
+	"BuffHp": 0,
+	"BuffAtkSpeed": 0,
+	"BuffDef": 0,
+	"IconAddress": "weapon_1",
+	"Price": 100
   },
   {
     "Id": "weapon_2",
@@ -21,11 +21,11 @@
     "Rank": 0,
     "Range": 1,
     "BuffAtk": 15,
-    "BuffHp": 0,
-    "BuffAtkSpeed": 0,
-    "BuffDef": 0,
-    "IconAddress": "",
-    "Price": 500
+	"BuffHp": 0,
+	"BuffAtkSpeed": 0,
+	"BuffDef": 0,
+	"IconAddress": "weapon_2",
+	"Price": 500
   },
   {
     "Id": "weapon_3",
@@ -35,11 +35,11 @@
     "Rank": 2,
     "Range": 1,
     "BuffAtk": 10,
-    "BuffHp": 0,
-    "BuffAtkSpeed": 2,
-    "BuffDef": 0,
-    "IconAddress": "",
-    "Price": 550
+	"BuffHp": 0,
+	"BuffAtkSpeed": 2,
+	"BuffDef": 0,
+	"IconAddress": "weapon_3",
+	"Price": 550
   },
   {
     "Id": "weapon_4",
@@ -49,11 +49,11 @@
     "Rank": 0,
     "Range": 2,
     "BuffAtk": 3,
-    "BuffHp": 0,
-    "BuffAtkSpeed": 5,
-    "BuffDef": 0,
-    "IconAddress": "",
-    "Price": 250
+	"BuffHp": 0,
+	"BuffAtkSpeed": 5,
+	"BuffDef": 0,
+	"IconAddress": "weapon_4",
+	"Price": 250
   },
   {
     "Id": "weapon_5",
@@ -63,11 +63,11 @@
     "Rank": 0,
     "Range": 1,
     "BuffAtk": 55,
-    "BuffHp": 0,
-    "BuffAtkSpeed": 10,
-    "BuffDef": 0,
-    "IconAddress": "",
-    "Price": 3500
+	"BuffHp": 0,
+	"BuffAtkSpeed": 10,
+	"BuffDef": 0,
+	"IconAddress": "weapon_5",
+	"Price": 3500
   },
   {
     "Id": "weapon_6",
@@ -91,11 +91,11 @@
     "Rank": 0,
     "Range": 0,
     "BuffAtk": 0,
-    "BuffHp": 200,
-    "BuffAtkSpeed": 0,
-    "BuffDef": 30,
-    "IconAddress": "",
-    "Price": 2000
+	"BuffHp": 200,
+	"BuffAtkSpeed": 0,
+	"BuffDef": 30,
+	"IconAddress": "armor_1",
+	"Price": 2000
   },
   {
     "Id": "accessories_1",
@@ -119,11 +119,11 @@
     "Rank": 0,
     "Range": 0,
     "BuffAtk": 35,
-    "BuffHp": 0,
-    "BuffAtkSpeed": 8,
-    "BuffDef": 0,
-    "IconAddress": "",
-    "Price": 3500
+	"BuffHp": 0,
+	"BuffAtkSpeed": 8,
+	"BuffDef": 0,
+	"IconAddress": "accessories_2",
+	"Price": 3500
   },
   {
     "Id": "accessories_3",
@@ -133,11 +133,11 @@
     "Rank": 0,
     "Range": 0,
     "BuffAtk": 0,
-    "BuffHp": 200,
-    "BuffAtkSpeed": 0,
-    "BuffDef": 40,
-    "IconAddress": "",
-    "Price": 3000
+	"BuffHp": 200,
+	"BuffAtkSpeed": 0,
+	"BuffDef": 40,
+	"IconAddress": "accessories_3",
+	"Price": 3000
   },
   {
     "Id": "armor_2",
@@ -147,11 +147,11 @@
     "Rank": 0,
     "Range": 0,
     "BuffAtk": 0,
-    "BuffHp": 50,
-    "BuffAtkSpeed": 0,
-    "BuffDef": 5,
-    "IconAddress": "",
-    "Price": 100
+	"BuffHp": 50,
+	"BuffAtkSpeed": 0,
+	"BuffDef": 5,
+	"IconAddress": "armor_2",
+	"Price": 100
   },
   {
     "Id": "armor_3",
@@ -161,11 +161,11 @@
     "Rank": 0,
     "Range": 0,
     "BuffAtk": 0,
-    "BuffHp": 150,
-    "BuffAtkSpeed": 0,
-    "BuffDef": 35,
-    "IconAddress": "",
-    "Price": 1500
+	"BuffHp": 150,
+	"BuffAtkSpeed": 0,
+	"BuffDef": 35,
+	"IconAddress": "armor_3",
+	"Price": 1500
   },
   {
     "Id": "weapon_7",
@@ -175,11 +175,11 @@
     "Rank": 0,
     "Range": 2,
     "BuffAtk": 150,
-    "BuffHp": 0,
-    "BuffAtkSpeed": 10,
-    "BuffDef": 0,
-    "IconAddress": "",
-    "Price": 3500
+	"BuffHp": 0,
+	"BuffAtkSpeed": 10,
+	"BuffDef": 0,
+	"IconAddress": "weapon_7",
+	"Price": 3500
   },
   {
     "Id": "accessories_4",
@@ -189,11 +189,11 @@
     "Rank": 0,
     "Range": 0,
     "BuffAtk": 10,
-    "BuffHp": 0,
-    "BuffAtkSpeed": 0,
-    "BuffDef": 10,
-    "IconAddress": "",
-    "Price": 1300
+	"BuffHp": 0,
+	"BuffAtkSpeed": 0,
+	"BuffDef": 10,
+	"IconAddress": "accessories_4",
+	"Price": 1300
   },
   {
     "Id": "accessories_5",
@@ -203,11 +203,11 @@
     "Rank": 0,
     "Range": 0,
     "BuffAtk": 10,
-    "BuffHp": 10,
-    "BuffAtkSpeed": 3,
-    "BuffDef": 10,
-    "IconAddress": "",
-    "Price": 1000
+	"BuffHp": 10,
+	"BuffAtkSpeed": 3,
+	"BuffDef": 10,
+	"IconAddress": "accessories_5",
+	"Price": 1000
   },
   {
     "Id": "armor_4",
@@ -217,11 +217,11 @@
     "Rank": 0,
     "Range": 0,
     "BuffAtk": 10,
-    "BuffHp": 500,
-    "BuffAtkSpeed": 0,
-    "BuffDef": 50,
-    "IconAddress": "",
-    "Price": 10000
+	"BuffHp": 500,
+	"BuffAtkSpeed": 0,
+	"BuffDef": 50,
+	"IconAddress": "armor_4",
+	"Price": 10000
   },
   {
     "Id": "weapon_8",
@@ -231,10 +231,10 @@
     "Rank": 0,
     "Range": 1,
     "BuffAtk": 150,
-    "BuffHp": 20,
-    "BuffAtkSpeed": 0,
-    "BuffDef": 15,
-    "IconAddress": "",
-    "Price": 9000
+	"BuffHp": 20,
+	"BuffAtkSpeed": 0,
+	"BuffDef": 15,
+	"IconAddress": "weapon_8",
+	"Price": 9000
   }
 ]
