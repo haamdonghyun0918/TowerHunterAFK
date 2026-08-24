@@ -292,7 +292,8 @@ public class HunterInfoUi : UiBase
             return;
         }
 
-        SaveManager.Instance.CurrentSaveData.Exp -= _levelUpExp;
+        NetworkManager.Instance.PlayerResourceService.RequestUseExp(_levelUpExp);
+
         _characterSaveData.Exp += _levelUpExp;
         SaveManager.Instance.SaveCurrentData();
 

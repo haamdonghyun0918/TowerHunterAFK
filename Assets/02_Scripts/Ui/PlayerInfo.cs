@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 using Cysharp.Threading.Tasks;
+using System.ComponentModel;
 
 public class PlayerInfo : MonoBehaviour
 {
@@ -10,9 +11,63 @@ public class PlayerInfo : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textLevel;
     [SerializeField] private Image _imageGuild;
 
+    private StageViewModel _stageViewModel;
+
+    private void Start()
+    {
+        Init();
+    }
+
     private void OnEnable()
     {
+        if (_stageViewModel != null)
+        {
+            Bind();
+        }
         UpdatePlayerInfo().Forget();
+    }
+
+    private void OnDisable()
+    {
+        Unbind();
+    }
+
+    private void Init()
+    {
+        if (NetworkManager.Instance != null && NetworkManager.Instance.StageService != null)
+        {
+            _stageViewModel = NetworkManager.Instance.StageService.GetStageViewModel();
+            Bind();
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerInfo] StageService를 찾을 수 없습니다.");
+        }
+
+        UpdatePlayerInfo().Forget();
+    }
+
+    private void Bind()
+    {
+        if (_stageViewModel == null) return;
+
+        _stageViewModel.PropertyChanged -= OnPropertyChanged;
+        _stageViewModel.PropertyChanged += OnPropertyChanged;
+    }
+
+    private void Unbind()
+    {
+        if (_stageViewModel == null) return;
+
+        _stageViewModel.PropertyChanged -= OnPropertyChanged;
+    }
+
+    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(StageViewModel.CurrentStage) || e.PropertyName == "MaxClearedStage")
+        {
+            UpdatePlayerInfo().Forget();
+        }
     }
 
     public async UniTaskVoid UpdatePlayerInfo()
@@ -73,7 +128,6 @@ public class PlayerInfo : MonoBehaviour
             {
                 _imageGuild.sprite = loadedSprite;
             }
-
             else
             {
                 Debug.LogWarning($"[PlayerInfo] 어드레서블에서 이미지를 찾을 수 없습니다: {imageKey}");
