@@ -3,19 +3,31 @@ using System;
 using System.Threading;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class EquipmentSlotView : MonoBehaviour
+public class EquipmentSlotView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
     [SerializeField] private Image Image_EquipmentIcon;
     [SerializeField] private TMP_Text Text_EnhanceLevel;
     [SerializeField] private UiButton Button_Equipment;
+    [SerializeField] private Image _progressRing;
 
     private string _uniqueId;
     private Action<string> _onClickEquipment;
-    private CancellationTokenSource _iconCancellationTokenSource;
+    private Action<string> _onLongPressEquipment;
 
-    public void SetUp(EquipmentSlotViewModel viewModel, Action<string> onClickEquipment)
+    private CancellationTokenSource _iconCancellationTokenSource;
+    private CancellationTokenSource _longPressCts;
+
+    private bool _isPointerDown = false;
+    private bool _isLongPressTriggered = false;
+    private bool _isClickCanceled = false;
+    private const float TapThreshold = 0.2f;
+    private const float LongPressDuration = 0.6f;
+
+
+    public void SetUp(EquipmentSlotViewModel viewModel, Action<string> onClickEquipment, Action<string> onLongPressEquipment = null)
     {
         if (viewModel == null)
         {
@@ -25,6 +37,17 @@ public class EquipmentSlotView : MonoBehaviour
 
         _uniqueId = viewModel.UniqueId;
         _onClickEquipment = onClickEquipment;
+        _onLongPressEquipment = onLongPressEquipment;
+
+        _longPressCts?.Cancel();
+        _longPressCts?.Dispose();
+        _longPressCts = new CancellationTokenSource();
+
+        if (_progressRing != null)
+        {
+            _progressRing.fillAmount = 0f;
+            _progressRing.gameObject.SetActive(false);
+        }
 
         UpdateEnhanceLevel(viewModel.EnhanceLevel);
         BindButton();
@@ -54,6 +77,11 @@ public class EquipmentSlotView : MonoBehaviour
 
     private void OnClickEquipment()
     {
+        if (_isLongPressTriggered || _isClickCanceled)
+        {
+            return;
+        }
+
         if (_onClickEquipment == null)
         {
             return;
@@ -114,6 +142,7 @@ public class EquipmentSlotView : MonoBehaviour
     {
         _uniqueId = "";
         _onClickEquipment = null;
+        _onLongPressEquipment = null;
 
         CancelIconLoad();
         HideIcon();
@@ -122,16 +151,26 @@ public class EquipmentSlotView : MonoBehaviour
         {
             Text_EnhanceLevel.text = "";
         }
+
+        if (_progressRing != null)
+        {
+            _progressRing.fillAmount = 0f;
+            _progressRing.gameObject.SetActive(false);
+        }
     }
 
     private void OnDisable()
     {
         CancelIconLoad();
+        _longPressCts?.Cancel();
     }
 
     private void OnDestroy()
     {
         CancelIconLoad();
+
+        _longPressCts?.Cancel();
+        _longPressCts?.Dispose();
 
         if (Button_Equipment != null)
         {
@@ -149,5 +188,87 @@ public class EquipmentSlotView : MonoBehaviour
         _iconCancellationTokenSource.Cancel();
         _iconCancellationTokenSource.Dispose();
         _iconCancellationTokenSource = null;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        _isPointerDown = true;
+        _isLongPressTriggered = false;
+        _isClickCanceled = false;
+
+        if (_onLongPressEquipment == null)
+        {
+            return;
+        }
+
+        _longPressCts?.Cancel();
+        _longPressCts?.Dispose();
+        _longPressCts = new CancellationTokenSource();
+
+        CheckLongPress(_longPressCts.Token).Forget();
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        _isPointerDown = false;
+        _longPressCts?.Cancel();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        _isPointerDown = false;
+        _longPressCts?.Cancel();
+    }
+
+    private async UniTaskVoid CheckLongPress(CancellationToken token)
+    {
+        if (_progressRing == null)
+        {
+            Debug.LogWarning("[EquipmentSlotView] ProgressRing 이미지가 존재하지 않습니다.");
+            return;
+        }
+
+        float elapsedTime = 0f;
+        _progressRing.fillAmount = 0f;
+        _progressRing.gameObject.SetActive(false);
+
+        try
+        {
+            while (elapsedTime < LongPressDuration)
+            {
+                elapsedTime += Time.deltaTime;
+
+                if (elapsedTime >= TapThreshold)
+                {
+                    _isClickCanceled = true;
+                    _progressRing.gameObject.SetActive(true);
+
+                    float fillRatio = (elapsedTime - TapThreshold) / (LongPressDuration - TapThreshold);
+                    _progressRing.fillAmount = fillRatio;
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
+            }
+
+            if (_isPointerDown)
+            {
+                _progressRing.fillAmount = 1f;
+                _isLongPressTriggered = true;
+                _onLongPressEquipment?.Invoke(_uniqueId);
+            }
+        }
+
+        catch 
+        {
+        }
+
+        finally
+        {
+            if (_progressRing != null)
+            {
+                _progressRing.fillAmount = 0f;
+                _progressRing.gameObject.SetActive(false);
+            }
+        }
     }
 }
