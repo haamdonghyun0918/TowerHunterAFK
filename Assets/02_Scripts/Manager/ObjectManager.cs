@@ -156,6 +156,26 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
+    public async UniTaskVoid SpawnBossRaidEntities(Transform playerSpawnSpot, Transform bossSpawnSpot)
+    {
+        if (Prefab_BossPlayerParty == null || Prefab_MonsterParty == null)
+        {
+            Debug.LogError("[ObjectManager] 보스 레이드 프리팹이 할당되지 않았습니다.");
+            return;
+        }
+
+        GameObject gObj_BossParty = Instantiate(Prefab_BossPlayerParty, playerSpawnSpot.position, Quaternion.identity);
+        PlayerPartyControllerForBoss bossParty = gObj_BossParty.GetComponent<PlayerPartyControllerForBoss>();
+
+        // [TODO] 실제로는 SaveManager에 저장된 보스 파티 UID 5개를 불러와서 반복문으로 SpawnHunter() 실행
+
+        GameObject gObj_BossMonsterParty = Instantiate(Prefab_MonsterParty, bossSpawnSpot.position, Quaternion.identity);
+        MonsterParty bossMonsterParty = gObj_BossMonsterParty.GetComponent<MonsterParty>();
+
+        string currentBossId = "boss_dragon_01"; // [TODO] 실제 보스 ID
+        await SpawnMonster(currentBossId, bossMonsterParty);
+    }
+
     private async UniTask<bool> SpawnHunter(string characterId, string characterUniqueId)
     {
         var data = GameDataManager.Instance.GetData<CharacterData>(characterId);
