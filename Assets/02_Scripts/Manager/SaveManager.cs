@@ -191,17 +191,6 @@ public class SaveManager : MonoBehaviour
         return CurrentSaveData.PlayerLevel;
     }
 
-    public void SavePlayerExp(long exp)
-    {
-        CurrentSaveData.Exp = exp;
-        SaveToFile(CurrentSaveData);
-    }
-
-    public long GetPlayerExp()
-    {
-        return CurrentSaveData.Exp;
-    }
-
     public void SaveExpeditionStart(string expeditionId, string startTime)
     {
         CurrentSaveData.OngoingExpeditionId = expeditionId;
