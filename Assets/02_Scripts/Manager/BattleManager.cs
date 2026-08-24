@@ -8,6 +8,8 @@ public class BattleManager : MonoBehaviour
 
     public static BattleManager Instance { get; private set; }
 
+    public bool _isPaused = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -21,6 +23,35 @@ public class BattleManager : MonoBehaviour
     }
     
     public void StartBattle(PlayerPartyControllerBase playerParty, GameObject monsterParty)
+
+    private void OnEnable()
+    {
+        MainUi.OnBossRaidStart += PauseBattle;
+        //TODO: 보스레이드 끝났을 때 이벤트 구독
+    }
+
+    private void OnDisable()
+    {
+        MainUi.OnBossRaidStart -= PauseBattle;
+        //TODO: 보스레이드 끝났을 때 이벤트 해제
+    }
+
+    public void PauseBattle()
+    {
+        _isPaused = true;
+    }
+
+    public void ResumeBattle()
+    {
+        _isPaused = false;
+    }
+
+    private bool CheckIsNotPaused()
+    {
+        return _isPaused == false;
+    }
+
+    public void StartBattle(PlayerPartyController playerParty, GameObject monsterParty)
     {
         if (playerParty == null)
         {
@@ -70,6 +101,8 @@ public class BattleManager : MonoBehaviour
         {
             foreach (BattleCharacter curUnit in turnQueue)
             {
+                await UniTask.WaitUntil(CheckIsNotPaused);
+
                 if (curUnit._isDead == true)
                 {
                     continue;
