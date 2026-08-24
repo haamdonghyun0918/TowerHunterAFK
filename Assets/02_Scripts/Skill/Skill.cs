@@ -1,4 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -24,9 +26,26 @@ public class Skill : MonoBehaviour
     private Transform _targetTransform;
     private MonsterParty _monsterParty;
 
+    private CancellationTokenSource _actionCancellationTokenSource = new CancellationTokenSource();
+
+    private List<GameObject> _spawnedEffectInstances = new List<GameObject>();
+
     private void OnEnable()
     {
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.OnStageChanged += OnStageChanged;
+        }
+    }
 
+    private void OnDisable()
+    {
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.OnStageChanged -= OnStageChanged;
+        }
+
+        CancelAllTasks();
     }
 
     public void InitializeSkill(string skillId)
@@ -43,6 +62,13 @@ public class Skill : MonoBehaviour
         SetRequiredSkillCost();
         SetSkillType();
         SetTargetTransform();
+    }
+
+    private void CancelAllTasks()
+    {
+        _actionCancellationTokenSource?.Cancel();
+        _actionCancellationTokenSource?.Dispose();
+        _actionCancellationTokenSource = new CancellationTokenSource();
     }
 
     private void SetSkillId(string skillId)
@@ -74,11 +100,25 @@ public class Skill : MonoBehaviour
             return;
         }
 
-        int motionDuration = _skillData.MotionDuration;
-        await UniTask.Delay(motionDuration);
+        try
+        {
+            int motionDuration = _skillData.MotionDuration;
 
-        GameObject instance = await InstantiateAsync(_skillPrefabPath, _targetTransform);
+            await UniTask.Delay(motionDuration, cancellationToken: _actionCancellationTokenSource.Token);
 
+            GameObject instance = await InstantiateAsync(_skillPrefabPath, _targetTransform);
+
+            if (instance != null)
+            {
+                _spawnedEffectInstances.Add(instance);
+            }
+        }
+
+        catch (System.OperationCanceledException)
+        {
+
+        }
+        
     }
 
     private async UniTask<GameObject> InstantiateAsync(string prefabPath, Transform parentTransform = null)
@@ -87,7 +127,7 @@ public class Skill : MonoBehaviour
 
         try
         {
-            GameObject instance = await handle.ToUniTask();
+            GameObject instance = await handle.ToUniTask(cancellationToken: _actionCancellationTokenSource.Token);
 
             return instance;
         }
@@ -215,6 +255,24 @@ public class Skill : MonoBehaviour
                 break;
         }
         return _targetTransform;
+    }
+    private void OnStageChanged(int newStage)
+    {
+        ClearAllSkillEffect();
+    }
+
+    public void ClearAllSkillEffect()
+    {
+        CancelAllTasks();
+
+        foreach(var effect in _spawnedEffectInstances)
+        {
+            if (effect != null)
+            {
+                Addressables.ReleaseInstance(effect);
+            }
+        }
+        _spawnedEffectInstances.Clear();
     }
 
 
