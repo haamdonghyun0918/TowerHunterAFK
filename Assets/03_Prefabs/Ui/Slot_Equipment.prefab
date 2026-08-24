@@ -110,7 +110,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -15, y: 15}
-  m_SizeDelta: {x: 40.4732, y: 25.0352}
+  m_SizeDelta: {x: 50.4405, y: 35}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &4456658192558957327
 CanvasRenderer:
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 0.2705882, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -167,8 +167,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -368,7 +368,6 @@ MonoBehaviour:
   Image_EquipmentIcon: {fileID: 244403909844568989}
   Text_EnhanceLevel: {fileID: 7115498488085416781}
   Button_Equipment: {fileID: 5573347843254469405}
-  _progressRing: {fileID: 0}
 --- !u!1 &6716802350083437114
 GameObject:
   m_ObjectHideFlags: 0
