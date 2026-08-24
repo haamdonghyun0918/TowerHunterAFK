@@ -413,7 +413,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2982020919150505200, guid: 7c007b06f9b7760459b844079387794e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3049848675506012561, guid: 7c007b06f9b7760459b844079387794e, type: 3}
       propertyPath: m_fontSize
@@ -716,6 +716,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EquipmentDisassembleUI
       objectReference: {fileID: 0}
+    - target: {fileID: 4224038679498738283, guid: e1f2c50a03bd16f4c871936a8ddf6068, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7052092407711717848, guid: e1f2c50a03bd16f4c871936a8ddf6068, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -895,7 +899,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1152989408579138200, guid: f46bf20ccd884294f9f831f864d49390, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -49,6 +49,7 @@ public class MonsterData : GameDataBase
     public int BaseAtkSpeed;
     public int BaseDef;
     public string PrefabPath;
+    public bool IsBoss;
 }
 
 [System.Serializable]

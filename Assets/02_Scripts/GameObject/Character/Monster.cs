@@ -6,6 +6,7 @@ public class Monster : BattleCharacter
     [Header("데이터 관련")]
     private MonsterData _monsterData;
     private string _monsterId;
+    private bool _isBoss;
 
     private Action<int, int> _onChangedHp;
 
@@ -38,6 +39,7 @@ public class Monster : BattleCharacter
         _isDead = false;
 
         _monsterId = _monsterData.Id;
+        _isBoss = _monsterData.IsBoss;
 
         SetStatData();
     }
@@ -60,5 +62,10 @@ public class Monster : BattleCharacter
         Debug.Log($"타겟{TargetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
         ChangeState(CharacterState.NormalAttack);
         ChangeState(CharacterState.Idle);
+    }
+
+    public bool GetIsMonsterBoss()
+    {
+        return _isBoss;
     }
 }

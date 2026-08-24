@@ -135,6 +135,13 @@ public class Character : BattleCharacter
     }
     //끝
 
+    //추가
+    public int GetCharacterCurHP()
+    {
+        return _characterHp;
+    }
+    //끝
+
     public int GetSkillDuration()
     {
         string skillId = _characterData.SkillId;

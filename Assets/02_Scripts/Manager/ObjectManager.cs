@@ -7,9 +7,7 @@ public class ObjectManager : MonoBehaviour
 {
     [SerializeField] private GameObject Prefab_PlayerParty;
     [SerializeField] private GameObject Prefab_MonsterParty;
-
-    [SerializeField] private GameObject Prefab_TestDefaultPlayer;
-    [SerializeField] private GameObject Prefab_TestDefaultMonster;
+    [SerializeField] private GameObject Prefab_BossPlayerParty;
 
     private PlayerPartyController _currentPlayerParty;
     private List<MonsterParty> _monsterPartyList = new List<MonsterParty>();
@@ -158,6 +156,26 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
+    public async UniTaskVoid SpawnBossRaidEntities(Transform playerSpawnSpot, Transform bossSpawnSpot)
+    {
+        if (Prefab_BossPlayerParty == null || Prefab_MonsterParty == null)
+        {
+            Debug.LogError("[ObjectManager] 보스 레이드 프리팹이 할당되지 않았습니다.");
+            return;
+        }
+
+        GameObject gObj_BossParty = Instantiate(Prefab_BossPlayerParty, playerSpawnSpot.position, Quaternion.identity);
+        PlayerPartyControllerForBoss bossParty = gObj_BossParty.GetComponent<PlayerPartyControllerForBoss>();
+
+        // [TODO] 실제로는 SaveManager에 저장된 보스 파티 UID 5개를 불러와서 반복문으로 SpawnHunter() 실행
+
+        GameObject gObj_BossMonsterParty = Instantiate(Prefab_MonsterParty, bossSpawnSpot.position, Quaternion.identity);
+        MonsterParty bossMonsterParty = gObj_BossMonsterParty.GetComponent<MonsterParty>();
+
+        string currentBossId = "boss_dragon_01"; // [TODO] 실제 보스 ID
+        await SpawnMonster(currentBossId, bossMonsterParty);
+    }
+
     private async UniTask<bool> SpawnHunter(string characterId, string characterUniqueId)
     {
         var data = GameDataManager.Instance.GetData<CharacterData>(characterId);
@@ -167,7 +185,7 @@ public class ObjectManager : MonoBehaviour
             return false;
         }
 
-        GameObject hunterPrefab = Prefab_TestDefaultPlayer;
+        GameObject hunterPrefab = null;
         if (string.IsNullOrEmpty(data.PrefabPath) == false)
         {
             GameObject loadedPrefab = await Addressables.LoadAssetAsync<GameObject>(data.PrefabPath);
@@ -177,7 +195,8 @@ public class ObjectManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"[ObjectManager] {data.PrefabPath} 경로에서 프리팹을 찾을 수 없습니다. 기본 프리팹을 사용합니다.");
+                Debug.LogWarning($"[ObjectManager] hunterPrefab이 null입니다!.");
+                return false;
             }
         }
 
@@ -211,7 +230,7 @@ public class ObjectManager : MonoBehaviour
             return;
         }
 
-        GameObject prefabToSpawn = Prefab_TestDefaultMonster;
+        GameObject prefabToSpawn = null;
 
         if (string.IsNullOrEmpty(data.PrefabPath) == false)
         {
@@ -219,6 +238,11 @@ public class ObjectManager : MonoBehaviour
             if (loadedPrefab != null)
             {
                 prefabToSpawn = loadedPrefab;
+            }
+            else
+            {
+                Debug.LogWarning("몬스터 프리팹이 널입니다.");
+                return;
             }
         }
 
