@@ -190,7 +190,6 @@ public class Character : BattleCharacter
         _characterAtk = baseStatData.BaseAtk + equipmentBonus.Atk + levelBonusAtk;
         _characterAtkSpeed = baseStatData.BaseAtkSpeed + equipmentBonus.AtkSpeed;
         _characterMaxHp = baseStatData.BaseHp + equipmentBonus.Hp + levelBonusHp;
-        _characterHp = _characterMaxHp;
         _characterDefense = baseStatData.BaseDef + equipmentBonus.Def + levelBonusDef;
 
         if (restoreHp || previousMaxHp <= 0)
@@ -554,5 +553,24 @@ public class Character : BattleCharacter
     {
         _onCharacterLevelChange?.Invoke(_characterLevel);
         IncreaseStatPerLevel();
+    }
+
+    // 캐릭터의 강화 단계와 레벨의 상승을 통하여 능력치의 변화를 동기화해주는 메서드
+    public void RefreshStatFromSaveData()
+    {
+        if (_isDead == true)
+        {
+            return;
+        }
+
+        if (SaveManager.Instance != null && SaveManager.Instance.CharacterDict.TryGetValue(_characterUniqueId, out var saveData))
+        {
+            _characterEnhancement = saveData.Rank;
+            _characterCurrentExp = (int)saveData.Exp;
+            _characterLevel = 1 + (_characterCurrentExp / _needExpForLevelUp);
+        }
+
+        SetStatData(false);
+        InvokeStatChangedEvent();
     }
 }

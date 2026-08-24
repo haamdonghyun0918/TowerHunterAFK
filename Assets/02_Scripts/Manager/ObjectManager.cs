@@ -84,6 +84,16 @@ public class ObjectManager : MonoBehaviour
             {
                 _currentPlayerParty.transform.position = playerSpawnSpot.position;
                 _currentPlayerParty._isBattling = false;
+                
+                // 단순 레벨업과 강화는 다음 스테이지에서 적용될 수 있도록 하는 메서드 (대신, 레벨업 하고 죽을 시는 죽은 걸로 판정)
+                for (int i = 0; i < _currentPlayerParty.MaxPartySize; i++)
+                {
+                    Character hunter = _currentPlayerParty.GetHunter(i);
+                    if (hunter != null && hunter._isDead == false)
+                    {
+                        hunter.RefreshStatFromSaveData();
+                    }
+                }
             }
 
             if (_currentPlayerParty.GetCurrentHunterCount() == 0)
