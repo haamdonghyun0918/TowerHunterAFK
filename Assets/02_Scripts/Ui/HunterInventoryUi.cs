@@ -45,6 +45,7 @@ public class HunterInventoryUi : UiBase
 
         var saveData = SaveManager.Instance.CurrentSaveData;
         string[] currentPartyUids = saveData.CurrentPartyCharacterUids;
+        string[] expPartyUids = saveData.ExpeditionPartyUids;
         List<CharacterSaveData> ownedCharacters = saveData.OwnedCharacters;
 
         for (int i = 0; i < 3; i++)
@@ -78,10 +79,21 @@ public class HunterInventoryUi : UiBase
                 if (currentPartyUids[i] == hunter.UniqueId)
                 {
                     isParty = true;
+                    break;
                 }
             }
 
-            if (isParty == false)
+            bool isExpParty = false;
+            for (int i = 0; i < expPartyUids.Length; i++)
+            {
+                if (expPartyUids[i] == hunter.UniqueId)
+                {
+                    isExpParty = true;
+                    break;
+                }
+            }
+
+            if (isParty == false && isExpParty == false)
             {
                 waitChars.Add(hunter);
             }
