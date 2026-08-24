@@ -23,8 +23,12 @@ public class Character : BattleCharacter
     private CharacterData _characterData;
     private string _characterId;
 
+    private string _characterUniqueId;
+
     [Header("전투 관련")]
     private Skill _skill;
+
+    private bool _isEquipmentEventBound;
 
     private bool _isSkillUsable = false;
     private void Awake()
@@ -50,10 +54,15 @@ public class Character : BattleCharacter
             Debug.Log($"[Character] GameDataManager가 NULL입니다.");
         }
     }
+    private void OnDestroy()
+    {
+        UnbindEquipmentChangedEvent();
+    }
 
-    public void InitCharacter(CharacterData characterData)
+    public void InitCharacter(CharacterData characterData, string characterUniqueId)
     {
         _characterData = characterData;
+        _characterUniqueId = characterUniqueId;
 
         if (_characterData == null)
         {
@@ -65,12 +74,19 @@ public class Character : BattleCharacter
         _maxSkillCost = _characterData.MaxSkillCost;
 
         InitializeSkill();
-        SetStatData();
+        SetStatData(true);
+        BindEquipmentChangedEvent();
     }
 
     public string GetCharacterId()
     {
         return _characterId;
+    }
+
+    //추가
+    public string GetCharacterUniqueId()
+    {
+        return _characterUniqueId;
     }
 
     //추가
@@ -106,15 +122,40 @@ public class Character : BattleCharacter
         _skill.InitializeSkill(skillId);
     }
 
-    private void SetStatData()
+    private void SetStatData(bool restoreHp)
     {
-        var baseStatData = GameDataManager.Instance.GetData<BaseStatData>(_characterData.BaseStatDataId);
+        BaseStatData baseStatData = GameDataManager.Instance.GetData<BaseStatData>(_characterData.BaseStatDataId);
 
-        _characterAtk = baseStatData.BaseAtk;
-        _characterAtkSpeed = baseStatData.BaseAtkSpeed;
-        _characterMaxHp = baseStatData.BaseHp;
-        _characterHp = baseStatData.BaseHp;
-        _characterDefense = baseStatData.BaseDef;
+        if (baseStatData == null)
+        {
+            Debug.LogError("[Character] BaseStatData가 없습니다.");
+            return;
+        }
+
+        EquipmentStatBonus equipmentBonus = new EquipmentStatBonus();
+
+        if (NetworkManager.Instance != null && NetworkManager.Instance.EquipmentService != null)
+        {
+            equipmentBonus = NetworkManager.Instance.EquipmentService.GetCharacterEquipmentStatBonus(_characterUniqueId);
+        }
+
+        int previousMaxHp = _characterMaxHp;
+        int previousHp = _characterHp;
+
+        _characterAtk = baseStatData.BaseAtk + equipmentBonus.Atk;
+        _characterAtkSpeed = baseStatData.BaseAtkSpeed + equipmentBonus.AtkSpeed;
+        _characterMaxHp = baseStatData.BaseHp + equipmentBonus.Hp;
+        _characterHp = _characterMaxHp;
+        _characterDefense = baseStatData.BaseDef + equipmentBonus.Def;
+
+        if (restoreHp || previousMaxHp <= 0)
+        {
+            _characterHp = _characterMaxHp;
+            return;
+        }
+
+        int missingHp = Mathf.Max(0, previousMaxHp - previousHp);
+        _characterHp = Mathf.Clamp(_characterMaxHp - missingHp, 0, _characterMaxHp);
     }
 
     private async UniTask UseSkill(Monster targetMonster, MonsterParty monsterParty)
@@ -296,6 +337,48 @@ public class Character : BattleCharacter
         //추가
         InvokeStatChangedEvent();
         InvokeCostChangedEvent();
+    }
+
+    private void BindEquipmentChangedEvent()
+    {
+        if (_isEquipmentEventBound)
+        {
+            return;
+        }
+
+        if (NetworkManager.Instance == null || NetworkManager.Instance.EquipmentService == null)
+        {
+            return;
+        }
+
+        NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged += OnCharacterEquipmentChanged;
+        _isEquipmentEventBound = true;
+    }
+
+    private void UnbindEquipmentChangedEvent()
+    {
+        if (_isEquipmentEventBound == false)
+        {
+            return;
+        }
+
+        if (NetworkManager.Instance != null && NetworkManager.Instance.EquipmentService != null)
+        {
+            NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged -= OnCharacterEquipmentChanged;
+        }
+
+        _isEquipmentEventBound = false;
+    }
+
+    private void OnCharacterEquipmentChanged(string characterUniqueId)
+    {
+        if (characterUniqueId != _characterUniqueId)
+        {
+            return;
+        }
+
+        SetStatData(false);
+        InvokeStatChangedEvent();
     }
 
 

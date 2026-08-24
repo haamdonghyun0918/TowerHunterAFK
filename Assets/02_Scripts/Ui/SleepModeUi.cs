@@ -87,6 +87,10 @@ public class SleepModeUi : UiBase
         {
             UpdateDiamondView();
         }
+        else if(eventArgs.PropertyName == nameof(PlayerResourceViewModel.MagicStone))
+        {
+            UpdateMagicStoneView();
+        }
     }
 
     private void UpdateAllViews()
@@ -95,6 +99,7 @@ public class SleepModeUi : UiBase
         UpdateGoldView();
         UpdateExpView();
         UpdateDiamondView();
+        UpdateMagicStoneView();
     }
     private void UpdateStageView()
     {
@@ -125,6 +130,14 @@ public class SleepModeUi : UiBase
         if (_playerResourceViewModel != null && Text_Diamond != null)
         {
             Text_Diamond.text = _playerResourceViewModel.Diamond.ToString("N0");
+        }
+    }
+
+    private void UpdateMagicStoneView()
+    {
+        if(_playerResourceViewModel != null && Text_MagicStone != null)
+        {
+            Text_MagicStone.text = _playerResourceViewModel.MagicStone.ToString("N0");
         }
     }
 }

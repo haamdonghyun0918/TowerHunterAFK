@@ -1,68 +1,140 @@
-﻿using UnityEngine;
-
-public class EquipmentDisassembleViewModel : ViewModelBase
+﻿public class EquipmentDisassembleViewModel : ViewModelBase
 {
-    private string _targetEquipmentUniqueId;
+    private readonly EquipmentService _equipmentService;
+    private EquipmentModel _targetEquipment;
+
+    public EquipmentDisassembleViewModel(EquipmentService equipmentService)
+    {
+        _equipmentService = equipmentService;
+    }
+
+    public bool HasTarget
+    {
+        get
+        {
+            return _targetEquipment != null;
+        }
+    }
+
     public string TargetEquipmentUniqueId
     {
-        get => _targetEquipmentUniqueId;
-
-        set
+        get
         {
-            if (_targetEquipmentUniqueId != value)
+            if (HasTarget)
             {
-                _targetEquipmentUniqueId = value;
-                OnPropertyChanged(nameof(TargetEquipmentUniqueId));
+                return _targetEquipment.UniqueId;
             }
+
+            return "";
         }
     }
 
-    private string _itemIconAddress;
     public string ItemIconAddress
     {
-        get => _itemIconAddress;
-
-        set
+        get
         {
-            if (_itemIconAddress != value)
+            if (HasTarget)
             {
-                _itemIconAddress = value;
-
-                OnPropertyChanged(nameof(ItemIconAddress));
+                return _targetEquipment.IconAddress;
             }
+
+            return "";
         }
     }
 
-    private string _itemName;
     public string ItemName
     {
-        get => _itemName;
-
-        set
+        get
         {
-            if (_itemName != value)
+            if (HasTarget)
             {
-                _itemName = value;
-
-                OnPropertyChanged(nameof(ItemName));
+                return _targetEquipment.Name;
             }
+
+            return "";
         }
     }
 
-    private string _rewardText;
+    public int EnhanceLevel
+    {
+        get
+        {
+            if (HasTarget)
+            {
+                return _targetEquipment.EnhanceLevel;
+            }
+
+            return 0;
+        }
+    }
+
+    public long RewardAmount
+    {
+        get
+        {
+            if (HasTarget)
+            {
+                return _equipmentService.GetDisassembleReward(_targetEquipment);
+            }
+
+            return 0;
+        }
+    }
+
     public string RewardText
     {
-        get => _rewardText;
-
-        set
+        get
         {
-            if (_rewardText != value)
-            {
-                _rewardText = value;
-
-                OnPropertyChanged(nameof(RewardText));
-            }
+            string currencyName = _equipmentService.DisassembleRewardCurrencyName;
+            return $"{RewardAmount:N0} {currencyName}";
         }
     }
 
+    public bool CanDisassemble
+    {
+        get
+        {
+            if (HasTarget == false)
+            {
+                return false;
+            }
+
+            return _equipmentService.IsEquipmentEquipped(TargetEquipmentUniqueId) == false;
+        }
+    }
+
+    public void SetTarget(EquipmentModel equipmentModel)
+    {
+        _targetEquipment = equipmentModel;
+        NotifyAllChanged();
+    }
+
+    public void ClearTarget()
+    {
+        _targetEquipment = null;
+        NotifyAllChanged();
+    }
+
+    public bool RequestDisassemble()
+    {
+        if (HasTarget == false)
+        {
+            return false;
+        }
+
+        return _equipmentService.RequestDisassemble(TargetEquipmentUniqueId);
+    }
+
+    public void NotifyEquipmentChanged(string uniqueId)
+    {
+        if (TargetEquipmentUniqueId == uniqueId)
+        {
+            NotifyAllChanged();
+        }
+    }
+
+    private void NotifyAllChanged()
+    {
+        OnPropertyChanged(string.Empty);
+    }
 }

@@ -51,6 +51,19 @@
         }
     }
 
+    public long MagicStone
+    {
+        get => _playerResourceModel.MagicStone;
+        private set
+        {
+            if(_playerResourceModel.MagicStone != value)
+            {
+                _playerResourceModel.MagicStone = value;
+                OnPropertyChanged(nameof(MagicStone));
+            }
+        }
+    }
+
     public void SetGoldOnLoad(long gold)
     {
         Gold = gold;
@@ -64,6 +77,10 @@
     public void SetDiamondOnLoad(uint diamond)
     {
         Diamond = diamond;
+    }
+    public void SetMagicStoneOnLoad(long magicStone)
+    {
+        MagicStone = magicStone;
     }
 
     public bool TryDecreaseGold(long amount)
@@ -98,6 +115,7 @@
         return true;
     }
 
+
     public bool TryDecreaseExp(long amount)
     {
         if(amount <= 0 ||  Exp < amount)
@@ -128,11 +146,33 @@
         return true;
     }
 
+    public bool TryDecreaseMagicStone(long amount)
+    {
+        if (amount <= 0 || MagicStone < amount)
+        {
+            return false;
+        }
+        MagicStone = MagicStone - amount;
+        return true;
+    }
+
+    public bool TryIncreaseMagicStone(long amount)
+    {
+        if (amount <= 0)
+        {
+            return false;
+        }
+
+        MagicStone = MagicStone + amount;
+        return true;
+    }
+
     public void InvokeOnceOnInit()
     {
         OnPropertyChanged(nameof(Gold));
         OnPropertyChanged(nameof(Exp));
         OnPropertyChanged(nameof(Diamond));
+        OnPropertyChanged(nameof(MagicStone));
     }
 
 }

@@ -5,4 +5,6 @@
     public long Exp { get; set; }
 
     public uint Diamond {  get; set; }
+
+    public long MagicStone { get; set; }
 }

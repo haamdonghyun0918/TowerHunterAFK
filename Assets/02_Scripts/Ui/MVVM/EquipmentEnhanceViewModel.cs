@@ -1,124 +1,149 @@
 ﻿public class EquipmentEnhanceViewModel : ViewModelBase
 {
-    //비효율적이라 일단은 제외
-    //public void InvokeOnceOnInit()
-    //{
-    //    OnPropertyChanged(nameof(TargetEquipmentUniqueId));
-    //    OnPropertyChanged(nameof(ItemName));
-    //    OnPropertyChanged(nameof(EnhanceLevel));
-    //    OnPropertyChanged(nameof(TotalAtkText));
-    //    OnPropertyChanged(nameof(CostText));
-    //}
+    private readonly EquipmentService _equipmentService;
+    private EquipmentModel _targetEquipment;
 
-    private string _targetEquipmentUniqueId;
+    public EquipmentEnhanceViewModel(EquipmentService equipmentService)
+    {
+        _equipmentService = equipmentService;
+    }
+
+    public bool HasTarget
+    {
+        get
+        {
+            return _targetEquipment != null;
+        }
+    }
+
     public string TargetEquipmentUniqueId
     {
-        get => _targetEquipmentUniqueId;
-
-        set
+        get
         {
-            if (_targetEquipmentUniqueId != value)
+            if (HasTarget)
             {
-                _targetEquipmentUniqueId = value;
-
-                OnPropertyChanged(nameof(TargetEquipmentUniqueId));
+                return _targetEquipment.UniqueId;
             }
+
+            return "";
         }
     }
 
-    private string _itemIconAddress;
     public string ItemIconAddress
     {
-        get => _itemIconAddress;
-
-        set
+        get
         {
-            if (_itemIconAddress != value)
+            if (HasTarget)
             {
-                _itemIconAddress = value;
-
-                OnPropertyChanged(nameof(ItemIconAddress));
+                return _targetEquipment.IconAddress;
             }
+
+            return "";
         }
     }
 
-    private string _itemName;
     public string ItemName
     {
-        get => _itemName;
-
-        set
+        get
         {
-            if (_itemName != value)
+            if (HasTarget)
             {
-                _itemName = value;
-
-                OnPropertyChanged(nameof(ItemName));
+                return _targetEquipment.Name;
             }
+
+            return "";
         }
     }
 
-    private int _enhanceLevel;
     public int EnhanceLevel
     {
-        get => _enhanceLevel;
-
-        set
+        get
         {
-            if (_enhanceLevel != value)
+            if (HasTarget)
             {
-                _enhanceLevel = value;
-
-                OnPropertyChanged(nameof(EnhanceLevel));
+                return _targetEquipment.EnhanceLevel;
             }
+
+            return 0;
         }
     }
 
-    private string _totalAtkText;
     public string TotalAtkText
     {
-        get => _totalAtkText;
-
-        set
+        get
         {
-            if (_totalAtkText != value)
+            if (HasTarget == false)
             {
-                _totalAtkText = value;
-
-                OnPropertyChanged(nameof(TotalAtkText));
+                return "공격력 : 0";
             }
+
+            int totalAtk = _targetEquipment.GetEquipmentTotalAtk();
+            return $"공격력 : {totalAtk:N0}";
         }
     }
 
-    private string _totalDefText;
     public string TotalDefText
     {
-        get => _totalDefText;
-
-        set
+        get
         {
-            if (_totalDefText != value)
+            if (HasTarget == false)
             {
-                _totalDefText = value;
-
-                OnPropertyChanged(nameof(TotalDefText));
+                return "방어력 : 0";
             }
+
+            int totalDef = _targetEquipment.GetEquipmentTotalDef();
+            return $"방어력 : {totalDef:N0}";
         }
     }
 
-    private string _costText;
     public string CostText
     {
-        get => _costText;
-
-        set
+        get
         {
-            if (_costText != value)
+            if (HasTarget == false)
             {
-                _costText = value;
-
-                OnPropertyChanged(nameof(CostText));
+                return "0 마석";
             }
+
+            long enhanceCost = _equipmentService.GetEnhanceCost(_targetEquipment);
+            string currencyName = _equipmentService.EnhanceCostCurrencyName;
+
+            return $"{enhanceCost:N0} {currencyName}";
         }
+    }
+
+    public void SetTarget(EquipmentModel equipmentModel)
+    {
+        _targetEquipment = equipmentModel;
+        NotifyAllChanged();
+    }
+
+    public void ClearTarget()
+    {
+        _targetEquipment = null;
+        NotifyAllChanged();
+    }
+
+    public bool RequestEnhance()
+    {
+        if (HasTarget == false)
+        {
+            return false;
+        }
+
+        return _equipmentService.RequestEnhance(TargetEquipmentUniqueId);
+    }
+
+    public void NotifyEquipmentChanged(string uniqueId)
+    {
+        if (TargetEquipmentUniqueId == uniqueId)
+        {
+            NotifyAllChanged();
+        }
+    }
+
+    private void NotifyAllChanged()
+    {
+        OnPropertyChanged(string.Empty);
     }
 }
