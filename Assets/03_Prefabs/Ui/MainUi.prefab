@@ -607,6 +607,7 @@ MonoBehaviour:
   _slotIndex: 0
   Root_CharacterStatus: {fileID: 4279345933089156285}
   Slider_Hp: {fileID: 5232425086492755214}
+  Text_HunterName: {fileID: 4167219717643814184}
   SkillCostList:
   - {fileID: 797013490082636288}
   - {fileID: 6551940947635207654}
@@ -628,6 +629,7 @@ MonoBehaviour:
   _slotIndex: 1
   Root_CharacterStatus: {fileID: 6080026042349010773}
   Slider_Hp: {fileID: 2629988899384944257}
+  Text_HunterName: {fileID: 2698501684922594535}
   SkillCostList:
   - {fileID: 6148454138849167042}
   - {fileID: 359189557697223855}
@@ -649,6 +651,7 @@ MonoBehaviour:
   _slotIndex: 2
   Root_CharacterStatus: {fileID: 3607074773447709548}
   Slider_Hp: {fileID: 1507605095808354110}
+  Text_HunterName: {fileID: 863422206929771527}
   SkillCostList:
   - {fileID: 5704640251930182844}
   - {fileID: 3715799490104731830}
@@ -2466,7 +2469,7 @@ GameObject:
   - component: {fileID: 7566615712496991492}
   - component: {fileID: 2698501684922594535}
   m_Layer: 5
-  m_Name: Text_HunterName
+  m_Name: Text_S1_HunterName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3307,7 +3310,7 @@ GameObject:
   - component: {fileID: 4056340868720872830}
   - component: {fileID: 863422206929771527}
   m_Layer: 5
-  m_Name: Text_HunterName
+  m_Name: Text_S2_HunterName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3827,7 +3830,7 @@ GameObject:
   - component: {fileID: 4402060837142191142}
   - component: {fileID: 4167219717643814184}
   m_Layer: 5
-  m_Name: Text_HunterName
+  m_Name: Text_S0_HunterName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
