@@ -173,6 +173,25 @@ public class HunterInfoUi : UiBase
         UpdateEquipmentIcons();
     }
 
+    private bool IsCharacterInParty(string uniqueId)
+    {
+        var saveData = SaveManager.Instance.CurrentSaveData;
+
+        for (int i = 0; i < saveData.CurrentPartyCharacterUids.Length; i++)
+        {
+            if (saveData.CurrentPartyCharacterUids[i] == uniqueId)
+                return true;
+        }
+
+        for (int i = 0; i < saveData.ExpeditionPartyUids.Length; i++)
+        {
+            if (saveData.ExpeditionPartyUids[i] == uniqueId)
+                return true;
+        }
+
+        return false;
+    }
+
     private int GetMaxLevel(string rarity, int rank)
     {
         int maxLevel = 5;
@@ -193,9 +212,13 @@ public class HunterInfoUi : UiBase
         {
             if (character.BaseId == _characterSaveData.BaseId && character.UniqueId != _characterSaveData.UniqueId)
             {
-                count++;
+                if (IsCharacterInParty(character.UniqueId) == false)
+                {
+                    count++;
+                }
             }
         }
+
         return count;
     }
 
@@ -238,7 +261,7 @@ public class HunterInfoUi : UiBase
     {
         if (_characterSaveData.Rank >= 5)
         {
-            Debug.LogWarning("이미 최대 강화 단계입니다.");
+            Debug.Log("이미 최대 강화 단계입니다.");
             return;
         }
 
@@ -247,7 +270,7 @@ public class HunterInfoUi : UiBase
 
         if (owned < required)
         {
-            Debug.LogError($"강화 재료가 부족합니다. (필요: {required}, 보유: {owned})");
+            Debug.Log($"강화 재료가 부족합니다. (필요: {required}, 대기 헌터 보유: {owned})");
             return;
         }
 
@@ -259,11 +282,18 @@ public class HunterInfoUi : UiBase
 
             if (character.BaseId == _characterSaveData.BaseId && character.UniqueId != _characterSaveData.UniqueId)
             {
-                SaveManager.Instance.CurrentSaveData.OwnedCharacters.RemoveAt(i);
-                SaveManager.Instance.CharacterDict.Remove(character.UniqueId);
-                consumed++;
+                if (IsCharacterInParty(character.UniqueId) == false)
+                {
+                    SaveManager.Instance.CurrentSaveData.OwnedCharacters.RemoveAt(i);
+                    SaveManager.Instance.CharacterDict.Remove(character.UniqueId);
+                    consumed++;
 
-                if (consumed >= required) break;
+                    if (consumed >= required)
+                    {
+                        break;
+                    }
+
+                }
             }
         }
 
@@ -280,7 +310,7 @@ public class HunterInfoUi : UiBase
 
         if (_currentLevel >= maxLevel)
         {
-            Debug.LogError("최대 레벨이므로 더 이상 경험치를 사용할 수 없습니다.");
+            Debug.Log("최대 레벨이므로 더 이상 경험치를 사용할 수 없습니다.");
             return;
         }
 
@@ -288,7 +318,7 @@ public class HunterInfoUi : UiBase
 
         if (ownedExp < _levelUpExp)
         {
-            Debug.LogWarning($"경험치가 부족합니다. (보유: {ownedExp} / 필요: {_levelUpExp})");
+            Debug.Log($"경험치가 부족합니다. (보유: {ownedExp} / 필요: {_levelUpExp})");
             return;
         }
 
