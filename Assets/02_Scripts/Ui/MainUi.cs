@@ -9,7 +9,7 @@ public class MainUi : UiBase
     [SerializeField] private UiButton _buttonBossRaid;
 
     public static event Action OnBossRaidStart;
-    public static event Action<bool> OnBossRaidEnd; //TODO: 보스레이드 끝나는 부분에 추가해야 할 것
+    public static event Action OnBossRaidEnd; //TODO: 보스레이드 끝나는 부분에 추가해야 할 것
 
     private void OnEnable()
     {
@@ -78,8 +78,8 @@ public class MainUi : UiBase
         OnBossRaidStart?.Invoke();
     }
 
-    public static void TriggerBossRaidEnd(bool isWin)
+    public static void TriggerBossRaidEnd()
     {
-        OnBossRaidEnd?.Invoke(isWin);
+        OnBossRaidEnd?.Invoke();
     }
 }
