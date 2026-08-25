@@ -47,13 +47,14 @@ public class BattleCharacter : MonoBehaviour
         ResetStateChangedEvent();
     }
 
-    public void TakeDamage(int damage)
+    public async UniTask TakeDamage(int damage)
     {
         if (_isDead == true) return;
 
         int currentDamage = ApplyDefenseDamage(damage);
 
         ChangeState(CharacterState.Hit);
+
 
         _characterHp -= currentDamage;
         
@@ -66,10 +67,12 @@ public class BattleCharacter : MonoBehaviour
 
         if (_characterHp <= 0)
         {
-            Die();
+            Die().Forget();
         }
+
         else
         {
+            await UniTask.Delay(500);
             ChangeState(CharacterState.Idle);
         }
     }
@@ -90,7 +93,7 @@ public class BattleCharacter : MonoBehaviour
     {
         ChangeState(CharacterState.Die);
 
-        await UniTask.Delay(1000);
+        await UniTask.Delay(500);
 
         _isDead = true;
 

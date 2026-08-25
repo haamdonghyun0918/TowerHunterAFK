@@ -60,7 +60,7 @@ public class Monster : BattleCharacter
 
         await UniTask.Delay(1000);
 
-        TargetCharacter.TakeDamage(_characterAtk);
+        await TargetCharacter.TakeDamage(_characterAtk);
 
         Debug.Log($"타겟{TargetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
         ChangeState(CharacterState.Idle);

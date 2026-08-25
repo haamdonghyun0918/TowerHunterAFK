@@ -276,7 +276,7 @@ public class Character : BattleCharacter
         ChangeState(CharacterState.NormalAttack);
         var characterType = _characterData.CharacterType;
         await UniTask.Delay(GetNormalAttackMotionDuration(SetCharacterType(characterType)));
-        targetMonster.TakeDamage(_characterAtk);
+        targetMonster.TakeDamage(_characterAtk).Forget();
     }
 
     public void IncreaseCurrentSkillCost(int amount)
@@ -327,7 +327,7 @@ public class Character : BattleCharacter
                 }
             case NormalAttackType.Wizard:
                 {
-                    return 1500;
+                    return 1000;
                 }
             case NormalAttackType.Monk:
                 {
