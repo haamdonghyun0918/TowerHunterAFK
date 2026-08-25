@@ -1,7 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class SaveManager : MonoBehaviour
 {
@@ -220,5 +221,17 @@ public class SaveManager : MonoBehaviour
     public void SaveCurrentData()
     {
         SaveToFile(CurrentSaveData);
+    }
+
+    public void SaveLogoutTime()
+    {
+        CurrentSaveData.LastLogoutTime = DateTime.Now.ToString("O");
+        SaveToFile(CurrentSaveData);
+        Debug.Log($"[SaveManager] 마지막 접속 시간 저장: {CurrentSaveData.LastLogoutTime}");
+    }
+
+    public string GetLogoutTime()
+    {
+        return CurrentSaveData.LastLogoutTime;
     }
 }

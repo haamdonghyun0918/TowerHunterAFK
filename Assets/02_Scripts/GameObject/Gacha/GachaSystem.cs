@@ -243,8 +243,6 @@ public class GachaSystem : MonoBehaviour
     {
         LogDrawnCharacter(character);
 
-        PlayDrawAnimation(character);
-
         OpenCharacterCardUI(character);
 
         // 실제로 저장되어야 하므로 CharacterUtils에서 Add를 통하여 인스턴스 Id를 가지며 인벤토리에 들어가도록 추가
@@ -286,30 +284,6 @@ public class GachaSystem : MonoBehaviour
         int baseDef = baseStatData.BaseDef;
         int baseAtkSpeed = baseStatData.BaseAtkSpeed;
         int baseHp = baseStatData.BaseHp;
-    }
-
-    private void PlayDrawAnimation(CharacterData character)
-    {
-        //[TODO] 등급에 따라 뽑히는 애니메이션 다르게 재생
-        string Rarity = character.Rarity;
-        switch (Rarity)
-        {
-            case "A":
-                {
-                    Debug.Log("축하합니다! A등급이 뽑혔습니다.");
-                }
-                break;
-            case "B":
-                {
-                    Debug.Log("축하합니다! B등급이 뽑혔습니다.");
-                }
-                break;
-            case "C":
-                {
-                    Debug.Log("축하합니다! C등급이 뽑혔습니다.");
-                }
-                break;
-        }
     }
 
     private void LogDrawnCharacter(CharacterData character)

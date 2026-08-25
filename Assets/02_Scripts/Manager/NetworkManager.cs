@@ -14,6 +14,8 @@ public class NetworkManager : MonoBehaviour
 
     public EquipmentService EquipmentService { get; private set; }
 
+    public OffLineRewardService OffLineRewardService { get; private set; }
+
     private void Awake()
     {
         if(Instance == null)
@@ -24,6 +26,7 @@ public class NetworkManager : MonoBehaviour
             CharacterStatusService = new CharacterStatusService();
             ExpeditionService = new ExpeditionService();
             EquipmentService = new EquipmentService();
+            OffLineRewardService = new OffLineRewardService();
         }
         else
         {

@@ -7,9 +7,10 @@ public class MainUi : UiBase
     [SerializeField] private UiButton _buttonHunterInventory;
     [SerializeField] private UiButton _buttonEquipmentInventory;
     [SerializeField] private UiButton _buttonBossRaid;
+    [SerializeField] private UiButton _buttonOffLineReward;
 
     public static event Action OnBossRaidStart;
-    public static event Action OnBossRaidEnd; //TODO: 보스레이드 끝나는 부분에 추가해야 할 것
+    public static event Action OnBossRaidEnd;
 
     private void OnEnable()
     {
@@ -31,6 +32,11 @@ public class MainUi : UiBase
         if (_buttonBossRaid)
         {
             _buttonBossRaid.BindOnClickButtonEvent(OpenBossRaidUi);
+        }
+
+        if (_buttonOffLineReward)
+        {
+            _buttonOffLineReward.BindOnClickButtonEvent(OpenOffLineRewardUi);
         }
     }
 
@@ -55,6 +61,11 @@ public class MainUi : UiBase
         {
             OpenBossRaidUi();
         }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            OpenOffLineRewardUi();
+        }
     }
 
     private async void OpenExpedition()
@@ -76,6 +87,11 @@ public class MainUi : UiBase
     {
         //await UiManager.Instance.OpenUI<BossRaidUi>();
         OnBossRaidStart?.Invoke();
+    }
+
+    private async void OpenOffLineRewardUi()
+    {
+        await UiManager.Instance.OpenUi<OffLineRewardUi>();
     }
 
     public static void TriggerBossRaidEnd()

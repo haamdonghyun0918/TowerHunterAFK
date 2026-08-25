@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 
 public enum CharacterState
@@ -52,7 +53,7 @@ public class BattleCharacter : MonoBehaviour
 
         int currentDamage = ApplyDefenseDamage(damage);
 
-        //[TODO] ChangeState(CharacterState.Hit);
+        ChangeState(CharacterState.Hit);
 
         _characterHp -= currentDamage;
         
@@ -85,9 +86,11 @@ public class BattleCharacter : MonoBehaviour
         return currentDamage;
     }
 
-    private void Die()
+    private async UniTask Die()
     {
         ChangeState(CharacterState.Die);
+
+        await UniTask.Delay(1000);
 
         _isDead = true;
 
@@ -156,7 +159,7 @@ public class BattleCharacter : MonoBehaviour
                 break;
             case CharacterState.Hit:
                 {
-                    //_characterAnimator.SetBool("IsHit", true);
+                    _characterAnimator.SetBool("IsDamaged", true);
                 }
                 break;
         }
@@ -167,5 +170,6 @@ public class BattleCharacter : MonoBehaviour
         _characterAnimator.SetBool("IsNormalAttack", false);
         _characterAnimator.SetBool("IsSkillAttack", false);
         _characterAnimator.SetBool("IsDead", false);
+        _characterAnimator.SetBool("IsDamaged", false);
     }
 }

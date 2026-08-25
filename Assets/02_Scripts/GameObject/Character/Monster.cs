@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 
 public class Monster : BattleCharacter
@@ -7,8 +8,6 @@ public class Monster : BattleCharacter
     private MonsterData _monsterData;
     private string _monsterId;
     private bool _isBoss;
-
-    private Action<int, int> _onChangedHp;
 
     private void Awake()
     {
@@ -53,14 +52,17 @@ public class Monster : BattleCharacter
         _characterDefense = _monsterData.BaseDef;
     }
 
-    public void AtkTarget(Character TargetCharacter)
+    public async UniTask AtkTarget(Character TargetCharacter)
     {
         if (TargetCharacter._isDead == true) return;
+
+        ChangeState(CharacterState.NormalAttack);
+
+        await UniTask.Delay(1000);
 
         TargetCharacter.TakeDamage(_characterAtk);
 
         Debug.Log($"타겟{TargetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
-        ChangeState(CharacterState.NormalAttack);
         ChangeState(CharacterState.Idle);
     }
 

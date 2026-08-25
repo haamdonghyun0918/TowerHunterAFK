@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FirstFloorMonster2
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 7dfea3d2eaabf89448263b5c4ef6196d, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 550eb343b0eedd24b89223a73f2853de, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -77,4 +81,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86951575f60176440977eaa88a88da1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
-  _characterAnimator: {fileID: 0}
+  _characterAnimator: {fileID: 4828716613421751440}
+--- !u!95 &4828716613421751440 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 7dfea3d2eaabf89448263b5c4ef6196d, type: 3}
+  m_PrefabInstance: {fileID: 1326760361139331329}
+  m_PrefabAsset: {fileID: 0}

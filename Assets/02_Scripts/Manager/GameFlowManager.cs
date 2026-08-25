@@ -85,6 +85,20 @@ public class GameFlowManager : MonoBehaviour
 
         await UiManager.Instance.OpenUi<MainUi>();
 
+        if (NetworkManager.Instance.OffLineRewardService != null)
+        {
+            bool hasReward = NetworkManager.Instance.OffLineRewardService.CalculateOfflineReward();
+            if (hasReward == true)
+            {
+                await UiManager.Instance.OpenUi<OffLineRewardUi>();
+            }
+        }
+
+        else
+        {
+            Debug.LogError("[GameFlowManager] OfflineRewardService가 존재하지 않습니다.");
+        }
+
         Debug.Log("게임 세팅 완료 게임 화면 출력");
     }
 
@@ -222,5 +236,15 @@ public class GameFlowManager : MonoBehaviour
 
         _inactivityTimer = 0f;
         Debug.Log("[GameFlowManager] 절전 모드 해제: 60프레임으로 복구");
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (SaveManager.Instance == null)
+        {
+            Debug.LogError("[GameFlowManager] SaveManager.Instance가 없습니다.");
+            return;
+        }
+        SaveManager.Instance.SaveLogoutTime();
     }
 }

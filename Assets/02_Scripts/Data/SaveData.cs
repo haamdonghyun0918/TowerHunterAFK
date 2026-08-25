@@ -48,4 +48,6 @@ public class SaveData
 
     public string OngoingExpeditionId = "";
     public string ExpeditionStartTime = "";
+
+    public string LastLogoutTime = "";
 }
