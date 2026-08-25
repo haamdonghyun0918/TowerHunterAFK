@@ -32,6 +32,7 @@ public class GameFlowManager : MonoBehaviour
     private void Update()
     {
         CheckSleepMode();
+        CheckQuitUi();
     }
 
     private async UniTaskVoid StartGame()
@@ -236,6 +237,23 @@ public class GameFlowManager : MonoBehaviour
 
         _inactivityTimer = 0f;
         Debug.Log("[GameFlowManager] 절전 모드 해제: 60프레임으로 복구");
+    }
+
+    private void CheckQuitUi()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (UiManager.Instance != null)
+            {
+                UiManager.Instance.OpenUi<GameSetUi>().Forget();
+            }
+
+            else
+            {
+                Debug.LogError("[GameFlowManager] UiManager.Instance가 없습니다.");
+                return;
+            }
+        }
     }
 
     private void OnApplicationQuit()
