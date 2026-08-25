@@ -91,7 +91,7 @@ public class MainUi : UiBase
 
     private async void OpenOffLineRewardUi()
     {
-        //
+        await UiManager.Instance.OpenUi<OffLineRewardUi>();
     }
 
     public static void TriggerBossRaidEnd()
