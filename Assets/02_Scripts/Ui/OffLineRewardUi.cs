@@ -38,6 +38,8 @@ public class OffLineRewardUi : UiBase
 
         _rewardService = NetworkManager.Instance.OffLineRewardService;
 
+        _rewardService.CalculateOfflineReward();
+
         if (_buttonClaim != null)
         {
             _buttonClaim.BindOnClickButtonEvent(OnClickClaim);
@@ -68,7 +70,7 @@ public class OffLineRewardUi : UiBase
     {
         if (_textTime != null)
         {
-            _textTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}", (int)_rewardService.OfflineTime.TotalHours, _rewardService.OfflineTime.Minutes, _rewardService.OfflineTime.Seconds);
+            _textTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}",(int)_rewardService.OfflineTime.TotalHours, _rewardService.OfflineTime.Minutes, _rewardService.OfflineTime.Seconds);
         }
 
         if (_textGold != null)
@@ -86,11 +88,11 @@ public class OffLineRewardUi : UiBase
             _textMagicStone.text = $"+{_rewardService.RewardMagicStone.ToString("N0")}";
         }
 
-        foreach (GameObject slot in _createdSlots)
+        for (int i = 0; i < _createdSlots.Count; i++)
         {
-            if (slot != null)
+            if (_createdSlots[i] != null)
             {
-                Destroy(slot);
+                Destroy(_createdSlots[i]);
             }
         }
 
@@ -102,12 +104,20 @@ public class OffLineRewardUi : UiBase
             return;
         }
 
-        foreach (EquipmentData equipData in _rewardService.RewardEquipments)
+        for (int i = 0; i < _rewardService.RewardEquipments.Count; i++)
         {
-            GameObject slotObj = await ResourceManager.Instance.Instantiate(EquipmentSlotAddress, _content);
+            EquipmentData equipData = _rewardService.RewardEquipments[i];
+
+            if (equipData == null)
+            {
+                continue;
+            }
+
+            GameObject slotObj = await ResourceManager.Instance.Instantiate(EquipmentSlotAddress, _content, true);
 
             if (slotObj != null)
             {
+                slotObj.transform.localScale = Vector3.one;
                 EquipmentSlotView slotView = slotObj.GetComponent<EquipmentSlotView>();
 
                 if (slotView != null)
