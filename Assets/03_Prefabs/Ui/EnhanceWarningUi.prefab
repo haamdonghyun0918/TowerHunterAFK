@@ -146,6 +146,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1959382100811866228}
+  - component: {fileID: 2025077441418305828}
   m_Layer: 5
   m_Name: EnhanceWarningUi
   m_TagString: Untagged
@@ -174,6 +175,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2025077441418305828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3267846986424200125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 465497e98a7a75c4291fce3042351ccb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnhanceWarningUi
 --- !u!1 &4036893881638843801
 GameObject:
   m_ObjectHideFlags: 0
