@@ -26,7 +26,8 @@
     "BaseHp": 200,
     "BaseAtkSpeed": 12,
 	"BaseDef": 20,
-	"PrefabPath": "TestMonster3"
+	"PrefabPath": "TestMonster3",
+	"IsBoss": false
   },
   {
     "Id": "monster_FirstFloor_01",
@@ -35,7 +36,8 @@
     "BaseHp": 500,
     "BaseAtkSpeed": 10,
 	"BaseDef": 20,
-	"PrefabPath": "FirstFloorMonster1"
+	"PrefabPath": "FirstFloorMonster1",
+	"IsBoss": false
   },
   {
     "Id": "monster_FirstFloor_02",
@@ -44,7 +46,8 @@
     "BaseHp": 300,
     "BaseAtkSpeed": 10,
 	"BaseDef": 10,
-	"PrefabPath": "FirstFloorMonster2"
+	"PrefabPath": "FirstFloorMonster2",
+	"IsBoss": false
   },
   {
     "Id": "monster_FirstFloor_03",
@@ -53,7 +56,8 @@
     "BaseHp": 400,
     "BaseAtkSpeed": 11,
 	"BaseDef": 20,
-	"PrefabPath": "FirstFloorMonster3"
+	"PrefabPath": "FirstFloorMonster3",
+	"IsBoss": false
   },
   {
     "Id": "monster_SecondFloor_01",
@@ -62,7 +66,8 @@
     "BaseHp": 600,
     "BaseAtkSpeed": 10,
 	"BaseDef": 20,
-	"PrefabPath": "SecondFloorMonster1"
+	"PrefabPath": "SecondFloorMonster1",
+	"IsBoss": false
   },
   {
     "Id": "monster_SecondFloor_02",
@@ -71,7 +76,8 @@
     "BaseHp": 400,
     "BaseAtkSpeed": 10,
 	"BaseDef": 10,
-	"PrefabPath": "SecondFloorMonster2"
+	"PrefabPath": "SecondFloorMonster2",
+	"IsBoss": false
   },
   {
     "Id": "monster_SecondFloor_03",
@@ -80,7 +86,8 @@
     "BaseHp": 500,
     "BaseAtkSpeed": 11,
 	"BaseDef": 20,
-	"PrefabPath": "SecondFloorMonster3"
+	"PrefabPath": "SecondFloorMonster3",
+	"IsBoss": false
   },
   {
     "Id": "monster_ThirdFloor_01",
@@ -89,7 +96,8 @@
     "BaseHp": 700,
     "BaseAtkSpeed": 10,
 	"BaseDef": 20,
-	"PrefabPath": "ThirdFloorMonster1"
+	"PrefabPath": "ThirdFloorMonster1",
+	"IsBoss": false
   },
   {
     "Id": "monster_ThirdFloor_02",
@@ -98,7 +106,8 @@
     "BaseHp": 500,
     "BaseAtkSpeed": 10,
 	"BaseDef": 10,
-	"PrefabPath": "ThirdFloorMonster2"
+	"PrefabPath": "ThirdFloorMonster2",
+	"IsBoss": false
   },
   {
     "Id": "monster_ThirdFloor_03",
@@ -107,6 +116,17 @@
     "BaseHp": 600,
     "BaseAtkSpeed": 11,
 	"BaseDef": 20,
-	"PrefabPath": "ThirdFloorMonster3"
+	"PrefabPath": "ThirdFloorMonster3",
+	"IsBoss": false
+  },
+  {
+    "Id": "monster_Boss_01",
+    "Name": "고블린 보스",
+    "BaseAtk": 100,
+    "BaseHp": 2000,
+    "BaseAtkSpeed": 15,
+	"BaseDef": 150,
+	"PrefabPath": "GoblinBoss",
+	"IsBoss": true
   }
 ]
