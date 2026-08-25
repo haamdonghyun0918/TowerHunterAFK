@@ -243,15 +243,20 @@ public class GameFlowManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (UiManager.Instance != null)
+            if (UiManager.Instance == null)
             {
-                UiManager.Instance.OpenUi<GameSetUi>().Forget();
+                Debug.LogError("[GameFlowManager] UiManager.Instance가 없습니다.");
+                return;
+            }
+
+            if (GameSetUi.IsOpen == true)
+            {
+                UiManager.Instance.CloseUi<GameSetUi>();
             }
 
             else
             {
-                Debug.LogError("[GameFlowManager] UiManager.Instance가 없습니다.");
-                return;
+                UiManager.Instance.OpenUi<GameSetUi>().Forget();
             }
         }
     }

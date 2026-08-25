@@ -5,8 +5,13 @@ public class GameSetUi : UiBase
     [SerializeField] private UiButton _buttonConfirm;
     [SerializeField] private UiButton _buttonCancel;
 
+    public static bool IsOpen { get; private set; }
+
+
     private void OnEnable()
     {
+        IsOpen = true;
+
         if (_buttonConfirm != null)
         {
             _buttonConfirm.BindOnClickButtonEvent(OnClickConfirm);
@@ -20,6 +25,8 @@ public class GameSetUi : UiBase
 
     private void OnDisable()
     {
+        IsOpen = false;
+
         if (_buttonConfirm != null)
         {
             _buttonConfirm.UnBindOnClickButtonEvent(OnClickConfirm);
