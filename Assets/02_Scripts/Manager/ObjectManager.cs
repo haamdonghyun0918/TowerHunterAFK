@@ -61,7 +61,7 @@ public class ObjectManager : MonoBehaviour
 
                         if (SaveManager.Instance.CharacterDict.TryGetValue(partyUid, out CharacterSaveData targetData))
                         {
-                            bool isSpawned = await SpawnHunter(targetData.BaseId, targetData.UniqueId);
+                            bool isSpawned = await SpawnHunter(targetData.BaseId, targetData.UniqueId, _currentPlayerParty);
 
                             if (isSpawned == true)
                             {
@@ -166,27 +166,41 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    public async UniTaskVoid SpawnBossRaidEntities(Transform playerSpawnSpot, Transform bossSpawnSpot)
+    public async UniTaskVoid SpawnBossRaidEntities(int bossNum)
     {
+        Transform playerSpawnSpotForBoss = MapManager.Instance.GetPlayerSpawnSpotForBoss();
+        Transform monsterSpawnSpotForBoss = MapManager.Instance.GetMonsterSpawnSpotForBoss();
+
         if (Prefab_BossPlayerParty == null || Prefab_MonsterParty == null)
         {
             Debug.LogError("[ObjectManager] 보스 레이드 프리팹이 할당되지 않았습니다.");
             return;
         }
 
-        GameObject gObj_BossParty = Instantiate(Prefab_BossPlayerParty, playerSpawnSpot.position, Quaternion.identity);
+        GameObject gObj_BossParty = Instantiate(Prefab_BossPlayerParty, playerSpawnSpotForBoss.position, Quaternion.identity);
         PlayerPartyControllerForBoss bossParty = gObj_BossParty.GetComponent<PlayerPartyControllerForBoss>();
 
-        // [TODO] 실제로는 SaveManager에 저장된 보스 파티 UID 5개를 불러와서 반복문으로 SpawnHunter() 실행
+        string[] bossPartyUids = SaveManager.Instance.CurrentSaveData.BossRaidPartyUids;
+        for (int i = 0; i < bossPartyUids.Length; i++)
+        {
+            string uid = bossPartyUids[i];
+            if (string.IsNullOrEmpty(uid) == false)
+            {
+                if (SaveManager.Instance.CharacterDict.TryGetValue(uid, out CharacterSaveData charData))
+                {
+                    await SpawnHunter(charData.BaseId, uid, bossParty);
+                }
+            }
+        }
 
-        GameObject gObj_BossMonsterParty = Instantiate(Prefab_MonsterParty, bossSpawnSpot.position, Quaternion.identity);
+        GameObject gObj_BossMonsterParty = Instantiate(Prefab_MonsterParty, monsterSpawnSpotForBoss.position, Quaternion.identity);
         MonsterParty bossMonsterParty = gObj_BossMonsterParty.GetComponent<MonsterParty>();
 
-        string currentBossId = "boss_dragon_01"; // [TODO] 실제 보스 ID
+        string currentBossId = $"monster_Boss_{bossNum}"; 
         await SpawnMonster(currentBossId, bossMonsterParty);
     }
 
-    private async UniTask<bool> SpawnHunter(string characterId, string characterUniqueId)
+    private async UniTask<bool> SpawnHunter(string characterId, string characterUniqueId, PlayerPartyControllerBase targetParty)
     {
         var data = GameDataManager.Instance.GetData<CharacterData>(characterId);
         if (data == null)
@@ -215,7 +229,7 @@ public class ObjectManager : MonoBehaviour
             GameObject hunterObj = Instantiate(hunterPrefab);
             Character newHunter = hunterObj.GetComponent<Character>();
             newHunter.InitCharacter(data, characterUniqueId);
-            _currentPlayerParty.AddHunter(newHunter);
+            targetParty.AddHunter(newHunter);
             return true;
         }
 
@@ -327,6 +341,11 @@ public class ObjectManager : MonoBehaviour
             Destroy(_currentPlayerParty.gameObject);
             _currentPlayerParty = null;
         }
+    }
+
+    public PlayerPartyController GetCurrentPlayerParty()
+    {
+        return _currentPlayerParty;
     }
 
 }
