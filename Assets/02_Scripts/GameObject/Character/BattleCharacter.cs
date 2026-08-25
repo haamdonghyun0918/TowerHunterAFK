@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 
 public enum CharacterState
@@ -85,9 +86,11 @@ public class BattleCharacter : MonoBehaviour
         return currentDamage;
     }
 
-    private void Die()
+    private async UniTask Die()
     {
         ChangeState(CharacterState.Die);
+
+        await UniTask.Delay(1000);
 
         _isDead = true;
 
