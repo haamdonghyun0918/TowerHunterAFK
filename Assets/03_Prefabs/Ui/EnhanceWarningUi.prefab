@@ -187,6 +187,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 465497e98a7a75c4291fce3042351ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnhanceWarningUi
+  _buttonConfirm: {fileID: 4086863120530082258}
+  _buttonCancel: {fileID: 1954151758301635828}
 --- !u!1 &4036893881638843801
 GameObject:
   m_ObjectHideFlags: 0
