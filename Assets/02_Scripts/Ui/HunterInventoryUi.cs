@@ -34,13 +34,13 @@ public class HunterInventoryUi : UiBase
             _buttonCheck.BindOnClickButtonEvent(ConfirmPartySetting);
         }
 
-        HunterInfoUi.OnHunterEnhanced -= OnHunterInventoryRecent;
-        HunterInfoUi.OnHunterEnhanced += OnHunterInventoryRecent;
+        HunterInfoUi.OnHunterStateChanged -= OnHunterInventoryRecent;
+        HunterInfoUi.OnHunterStateChanged += OnHunterInventoryRecent;
     }
 
     private void OnDisable()
     {
-        HunterInfoUi.OnHunterEnhanced -= OnHunterInventoryRecent;
+        HunterInfoUi.OnHunterStateChanged -= OnHunterInventoryRecent;
     }
 
     private void OnHunterInventoryRecent()
