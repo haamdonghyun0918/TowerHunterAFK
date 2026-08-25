@@ -6,7 +6,8 @@
     "BaseHp": 100,
     "BaseAtkSpeed": 10,
 	"BaseDef": 10,
-	"PrefabPath": "TestMonster1"
+	"PrefabPath": "TestMonster1",
+	"IsBoss": false
   },
   {
     "Id": "monster_Test_02",
@@ -15,7 +16,8 @@
     "BaseHp": 150,
     "BaseAtkSpeed": 11,
 	"BaseDef": 15,
-	"PrefabPath": "TestMonster2"
+	"PrefabPath": "TestMonster2",
+	"IsBoss": false
   },
   {
     "Id": "monster_Test_03",
@@ -24,6 +26,67 @@
     "BaseHp": 200,
     "BaseAtkSpeed": 12,
 	"BaseDef": 20,
-	"PrefabPath": "TestMonster3"
+	"PrefabPath": "TestMonster3",
+	"IsBoss": false
+  },
+  {
+    "Id": "monster_Goblin_01",
+    "Name": "고블린",
+    "BaseAtk": 30,
+    "BaseHp": 100,
+    "BaseAtkSpeed": 12,
+	"BaseDef": 10,
+	"PrefabPath": "MonsterGoblin1",
+	"IsBoss": false
+  },
+  {
+    "Id": "monster_Orc_01",
+    "Name": "오크",
+    "BaseAtk": 60,
+    "BaseHp": 150,
+    "BaseAtkSpeed": 10,
+	"BaseDef": 20,
+	"PrefabPath": "MonsterOrc1",
+	"IsBoss": false
+  },
+  {
+    "Id": "monster_Oger_01",
+    "Name": "오우거",
+    "BaseAtk": 80,
+    "BaseHp": 200,
+    "BaseAtkSpeed": 8,
+	"BaseDef": 20,
+	"PrefabPath": "MonsterOrger1",
+	"IsBoss": false
+  },
+  {
+    "Id": "monster_Zombie_01",
+    "Name": "좀비",
+    "BaseAtk": 35,
+    "BaseHp": 100,
+    "BaseAtkSpeed": 5,
+	"BaseDef": 10,
+	"PrefabPath": "MonsterZombie1",
+	"IsBoss": false
+  },
+  {
+    "Id": "monster_Skeleton_01",
+    "Name": "스켈레톤",
+    "BaseAtk": 50,
+    "BaseHp": 150,
+    "BaseAtkSpeed": 15,
+	"BaseDef": 0,
+	"PrefabPath": "MonsterSkeleton1",
+	"IsBoss": false
+  },
+  {
+    "Id": "monster_GoblinBoss_01",
+    "Name": "고블린 보스",
+    "BaseAtk": 50,
+    "BaseHp": 2000,
+    "BaseAtkSpeed": 10,
+	"BaseDef": 30,
+	"PrefabPath": "MonsterGoblinBoss1",
+	"IsBoss": true
   }
 ]
