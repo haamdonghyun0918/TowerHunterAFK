@@ -25,13 +25,13 @@ public class BattleManager : MonoBehaviour
     private void OnEnable()
     {
         MainUi.OnBossRaidStart += PauseBattle;
-        //TODO: 보스레이드 끝났을 때 이벤트 구독
+        MainUi.OnBossRaidEnd += PauseBattle;
     }
 
     private void OnDisable()
     {
         MainUi.OnBossRaidStart -= PauseBattle;
-        //TODO: 보스레이드 끝났을 때 이벤트 해제
+        MainUi.OnBossRaidEnd -= PauseBattle;
     }
 
     public void PauseBattle()

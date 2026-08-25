@@ -120,7 +120,7 @@
 	"IsBoss": false
   },
   {
-    "Id": "monster_Boss_01",
+    "Id": "monster_Boss_1",
     "Name": "고블린 보스",
     "BaseAtk": 100,
     "BaseHp": 2000,

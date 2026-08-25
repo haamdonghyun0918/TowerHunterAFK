@@ -5,9 +5,19 @@ public class PlayerPartyControllerBase : MonoBehaviour
     [SerializeField] protected Transform[] _playerSlots;
     protected Character[] _hunters;
 
+    [SerializeField] protected GameObject _partyCamera;
+
     protected virtual void Awake()
     {
         _hunters = new Character[_playerSlots.Length];
+    }
+
+    public void SetCameraActive(bool isActive)
+    {
+        if (_partyCamera != null)
+        {
+            _partyCamera.SetActive(isActive);
+        }
     }
 
     public int MaxPartySize => _hunters.Length;

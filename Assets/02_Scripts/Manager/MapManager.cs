@@ -31,6 +31,12 @@ public class MapManager : MonoBehaviour
     [SerializeField] private SpriteRenderer _mapBackGround;
     [SerializeField] private string[] _mapAddressableKeys = { "Map1", "Map2", "Map3", "Map4", "Map5", "Map6", "Map7", "Map8" };
 
+    [Header("Boss Raid")]
+    [SerializeField] private Transform _playerSpawnSpotForBoss;
+    [SerializeField] private Transform _monsterSpawnSpotForBoss;
+    [SerializeField] private SpriteRenderer _mapBackGroundForBoss;
+    [SerializeField] private string _mapAddressableKeyForBoss = "Map1";
+
     public event Action<int> OnStageChanged;
     public event Action OnStageCleared;
     public event Action OnStageFailed;
@@ -47,6 +53,19 @@ public class MapManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void OnEnable()
+    {
+        MainUi.OnBossRaidStart += EnterBossRaidMap;
+        MainUi.OnBossRaidEnd += ExitBossRaidMap;
+    }
+
+    private void OnDisable()
+    {
+        MainUi.OnBossRaidStart -= EnterBossRaidMap;
+        MainUi.OnBossRaidEnd -= ExitBossRaidMap;
+    }
+
 
     public async UniTask Init()
     {
@@ -65,6 +84,37 @@ public class MapManager : MonoBehaviour
         NetworkManager.Instance.StageService.SetStageOnLoad(savedStage);
         await StartNewStage(savedStage);
         Debug.Log("MapManager 호출");
+    }
+
+    public void EnterBossRaidMap()
+    {
+        if(ObjectManager.Instance != null)
+        {
+            PlayerPartyController mainParty = ObjectManager.Instance.GetCurrentPlayerParty();
+            if (mainParty != null)
+            {
+                mainParty.SetCameraActive(false); 
+            }
+        }
+
+        LoadMapSpriteForBoss(_mapAddressableKeyForBoss).Forget();
+
+        if (ObjectManager.Instance != null)
+        {
+            ObjectManager.Instance.SpawnBossRaidEntities(1).Forget();
+        }
+    }
+
+    public void ExitBossRaidMap()
+    {
+        if (ObjectManager.Instance != null)
+        {
+            PlayerPartyController mainParty = ObjectManager.Instance.GetCurrentPlayerParty();
+            if (mainParty != null)
+            {
+                mainParty.SetCameraActive(true);
+            }
+        }
     }
 
     public async UniTask StartNewStage(int stage)
@@ -142,9 +192,39 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    private async UniTask LoadMapSpriteForBoss(string mapKey)
+    {
+        if (_mapBackGround == null)
+        {
+            Debug.LogError("[MapManager]: 맵 배경 SpriteRenderer가 연결되지 않았습니다.");
+            return;
+        }
+
+        try
+        {
+            Sprite loadedSprite = await Addressables.LoadAssetAsync<Sprite>(mapKey);
+
+            if (loadedSprite != null)
+            {
+                _mapBackGroundForBoss.sprite = loadedSprite;
+                Debug.Log("맵 이미지 불러오기 성공");
+            }
+        }
+
+        catch
+        {
+            Debug.LogError("맵 이미지를 불러기 실패");
+        }
+    }
+
     public Transform GetPlayerSpawnSpot()
     {
         return _playerSpawnSpot;
+    }
+
+    public Transform GetPlayerSpawnSpotForBoss()
+    {
+        return _playerSpawnSpotForBoss;
     }
 
     public Transform GetPlayerClearSpot()
@@ -155,5 +235,10 @@ public class MapManager : MonoBehaviour
     public Transform[] GetMonsterSpawnSpot()
     {
         return new Transform[] { _monsterSpawnSpot1, _monsterSpawnSpot2, _monsterSpawnSpot3 };
+    }
+
+    public Transform GetMonsterSpawnSpotForBoss()
+    {
+        return _monsterSpawnSpotForBoss;
     }
 }
