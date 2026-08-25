@@ -1306,6 +1306,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd0684cc04662d4d9ee6448c38ef456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OffLineRewardUi
+  _textTime: {fileID: 2183300554037406144}
+  _textGold: {fileID: 7353200464053993093}
+  _textExp: {fileID: 4488022955337837701}
+  _textMagicStone: {fileID: 8271681413507121936}
+  _buttonClaim: {fileID: 8202434880615880500}
+  _buttonClose: {fileID: 113219044001522937}
+  _content: {fileID: 6752660183496190131}
 --- !u!1 &6016213453661407672
 GameObject:
   m_ObjectHideFlags: 0
@@ -1371,7 +1378,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00:00
+  m_text: '00 : 00 : 00'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 08d619b361870a84daeaa83f3a3c3529, type: 2}
   m_sharedMaterial: {fileID: 1638788386066694746, guid: 08d619b361870a84daeaa83f3a3c3529, type: 2}

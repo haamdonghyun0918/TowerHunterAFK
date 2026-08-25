@@ -103,7 +103,7 @@ public class EquipmentService
         equipmentModel = null;
         if(string.IsNullOrEmpty(uniqueId))
         {
-            Debug.LogError("[EquipmentService]: 장비 UniqueId가 비어있습니다.");
+            Debug.LogWarning("[EquipmentService]: 장비 UniqueId가 비어있습니다.");
             return false;
         }
         if(_equipmentModelDict.TryGetValue(uniqueId, out equipmentModel))
