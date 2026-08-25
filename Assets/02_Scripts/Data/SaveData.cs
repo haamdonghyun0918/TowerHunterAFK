@@ -44,6 +44,7 @@ public class SaveData
 
     public string[] CurrentPartyCharacterUids = new string[3] { "", "", "" };
     public string[] ExpeditionPartyUids = new string[3] { "", "", "" };
+    public string[] BossRaidPartyUids = new string[5] { "", "", "", "", "" };
 
     public string OngoingExpeditionId = "";
     public string ExpeditionStartTime = "";
