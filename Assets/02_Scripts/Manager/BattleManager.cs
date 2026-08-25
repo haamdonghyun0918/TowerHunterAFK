@@ -171,7 +171,7 @@ public class BattleManager : MonoBehaviour
                         continue;
                     }
 
-                    monster.AtkTarget(target);
+                    await monster.AtkTarget(target);
                     await UniTask.Delay(300);
 
                     if (monster._isDead == false)
@@ -293,7 +293,7 @@ public class BattleManager : MonoBehaviour
                         continue;
                     }
 
-                    monster.AtkTarget(target);
+                    await monster.AtkTarget(target);
                     await UniTask.Delay(300);
 
                     if (monster._isDead == false)
