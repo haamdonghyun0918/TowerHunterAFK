@@ -370,6 +370,15 @@ public class HunterInfoUi : UiBase
 
         _characterSaveData.Rank++;
         _characterSaveData.Exp += bonusExp;
+        int newMaxLevel = GetMaxLevel(_characterData.Rarity, _characterSaveData.Rank);
+        long maxAllowableExp = (newMaxLevel - 1) * _levelUpExp;
+
+        if (_characterSaveData.Exp > maxAllowableExp)
+        {
+            long overflowExp = _characterSaveData.Exp - maxAllowableExp;
+            _characterSaveData.Exp = maxAllowableExp;
+        }
+
         SaveManager.Instance.SaveCurrentData();
 
         Debug.Log($"{_characterData.Name}이(가) {_characterSaveData.Rank}강으로 강화되었습니다! (이전된 경험치: {bonusExp})");
