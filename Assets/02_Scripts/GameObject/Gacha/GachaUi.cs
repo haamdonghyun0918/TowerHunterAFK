@@ -7,6 +7,7 @@ public class GachaUi : UiBase
 {
     [SerializeField] private Button Btn_SingleGacha;
     [SerializeField] private Button Btn_MultipleGacha;
+    [SerializeField] private Button Btn_Close;
     [SerializeField] private TMP_Text Text_Gold;
     [SerializeField] private TMP_Text Text_Diamond;
 
@@ -18,6 +19,9 @@ public class GachaUi : UiBase
 
     private void BindButtons()
     {
+        Btn_Close.onClick.RemoveListener(OnClickCloseUi);
+        Btn_Close.onClick.AddListener(OnClickCloseUi);
+
         Btn_SingleGacha.onClick.RemoveListener(OnClickSingleGachaButton);
         Btn_MultipleGacha.onClick.RemoveListener(OnClickMultipleGachaButton);
 
@@ -41,5 +45,10 @@ public class GachaUi : UiBase
     {
         GachaSystem.Instance.DrawMultipleCharacter().Forget();
         SetCurrencyTexts();
+    }
+
+    private void OnClickCloseUi()
+    {
+        UiManager.Instance.CloseUi<GachaUi>();
     }
 }
