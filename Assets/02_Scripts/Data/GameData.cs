@@ -27,7 +27,7 @@ public class CharacterData : GameDataBase
     public string CharacterType;
     public int GachaWeight;
     public string IconPath;
-
+    public string CircleIconPath;
     public EquipmentRange WeaponRange;
 }
 
