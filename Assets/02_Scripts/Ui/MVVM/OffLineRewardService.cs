@@ -57,8 +57,8 @@ public class OffLineRewardService
 
         double totalHours = OfflineTime.TotalHours;
 
-        RewardGold = (long)(maxStage * 500 * totalHours);
-        RewardExp = (long)(maxStage * 500 * totalHours);
+        RewardGold = (long)(maxStage * 300 * totalHours);
+        RewardExp = (long)(maxStage * 300 * totalHours);
         RewardMagicStone = (long)(maxStage * 10 * totalHours);
 
         int equipmentDropCount = (int)totalHours;
