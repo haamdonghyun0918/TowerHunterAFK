@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
 
 public class HunterInfoUi : UiBase
 {
@@ -52,6 +53,10 @@ public class HunterInfoUi : UiBase
 
     private int _currentLevel = 1;
     private const long _levelUpExp = 2000;
+
+    private List<CharacterSaveData> _pendingMaterials;
+    private long _pendingBonusExp;
+
     private void Awake()
     {
         if (_weaponEquipmentImage != null)
@@ -170,7 +175,7 @@ public class HunterInfoUi : UiBase
         SetText(_textName, _characterData.Name);
         SetText(_textCost, _characterData.MaxSkillCost.ToString());
         SetText(_textTier, _characterData.Rarity);
-       
+
         UpdateUpgradeUI();
         UpdateHunterStats();
         UpdateEquipmentIcons();
@@ -208,21 +213,37 @@ public class HunterInfoUi : UiBase
         return maxLevel;
     }
 
-    private int GetOwnedDuplicatesCount()
+    private List<CharacterSaveData> GetAvailableMaterials()
     {
-        int count = 0;
+        List<CharacterSaveData> materials = new List<CharacterSaveData>();
+
         foreach (var character in SaveManager.Instance.CurrentSaveData.OwnedCharacters)
         {
             if (character.BaseId == _characterSaveData.BaseId && character.UniqueId != _characterSaveData.UniqueId)
             {
                 if (IsCharacterInParty(character.UniqueId) == false)
                 {
-                    count++;
+                    materials.Add(character);
                 }
             }
         }
 
-        return count;
+        materials.Sort(CompareMaterialSpec);
+
+        return materials;
+    }
+
+    private int CompareMaterialSpec(CharacterSaveData a, CharacterSaveData b)
+    {
+        int rankComparison = a.Rank.CompareTo(b.Rank);
+        if (rankComparison != 0) return rankComparison;
+
+        return a.Exp.CompareTo(b.Exp);
+    }
+
+    private int GetOwnedDuplicatesCount()
+    {
+        return GetAvailableMaterials().Count;
     }
 
     private void UpdateUpgradeUI()
@@ -269,41 +290,89 @@ public class HunterInfoUi : UiBase
         }
 
         int required = _characterSaveData.Rank + 1;
-        int owned = GetOwnedDuplicatesCount();
+        List<CharacterSaveData> availableMaterials = GetAvailableMaterials();
 
-        if (owned < required)
+        if (availableMaterials.Count < required)
         {
-            Debug.Log($"강화 재료가 부족합니다. (필요: {required}, 대기 헌터 보유: {owned})");
+            Debug.Log($"강화 재료가 부족합니다. (필요: {required}, 대기 헌터 보유: {availableMaterials.Count})");
             return;
         }
 
-        int consumed = 0;
+        List<CharacterSaveData> materialsToUse = availableMaterials.GetRange(0, required);
 
-        for (int i = SaveManager.Instance.CurrentSaveData.OwnedCharacters.Count - 1; i >= 0; i--)
+        long totalBonusExp = 0;
+        bool hasHighRankMaterial = false;
+
+        foreach (var mat in materialsToUse)
         {
-            var character = SaveManager.Instance.CurrentSaveData.OwnedCharacters[i];
-
-            if (character.BaseId == _characterSaveData.BaseId && character.UniqueId != _characterSaveData.UniqueId)
+            totalBonusExp += mat.Exp;
+            if (mat.Rank > _characterSaveData.Rank)
             {
-                if (IsCharacterInParty(character.UniqueId) == false)
-                {
-                    SaveManager.Instance.CurrentSaveData.OwnedCharacters.RemoveAt(i);
-                    SaveManager.Instance.CharacterDict.Remove(character.UniqueId);
-                    consumed++;
-
-                    if (consumed >= required)
-                    {
-                        break;
-                    }
-
-                }
+                hasHighRankMaterial = true;
             }
         }
 
+        if (hasHighRankMaterial)
+        {
+            ShowWarningPopupAndEnhance(materialsToUse, totalBonusExp).Forget();
+        }
+
+        else
+        {
+            ExecuteEnhance(materialsToUse, totalBonusExp);
+        }
+    }
+
+    private async UniTaskVoid ShowWarningPopupAndEnhance(List<CharacterSaveData> materialsToUse, long totalBonusExp)
+    {
+        _pendingMaterials = materialsToUse;
+        _pendingBonusExp = totalBonusExp;
+
+        EnhanceWarningUi warningUi = await UiManager.Instance.OpenUi<EnhanceWarningUi>();
+
+        if (warningUi != null)
+        {
+            warningUi.SetUp(ExecutePendingEnhance);
+        }
+    }
+
+    private void ExecutePendingEnhance()
+    {
+        if (_pendingMaterials != null)
+        {
+            ExecuteEnhance(_pendingMaterials, _pendingBonusExp);
+            _pendingMaterials = null;
+            _pendingBonusExp = 0;
+        }
+    }
+
+    private void ExecuteEnhance(List<CharacterSaveData> materialsToUse, long bonusExp)
+    {
+        foreach (var mat in materialsToUse)
+        {
+            CharacterSaveData match = null;
+
+            foreach (var character in SaveManager.Instance.CurrentSaveData.OwnedCharacters)
+            {
+                if (character.UniqueId == mat.UniqueId)
+                {
+                    match = character;
+                    break;
+                }
+            }
+
+            if (match != null)
+            {
+                SaveManager.Instance.CurrentSaveData.OwnedCharacters.Remove(match);
+            }
+            SaveManager.Instance.CharacterDict.Remove(mat.UniqueId);
+        }
+
         _characterSaveData.Rank++;
+        _characterSaveData.Exp += bonusExp;
         SaveManager.Instance.SaveCurrentData();
 
-        Debug.Log($"{_characterData.Name}이(가) {_characterSaveData.Rank}강으로 강화되었습니다!");
+        Debug.Log($"{_characterData.Name}이(가) {_characterSaveData.Rank}강으로 강화되었습니다! (이전된 경험치: {bonusExp})");
         OnHunterEnhanced?.Invoke();
         UpdateHunterInfo();
     }
@@ -450,7 +519,6 @@ public class HunterInfoUi : UiBase
         }
 
         await UiManager.Instance.OpenUi<EquipmentInventoryUi>();
-
     }
 
     private void BindButton(UiButton button, UnityAction buttonAction)

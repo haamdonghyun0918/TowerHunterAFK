@@ -17,7 +17,7 @@ public class HunterInventoryUi : UiBase
     private void OnEnable()
     {
         var currentParty = SaveManager.Instance.CurrentSaveData.CurrentPartyCharacterUids;
-        
+
         for (int i = 0; i < 3; i++)
         {
             _originalPartyUids[i] = currentParty[i];
@@ -76,7 +76,6 @@ public class HunterInventoryUi : UiBase
                 var data = GameDataManager.Instance.GetData<CharacterData>(charData.BaseId);
                 _partySlots[i].SetUp(data, partyUid, OnClickPartySlot, OnLongPressSlot);
             }
-
             else
             {
                 _partySlots[i].SetUp(null, "", null);
@@ -112,6 +111,8 @@ public class HunterInventoryUi : UiBase
             }
         }
 
+        waitChars.Sort(CompareHunterSpec);
+
         int targetSlotCount = Mathf.Max(_firstSlotCount, waitChars.Count);
         int currentCount = _createdSlots.Count;
 
@@ -129,11 +130,10 @@ public class HunterInventoryUi : UiBase
             if (i < waitChars.Count)
             {
                 var data = GameDataManager.Instance.GetData<CharacterData>(waitChars[i].BaseId);
-  
+
                 _createdSlots[i].SetUp(data, waitChars[i].UniqueId, OnClickSlot, OnLongPressSlot);
                 _createdSlots[i].gameObject.SetActive(true);
             }
-
             else
             {
                 _createdSlots[i].gameObject.SetActive(false);
@@ -141,16 +141,44 @@ public class HunterInventoryUi : UiBase
         }
     }
 
+    private int CompareHunterSpec(CharacterSaveData huntData, CharacterSaveData realHuntData)
+    {
+        int rankComparison = realHuntData.Rank.CompareTo(huntData.Rank);
+        if (rankComparison != 0) return rankComparison;
+
+        int expComparison = realHuntData.Exp.CompareTo(huntData.Exp);
+        if (expComparison != 0) return expComparison;
+
+        var dataA = GameDataManager.Instance.GetData<CharacterData>(huntData.BaseId);
+        var dataB = GameDataManager.Instance.GetData<CharacterData>(realHuntData.BaseId);
+
+        int rarityValueA = dataA != null ? GetRarityValue(dataA.Rarity) : 0;
+        int rarityValueB = dataB != null ? GetRarityValue(dataB.Rarity) : 0;
+
+        return rarityValueB.CompareTo(rarityValueA);
+    }
+
+    private int GetRarityValue(string rarity)
+    {
+        switch (rarity)
+        {
+            case "S": return 4;
+            case "A": return 3;
+            case "B": return 2;
+            case "C": return 1;
+            default: return 0;
+        }
+    }
+
     private void OnClickSlot(string uniqueId)
     {
         PartySetting partySetting = new PartySetting();
         bool isSuccess = partySetting.AddHunterToParty(uniqueId);
-        
+
         if (isSuccess)
         {
             ReLoadHunterInventoryUi().Forget();
         }
-
     }
 
     private void OnClickPartySlot(string uniqueId)
@@ -201,9 +229,8 @@ public class HunterInventoryUi : UiBase
             return;
         }
 
-
         SaveManager.Instance.SaveCurrentData();
-        
+
         for (int i = 0; i < 3; i++)
         {
             _originalPartyUids[i] = currentParty[i];
@@ -239,7 +266,7 @@ public class HunterInventoryUi : UiBase
     private void CloseHunterInventory()
     {
         var currentParty = SaveManager.Instance.CurrentSaveData.CurrentPartyCharacterUids;
-        
+
         for (int i = 0; i < 3; i++)
         {
             currentParty[i] = _originalPartyUids[i];
