@@ -129,11 +129,19 @@ public class PartySetting
             {
                 HunterUtil utils = new HunterUtil();
                 utils.AddCharacters("character_dragonkick_01");
+                utils.AddCharacters("character_blueexplosion_01");
+                utils.AddCharacters("character_meteor_01");
             }
 
             if (saveData.OwnedCharacters.Count > 0)
             {
-                currentParty[0] = saveData.OwnedCharacters[0].UniqueId;
+                int limit = Mathf.Min(_maxSlots, saveData.OwnedCharacters.Count);
+
+                for (int i = 0; i < limit; i++)
+                {
+                    currentParty[i] = saveData.OwnedCharacters[i].UniqueId;
+                }
+
                 SaveManager.Instance.SaveCurrentData();
             }
         }

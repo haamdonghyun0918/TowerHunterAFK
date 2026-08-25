@@ -123,9 +123,9 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
                 if (rank == 1 || rank == 2)
                 {
-                    // 브론즈 색상 (구리빛)
                     _textEnhanceRank.color = new Color32(205, 127, 50, 255);
                 }
+
                 else if (rank == 3 || rank == 4)
 
                 {
