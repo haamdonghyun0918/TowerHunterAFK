@@ -3,6 +3,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+
 public class CharacterStatusView : MonoBehaviour
 {
     [SerializeField] private int _slotIndex;
@@ -14,7 +17,11 @@ public class CharacterStatusView : MonoBehaviour
 
     private CharacterStatusViewModel _characterStatusViewModel;
 
+    [SerializeField] private Image Image_HunterIcon;
+
     [SerializeField] private List<GameObject> SkillCostList = new List<GameObject>();
+
+    private string _currentCircleIconPath = "";
 
     private void Start()
     {
@@ -52,6 +59,13 @@ public class CharacterStatusView : MonoBehaviour
             Debug.LogError($"[CharacterStatusView] Text_HunterName이 연결되지 않았습니다. SlotIndex: {_slotIndex}");
             return;
         }
+
+        if(Image_HunterIcon == null)
+        {
+            Debug.LogError($"[CharacterStatusView] Image_HunterIcon이 연결되지 않았습니다. SlotIndex: {_slotIndex}");
+            return;
+        }
+
 
         if (NetworkManager.Instance == null || NetworkManager.Instance.CharacterStatusService == null)
         {
@@ -101,7 +115,8 @@ public class CharacterStatusView : MonoBehaviour
             || eventArgs.PropertyName == nameof(CharacterStatusViewModel.IsActive)
             || eventArgs.PropertyName == nameof(CharacterStatusViewModel.CurrentSkillCost)
             || eventArgs.PropertyName == nameof(CharacterStatusViewModel.MaxSkillCost)
-            || eventArgs.PropertyName == nameof(CharacterStatusViewModel.Name))
+            || eventArgs.PropertyName == nameof(CharacterStatusViewModel.Name)
+            || eventArgs.PropertyName == nameof(CharacterStatusViewModel.CircleIconPath))
         {
             UpdateView();
         }
@@ -116,6 +131,8 @@ public class CharacterStatusView : MonoBehaviour
 
         Root_CharacterStatus.SetActive(_characterStatusViewModel.IsActive);
 
+        UpdateHunterIconView();
+
         if (_characterStatusViewModel.IsActive == false)
         {
             return;
@@ -124,6 +141,72 @@ public class CharacterStatusView : MonoBehaviour
         Text_HunterName.text = _characterStatusViewModel.Name;
 
         UpdateSkillCostView();
+    }
+
+    private void UpdateHunterIconView()
+    {
+        if(Image_HunterIcon == null || _characterStatusViewModel == null)
+        {
+            return;
+        }
+        string circleIconPath = _characterStatusViewModel.CircleIconPath;
+
+        if(_currentCircleIconPath == circleIconPath)
+        {
+            return;
+        }
+
+        _currentCircleIconPath = circleIconPath;
+        Image_HunterIcon.sprite = null;
+        Image_HunterIcon.gameObject.SetActive(false);
+
+        if(string.IsNullOrEmpty(circleIconPath) )
+        {
+            return;
+        }
+        if(ResourceManager.Instance == null)
+        {
+            _currentCircleIconPath = null;
+
+            Debug.LogWarning($"[CharacterStatusView] ResourceManager가 없어 아이콘을 불러올 수 없습니다. SlotIndex: {_slotIndex}");
+
+            return;
+        }
+
+        CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+
+        LoadHunterIconAsync(circleIconPath, destroyToken).Forget();
+
+        
+    }
+
+    private async UniTask LoadHunterIconAsync(string circleIconPath, CancellationToken destroyToken)
+    {
+        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(circleIconPath);
+
+        if(destroyToken.IsCancellationRequested)
+        {
+            return;
+        }
+
+        if(Image_HunterIcon == null || _characterStatusViewModel == null)
+        {
+            return;
+        }
+
+        if (_currentCircleIconPath != circleIconPath || _characterStatusViewModel.CircleIconPath != circleIconPath)
+        { 
+            return ;
+        }
+
+        if(loadedSprite == null)
+        {
+            Debug.LogWarning($"[CharacterStatusView] 원형 아이콘 로드 실패: {circleIconPath}");
+            return;
+        }
+
+        Image_HunterIcon.sprite = loadedSprite;
+        Image_HunterIcon.gameObject.SetActive(true);
     }
 
     private void UpdateSkillCostView()
