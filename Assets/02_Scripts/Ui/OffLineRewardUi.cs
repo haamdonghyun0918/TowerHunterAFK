@@ -17,7 +17,7 @@ public class OffLineRewardUi : UiBase
 
     [Header("Equipment Scroll")]
     [SerializeField] private Transform _content;
-    private const string EquipmentSlotAddress = "Slot_Equipment";
+    private const string EquipmentSlotAddress = "EquipmentSlot";
 
     private OffLineRewardService _rewardService;
     private List<GameObject> _createdSlots = new List<GameObject>();
