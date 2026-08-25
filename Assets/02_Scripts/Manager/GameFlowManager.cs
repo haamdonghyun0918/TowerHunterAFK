@@ -8,7 +8,7 @@ public class GameFlowManager : MonoBehaviour
     //public EquipmentInventory EquipInven { get; private set; }
 
     private float _inactivityTimer = 0f;
-    private const float _sleepModeTimer = 60f;
+    private const float _sleepModeTimer = 300f;
     private bool _isSleepMode = false;
 
     private void Awake()
