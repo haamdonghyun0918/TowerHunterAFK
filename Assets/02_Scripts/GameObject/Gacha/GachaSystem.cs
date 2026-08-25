@@ -85,6 +85,12 @@ public class GachaSystem : MonoBehaviour
 
     private async UniTask<CharacterData> DrawSingleCharacter()
     {
+        bool _isDiamondExist = NetworkManager.Instance.PlayerResourceService.RequestUseDiamond(100);
+        if (_isDiamondExist == false)
+        {
+            Debug.LogError($"다이아몬드가 부족합니다. 현재 다이아 갯수: {SaveManager.Instance.CurrentSaveData.Diamond}");
+            return null;
+        }
         if (_isCardDrawing == true) return null;
 
         _isCardDrawing = true;
@@ -131,6 +137,12 @@ public class GachaSystem : MonoBehaviour
 
     private async UniTask<List<CharacterData>> DrawMultipleCharacter(int count = 10)
     {
+        bool _isDiamondExist = NetworkManager.Instance.PlayerResourceService.RequestUseDiamond(1000);
+        if (_isDiamondExist == false)
+        {
+            Debug.LogError($"다이아몬드가 부족합니다. 현재 다이아 갯수: {SaveManager.Instance.CurrentSaveData.Diamond}");
+            return null;
+        }
         if (_isCardDrawing == true) return null;
 
         _isCardDrawing = true;
