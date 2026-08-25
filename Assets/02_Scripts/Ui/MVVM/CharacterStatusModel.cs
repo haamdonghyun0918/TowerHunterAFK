@@ -9,4 +9,6 @@
     public bool IsActive { get; set; }
     public bool IsDead { get; set; }
     public string Name { get; set; } = "";
+
+    public string CircleIconPath { get; set; } = "";
 }

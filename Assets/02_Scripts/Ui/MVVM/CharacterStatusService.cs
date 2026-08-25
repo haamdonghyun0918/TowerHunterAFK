@@ -164,15 +164,38 @@ public class CharacterStatusService
 
         CharacterStatusViewModel characterStatusViewModel = _characterStatusViewModels[slotIndex];
 
-        _characterStatusViewModels[slotIndex]
-            .SetCharacterStatus(
-                character.GetCharacterId(),
-                character.GetCurrentHp(),
-                character.GetMaxHp(),
-                character.GetCurrentSkillCost(),
-                character.GetMaxSkillCost(),
-                true,
-                character._isDead,
-                character.GetCharacterName());
+        string characterId = character.GetCharacterId();
+
+        string circleIconPath = "";
+
+        if(GameDataManager.Instance == null)
+        {
+            Debug.LogWarning("[CharacterStatusService] GameDataManager가 없어 원형 아이콘 주소를 가져올 수 없습니다.");
+        }
+        else
+        {
+            CharacterData characterData = GameDataManager.Instance.GetData<CharacterData>(characterId);
+
+            if (characterData == null)
+            {
+                Debug.LogWarning($"[CharacterStatusService] CharacterData를 찾을 수 없습니다. CharacterId: {characterId}");
+            }
+            else
+            {
+                circleIconPath = characterData.CircleIconPath;
+            }
+        }
+
+            _characterStatusViewModels[slotIndex]
+                .SetCharacterStatus(
+                    character.GetCharacterId(),
+                    character.GetCurrentHp(),
+                    character.GetMaxHp(),
+                    character.GetCurrentSkillCost(),
+                    character.GetMaxSkillCost(),
+                    true,
+                    character._isDead,
+                    character.GetCharacterName(),
+                    circleIconPath);
     }
 }

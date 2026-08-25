@@ -17,6 +17,7 @@
     public bool IsActive => _characterStatusModel.IsActive;
     public bool IsDead => _characterStatusModel.IsDead;
     public string Name => _characterStatusModel.Name;
+    public string CircleIconPath => _characterStatusModel.CircleIconPath;
 
     public float HpRatio
     {
@@ -39,7 +40,8 @@
         int maxSkillCost,
         bool isActive,
         bool isDead,
-        string name)
+        string name,
+        string circleIconPath)
     {
         bool characterIdChanged = (CharacterId != characterId);
         bool currentHpChanged = (CurrentHp != currentHp);
@@ -49,6 +51,7 @@
         bool isActiveChanged = (IsActive != isActive);
         bool isDeadChanged = (IsDead != isDead);
         bool isNameChanged = (Name != name);
+        bool isCircleIconChanged = (CircleIconPath != circleIconPath);
 
         _characterStatusModel.CharacterId = characterId;
         _characterStatusModel.CurrentHp = currentHp;
@@ -58,6 +61,7 @@
         _characterStatusModel.IsActive = isActive;
         _characterStatusModel.IsDead = isDead;
         _characterStatusModel.Name = name;
+        _characterStatusModel.CircleIconPath = circleIconPath;
 
         if (characterIdChanged)
         {
@@ -94,6 +98,10 @@
         if(isNameChanged)
         {
             OnPropertyChanged(nameof(Name));
+        }
+        if(isCircleIconChanged)
+        {
+            OnPropertyChanged(nameof(CircleIconPath));
         }
 
     }
@@ -153,7 +161,7 @@
 
     public void Reset()
     {
-        SetCharacterStatus("", 0, 0, 0, 0, false, false, "");
+        SetCharacterStatus("", 0, 0, 0, 0, false, false, "", "");
     }
 
 }

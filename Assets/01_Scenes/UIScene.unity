@@ -335,6 +335,17 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &456266278 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1061236091876728788, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+  m_PrefabInstance: {fileID: 689228549}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &498999616
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +485,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainUi
       objectReference: {fileID: 0}
+    - target: {fileID: 963514548575817338, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+      propertyPath: Image_HunterIcon
+      value: 
+      objectReference: {fileID: 456266278}
     - target: {fileID: 1644261058604006850, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -558,10 +573,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3003886802820549136, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+      propertyPath: Image_HunterIcon
+      value: 
+      objectReference: {fileID: 1154405891}
+    - target: {fileID: 3996510775235395638, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6469802495126431584, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6778448899134167135, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7174082074790539206, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7703462567813559290, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+      propertyPath: Image_HunterIcon
+      value: 
+      objectReference: {fileID: 973034374}
     - target: {fileID: 8046018053703702436, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -571,6 +606,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+--- !u!114 &973034374 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6426238762301941520, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+  m_PrefabInstance: {fileID: 689228549}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1001 &1004199411
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -628,6 +674,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cea3744920a8f7743858faf8a064be65, type: 3}
+--- !u!114 &1154405891 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6469802495126431584, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
+  m_PrefabInstance: {fileID: 689228549}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!224 &1348132832 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8671624796294198199, guid: 8c5efc137327ecf4c9bc1514ee6ef346, type: 3}
