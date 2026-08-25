@@ -83,7 +83,7 @@ public class GachaSystem : MonoBehaviour
         }
     }
 
-    private async UniTask<CharacterData> DrawSingleCharacter()
+    public async UniTask<CharacterData> DrawSingleCharacter()
     {
         bool _isDiamondExist = NetworkManager.Instance.PlayerResourceService.RequestUseDiamond(100);
         if (_isDiamondExist == false)
@@ -135,7 +135,7 @@ public class GachaSystem : MonoBehaviour
         }
     }
 
-    private async UniTask<List<CharacterData>> DrawMultipleCharacter(int count = 10)
+    public async UniTask<List<CharacterData>> DrawMultipleCharacter(int count = 10)
     {
         bool _isDiamondExist = NetworkManager.Instance.PlayerResourceService.RequestUseDiamond(1000);
         if (_isDiamondExist == false)
@@ -310,12 +310,7 @@ public class GachaSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.D))
         {
-            await DrawSingleCharacter();
-        }
-
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            await DrawMultipleCharacter();
+            await UiManager.Instance.OpenUi<GachaUi>();
         }
     }
 }
