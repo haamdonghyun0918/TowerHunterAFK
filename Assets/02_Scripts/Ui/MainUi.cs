@@ -8,6 +8,7 @@ public class MainUi : UiBase
     [SerializeField] private UiButton _buttonEquipmentInventory;
     [SerializeField] private UiButton _buttonBossRaid;
     [SerializeField] private UiButton _buttonOffLineReward;
+    [SerializeField] private UiButton _buttonGacha;
 
     public static event Action OnBossRaidStart;
     public static event Action OnBossRaidEnd;
@@ -38,6 +39,11 @@ public class MainUi : UiBase
         {
             _buttonOffLineReward.BindOnClickButtonEvent(OpenOffLineRewardUi);
         }
+
+        if (_buttonGacha)
+        {
+            _buttonGacha.BindOnClickButtonEvent(OpenGachaUi);
+        }
     }
 
     private void Update()
@@ -65,6 +71,11 @@ public class MainUi : UiBase
         if (Input.GetKeyDown(KeyCode.T))
         {
             OpenOffLineRewardUi();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            OpenGachaUi();
         }
     }
 
@@ -97,5 +108,10 @@ public class MainUi : UiBase
     public static void TriggerBossRaidEnd()
     {
         OnBossRaidEnd?.Invoke();
+    }
+
+    public async void OpenGachaUi()
+    {
+        await UiManager.Instance.OpenUi<GachaUi>();
     }
 }
