@@ -31,6 +31,13 @@ public class HunterInfoUi : UiBase
     [SerializeField] private UiButton _buttonArmorEquipment;
     [SerializeField] private UiButton _buttonAccessoryEquipment;
 
+    [Header("Equipment Option")]
+    [SerializeField] private GameObject _equipmentOptionPanel;
+    [SerializeField] private TMP_Text _textEquipmentOptionName;
+    [SerializeField] private UiButton _buttonUnequip;
+    [SerializeField] private UiButton _buttonEquipmentEnhance;
+    [SerializeField] private UiButton _buttonEquipmentOptionClose;
+
     [Header("Buttons")]
     [SerializeField] private UiButton _buttonClose;
 
@@ -60,6 +67,8 @@ public class HunterInfoUi : UiBase
     private List<CharacterSaveData> _pendingMaterials;
     private long _pendingBonusExp;
 
+    private EquipmentSlot _selectedEquipmentSlot = EquipmentSlot.None;
+
     private void Awake()
     {
         if (_weaponEquipmentImage != null)
@@ -75,6 +84,10 @@ public class HunterInfoUi : UiBase
         if (_accessoryEquipmentImage != null)
         {
             _defaultAccessorySprite = _accessoryEquipmentImage.sprite;
+        }
+        if(_equipmentOptionPanel != null)
+        {
+            _equipmentOptionPanel.SetActive(false);
         }
     }
 
