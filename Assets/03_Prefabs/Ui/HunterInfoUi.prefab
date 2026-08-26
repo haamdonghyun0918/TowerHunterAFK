@@ -5486,6 +5486,8 @@ MonoBehaviour:
   _buttonUnequip: {fileID: 6950951950276938659}
   _buttonEquipmentEnhance: {fileID: 7706542757477316221}
   _buttonEquipmentOptionClose: {fileID: 2738299902368493435}
+  _equipmentOptionImage: {fileID: 3065139651209848887}
+  _textEquipmentOptionStat: {fileID: 8503421263632594847}
   _buttonClose: {fileID: 5041591860269126400}
   _textEnhanceRequirement: {fileID: 8975762030790154457}
   _textLevelUpRequirement: {fileID: 2935093414833401142}

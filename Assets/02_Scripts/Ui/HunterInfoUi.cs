@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using Unity.Jobs;
 
 public class HunterInfoUi : UiBase
 {
@@ -37,6 +38,8 @@ public class HunterInfoUi : UiBase
     [SerializeField] private UiButton _buttonUnequip;
     [SerializeField] private UiButton _buttonEquipmentEnhance;
     [SerializeField] private UiButton _buttonEquipmentOptionClose;
+    [SerializeField] private Image _equipmentOptionImage;
+    [SerializeField] private TMP_Text _textEquipmentOptionStat;
 
     [Header("Buttons")]
     [SerializeField] private UiButton _buttonClose;
@@ -111,6 +114,7 @@ public class HunterInfoUi : UiBase
         UnbindButton(_buttonAccessoryEquipment, OnClickAccessoryEquipment);
         UnbindButton(_buttonEnhance, OnClickEnhance);
         UnbindButton(_buttonLevelUp, OnClickLevelUp);
+        CloseEquipmentOptionPanel();
         _equipmentViewModel = null;
     }
 
@@ -757,6 +761,8 @@ public class HunterInfoUi : UiBase
         BindButton(_buttonEquipmentOptionClose, CloseEquipmentOptionPanel);
 
         SetText(_textEquipmentOptionName, _equipmentViewModel.GetEquippedEquipmentName(slot));
+
+        RefreshEquipmentOptionPanel();
     }
 
     private void CloseEquipmentOptionPanel()
@@ -772,6 +778,8 @@ public class HunterInfoUi : UiBase
         UnbindButton(_buttonEquipmentOptionClose, CloseEquipmentOptionPanel);
 
         _equipmentOptionPanel.SetActive(false);
+
+        ClearEquipmentOptionPanel();
     }
 
     private bool IsEquipmentOptionPanelOpen()
@@ -802,7 +810,93 @@ public class HunterInfoUi : UiBase
             return;
         }
 
-        SetText(_textEquipmentOptionName, _equipmentViewModel.GetEquippedEquipmentName(_selectedEquipmentSlot));
+        EquipmentModel selectedEquipment = _equipmentViewModel.GetEquippedEquipmentModel(_selectedEquipmentSlot);
+
+        if(selectedEquipment == null)
+        {
+            CloseEquipmentOptionPanel();
+            return;
+        }
+
+
+        SetText(_textEquipmentOptionName, $"{selectedEquipment.Name} +{selectedEquipment.EnhanceLevel}");
+
+        SetText(_textEquipmentOptionStat, GetEquipmentOptionStatText(selectedEquipment));
+
+        LoadEquipmentOptionIconAsync(selectedEquipment.UniqueId, selectedEquipment.IconAddress).Forget();
+    }
+
+    private string GetEquipmentOptionStatText(EquipmentModel equipmentModel)
+    {
+        string totalAtk = equipmentModel.GetEquipmentTotalAtk().ToString("N0");
+        string totalHp = equipmentModel.GetEquipmentTotalHp().ToString("N0");
+        string totalAtkSpeed = equipmentModel?.GetEquipmentTotalAtkSpeed().ToString("N0");
+        string totalDef = equipmentModel.GetEquipmentTotalDef().ToString("N0");
+
+        return
+            $"공격력 : {totalAtk}\n" +
+            $"체력 : {totalHp}\n" +
+            $"공격속도 : {totalAtkSpeed}\n" +
+            $"방어력 : {totalDef}";
+    }
+
+    private async UniTask LoadEquipmentOptionIconAsync(string equipmentUniqueId, string iconAddress)
+    {
+        if(_equipmentOptionImage == null)
+        {
+            return;
+        }
+
+        _equipmentOptionImage.sprite = null;
+        _equipmentOptionImage.gameObject.SetActive(false);
+
+        if(string.IsNullOrEmpty(iconAddress))
+        {
+            return;
+        }
+
+        if(ResourceManager.Instance == null)
+        {
+            Debug.LogError("[HunterInfoUi] ResourceManager가 없습니다.");
+
+            return;
+        }
+
+        Sprite loadedSprite = await ResourceManager.Instance.LoadAsset<Sprite>(iconAddress);
+
+        if(IsEquipmentOptionPanelOpen() == false || _equipmentViewModel == null)
+        {
+            return;
+        }
+
+        EquipmentModel currentEquipment = _equipmentViewModel.GetEquippedEquipmentModel(_selectedEquipmentSlot);
+
+        if(currentEquipment == null || currentEquipment.UniqueId != equipmentUniqueId)
+        {
+            return;
+        }
+
+        if(loadedSprite == null)
+        {
+            Debug.LogWarning($"[HunterInfoUi] 장비 아이콘 로드에 실패했습니다. Address: {iconAddress}");
+
+            return;
+        }
+
+        _equipmentOptionImage.sprite = loadedSprite;
+        _equipmentOptionImage.gameObject.SetActive(true);
+    }
+
+    private void ClearEquipmentOptionPanel()
+    {
+        SetText(_textEquipmentOptionName, "");
+        SetText(_textEquipmentOptionStat, "");
+
+        if(_textEquipmentOptionStat != null)
+        {
+            _equipmentOptionImage.sprite = null;
+            _equipmentOptionImage.gameObject.SetActive(false); 
+        }
     }
 
     private void OnClickUnequip()
