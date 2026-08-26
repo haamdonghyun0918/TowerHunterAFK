@@ -69,6 +69,58 @@
         return _equipmentService.BeginEquipSelection(_characterUniqueId, slot);
     }
 
+    public bool HasEquipment(EquipmentSlot slot)
+    {
+        EquipmentModel equipmentModel = GetEquippedEquipmentModel(slot);
+
+        return equipmentModel != null;
+    }
+
+    public string GetEquippedEquipmentUiqueId(EquipmentSlot slot)
+    {
+        EquipmentModel equipmentModel = GetEquippedEquipmentModel(slot);
+
+        if(equipmentModel == null)
+        {
+            return "";
+        }
+
+        return equipmentModel.UniqueId;
+    }
+
+    public string GetEquippedEquipmentName(EquipmentSlot slot)
+    {
+        EquipmentModel equipmentModel = GetEquippedEquipmentModel(slot);
+
+        if(equipmentModel == null)
+        {
+            return "";
+        }
+        return equipmentModel.Name;
+    }
+
+    public bool RequestUnequip(EquipmentSlot slot)
+    {
+        if (HasTarget == false)
+        {
+            return false;
+        }
+
+        return _equipmentService.RequestUnequip(_characterUniqueId, slot);
+    }
+
+    public bool RequestOpenEnhance(EquipmentSlot slot)
+    {
+        string equipmentUniqueId = GetEquippedEquipmentUiqueId(slot);
+
+        if(string.IsNullOrEmpty(equipmentUniqueId))
+        {
+            return false;
+        }
+
+        return _equipmentService.TrySetEnhanceTarget(equipmentUniqueId);
+    }
+
     public void NotifyCharacterEquipmentChanged(string characterUniqueId)
     {
         if (_characterUniqueId == characterUniqueId)
@@ -89,7 +141,7 @@
             return "";
         }
 
-        EquipmentModel equipmentModel = _equipmentService.GetEquippedEquipmentModel(_characterUniqueId, slot);
+        EquipmentModel equipmentModel = GetEquippedEquipmentModel(slot);
 
         if (equipmentModel == null)
         {
@@ -97,5 +149,15 @@
         }
 
         return equipmentModel.IconAddress;
+    }
+
+    public EquipmentModel GetEquippedEquipmentModel(EquipmentSlot slot)
+    {
+        if(HasTarget == false)
+        {
+            return null;
+        }
+
+        return _equipmentService.GetEquippedEquipmentModel(_characterUniqueId, slot);
     }
 }
