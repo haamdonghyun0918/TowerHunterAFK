@@ -1,37 +1,7 @@
 [
   {
-    "Id": "monster_Test_01",
-    "Name": "테스트 몬스터",
-    "BaseAtk": 30,
-    "BaseHp": 100,
-    "BaseAtkSpeed": 10,
-	"BaseDef": 10,
-	"PrefabPath": "TestMonster1",
-	"IsBoss": false
-  },
-  {
-    "Id": "monster_Test_02",
-    "Name": "테스트 몬스터",
-    "BaseAtk": 40,
-    "BaseHp": 150,
-    "BaseAtkSpeed": 11,
-	"BaseDef": 15,
-	"PrefabPath": "TestMonster2",
-	"IsBoss": false
-  },
-  {
-    "Id": "monster_Test_03",
-    "Name": "테스트 몬스터",
-    "BaseAtk": 50,
-    "BaseHp": 200,
-    "BaseAtkSpeed": 12,
-	"BaseDef": 20,
-	"PrefabPath": "TestMonster3",
-	"IsBoss": false
-  },
-  {
     "Id": "monster_FirstFloor_01",
-    "Name": "1층 몬스터_01",
+    "Name": "고블린",
     "BaseAtk": 50,
     "BaseHp": 500,
     "BaseAtkSpeed": 10,
@@ -41,7 +11,7 @@
   },
   {
     "Id": "monster_FirstFloor_02",
-    "Name": "1층 몬스터_02",
+    "Name": "오크",
     "BaseAtk": 80,
     "BaseHp": 300,
     "BaseAtkSpeed": 10,
@@ -51,7 +21,7 @@
   },
   {
     "Id": "monster_FirstFloor_03",
-    "Name": "1층 몬스터_03",
+    "Name": "라이칸슬로프",
     "BaseAtk": 40,
     "BaseHp": 400,
     "BaseAtkSpeed": 11,
@@ -61,7 +31,7 @@
   },
   {
     "Id": "monster_SecondFloor_01",
-    "Name": "2층 몬스터_01",
+    "Name": "금 간 스켈레톤",
     "BaseAtk": 60,
     "BaseHp": 600,
     "BaseAtkSpeed": 10,
@@ -71,7 +41,7 @@
   },
   {
     "Id": "monster_SecondFloor_02",
-    "Name": "2층 몬스터_02",
+    "Name": "스켈레톤",
     "BaseAtk": 90,
     "BaseHp": 400,
     "BaseAtkSpeed": 10,
@@ -81,7 +51,7 @@
   },
   {
     "Id": "monster_SecondFloor_03",
-    "Name": "2층 몬스터_03",
+    "Name": "좀비",
     "BaseAtk": 50,
     "BaseHp": 500,
     "BaseAtkSpeed": 11,
@@ -91,7 +61,7 @@
   },
   {
     "Id": "monster_ThirdFloor_01",
-    "Name": "3층 몬스터_01",
+    "Name": "엔트",
     "BaseAtk": 70,
     "BaseHp": 700,
     "BaseAtkSpeed": 10,
@@ -101,7 +71,7 @@
   },
   {
     "Id": "monster_ThirdFloor_02",
-    "Name": "3층 몬스터_02",
+    "Name": "스톤 골렘",
     "BaseAtk": 100,
     "BaseHp": 500,
     "BaseAtkSpeed": 10,
@@ -111,7 +81,7 @@
   },
   {
     "Id": "monster_ThirdFloor_03",
-    "Name": "3층 몬스터_03",
+    "Name": "얼음 골렘",
     "BaseAtk": 60,
     "BaseHp": 600,
     "BaseAtkSpeed": 11,
