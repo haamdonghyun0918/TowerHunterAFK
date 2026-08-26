@@ -80,7 +80,7 @@
     "BuffHp": 0,
     "BuffAtkSpeed": 10,
     "BuffDef": 0,
-    "IconAddress": "",
+    "IconAddress": "weapon_6",
     "Price": 500
   },
   {
@@ -108,7 +108,7 @@
     "BuffHp": 0,
     "BuffAtkSpeed": 15,
     "BuffDef": 0,
-    "IconAddress": "",
+    "IconAddress": "accessories_1",
     "Price": 4500
   },
   {
