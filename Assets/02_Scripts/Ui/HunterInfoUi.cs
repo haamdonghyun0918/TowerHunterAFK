@@ -184,6 +184,7 @@ public class HunterInfoUi : UiBase
     {
         UpdateHunterStats();
         UpdateEquipmentIcons();
+        RefreshEquipmentOptionPanel();
     }
 
     private void UpdateHunterInfo()
@@ -708,20 +709,19 @@ public class HunterInfoUi : UiBase
             _hunterProfileImage.gameObject.SetActive(true);
         }
     }
-
     private void OnClickWeaponEquipment()
     {
-        OpenEquipmentInventoryAsync(EquipmentSlot.Weapon).Forget();
+        OnClickEquipmentSlot(EquipmentSlot.Weapon);
     }
 
     private void OnClickArmorEquipment()
     {
-        OpenEquipmentInventoryAsync(EquipmentSlot.Armor).Forget();
+        OnClickEquipmentSlot(EquipmentSlot.Armor);
     }
 
     private void OnClickAccessoryEquipment()
     {
-        OpenEquipmentInventoryAsync(EquipmentSlot.Accessory).Forget();
+        OnClickEquipmentSlot(EquipmentSlot.Accessory);
     }
 
     private void OnClickEquipmentSlot(EquipmentSlot slot)
@@ -767,9 +767,9 @@ public class HunterInfoUi : UiBase
             return;
         }
 
-        BindButton(_buttonUnequip, OnClickUnequip);
-        BindButton(_buttonEquipmentEnhance, OnClickEquipmentEnhance);
-        BindButton(_buttonEquipmentOptionClose, CloseEquipmentOptionPanel);
+        UnbindButton(_buttonUnequip, OnClickUnequip);
+        UnbindButton(_buttonEquipmentEnhance, OnClickEquipmentEnhance);
+        UnbindButton(_buttonEquipmentOptionClose, CloseEquipmentOptionPanel);
 
         _equipmentOptionPanel.SetActive(false);
     }

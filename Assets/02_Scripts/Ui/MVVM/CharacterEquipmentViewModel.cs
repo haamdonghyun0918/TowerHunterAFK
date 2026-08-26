@@ -80,7 +80,7 @@
     {
         EquipmentModel equipmentModel = GetEquippedEquipmentModel(slot);
 
-        if(equipmentModel != null)
+        if(equipmentModel == null)
         {
             return "";
         }
