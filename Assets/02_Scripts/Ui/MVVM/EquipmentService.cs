@@ -230,6 +230,16 @@ public class EquipmentService
         return (equipmentModel.EnhanceLevel + 1) * 10L;
     }
 
+    public long GetEnhanceGoldCost(EquipmentModel equipmentModel)
+    {
+        if (equipmentModel == null)
+        {
+            return 0;
+        }
+
+        return (equipmentModel.EnhanceLevel + 1) * 10000L;
+    }
+
     public bool RequestEnhance(string uniqueId)
     {
         if(TryGetEquipmentModel(uniqueId, out EquipmentModel equipmentModel) == false)
@@ -244,18 +254,25 @@ public class EquipmentService
             return false;
         }
         long enhanceCost = GetEnhanceCost(equipmentModel);
+        long enhanceGoldCost = GetEnhanceGoldCost(equipmentModel);
 
-        if(enhanceCost <= 0)
+        if(enhanceCost <= 0 || enhanceGoldCost <= 0)
         {
             Debug.LogError("[EquipmentService] 강화 비용이 올바르지 않습니다.");
             return false;
         }
 
         bool isMagicStoneUsed = resourceService.RequestUseMagicStone(enhanceCost);
-
+        bool isGoldUsed = resourceService.RequestUseGold(enhanceGoldCost);
         if(isMagicStoneUsed == false)
         {
             Debug.LogWarning("[EquipmentService] 마석이 부족합니다.");
+            return false;
+        }
+
+        if (isGoldUsed == false)
+        {
+            Debug.LogWarning("[EquipmentService] 골드가 부족합니다.");
             return false;
         }
 
@@ -265,7 +282,7 @@ public class EquipmentService
 
         NotifyEquipmentChanged(uniqueId);
 
-        Debug.Log($"[EquipmentService] 강화 성공: {uniqueId}, 사용 마석: {enhanceCost}");
+        Debug.Log($"[EquipmentService] 강화 성공: {uniqueId}, 사용 마석: {enhanceCost}, 사용 골드: {enhanceGoldCost}");
 
         return true;
     }

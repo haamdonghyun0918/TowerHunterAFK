@@ -102,13 +102,14 @@
         {
             if (HasTarget == false)
             {
-                return "0 마석";
+                return "0 마석\n0 골드";
             }
 
             long enhanceCost = _equipmentService.GetEnhanceCost(_targetEquipment);
+            long goldCost = _equipmentService.GetEnhanceGoldCost(_targetEquipment);
             string currencyName = _equipmentService.EnhanceCostCurrencyName;
 
-            return $"{enhanceCost:N0} {currencyName}";
+            return $"{enhanceCost:N0} {currencyName}\n{goldCost:N0} 골드";
         }
     }
 
