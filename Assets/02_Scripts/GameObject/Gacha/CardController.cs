@@ -44,12 +44,6 @@ public class CardController : MonoBehaviour
         _cardFront.gameObject.SetActive(false);
 
         _characterName.gameObject.SetActive(false);
-
-        _glowTransform.localScale = Vector3.one;
-
-        _glowImage.color = new Color(1, 1, 1, 0);
-
-        _cardTransform.localScale = Vector3.one;
     }
 
     public async UniTask SetCard(CharacterData character)
@@ -80,21 +74,13 @@ public class CardController : MonoBehaviour
 
         sequence.Append(_glowImage.DOColor(_gradeColor, 0.5f));
 
-        sequence.Join(
-            _glowTransform.DOScale(1.3f, 0.5f)
-        );
+        sequence.Join(_glowTransform.DOScale(1.3f, 0.5f));
 
         sequence.AppendCallback(() =>
         {
-            _cardTransform.DOShakeRotation(
-                1.5f,
-                new Vector3(0f, 0f, 5f),
-                20
-            );
+            _cardTransform.DOShakeRotation(1.5f, new Vector3(0f, 0f, 5f), 20);
 
-            _glowTransform
-                .DOScale(1.5f, 0.25f)
-                .SetLoops(6, LoopType.Yoyo);
+            _glowTransform.DOScale(1.5f, 0.25f).SetLoops(6, LoopType.Yoyo);
         });
 
         sequence.AppendInterval(1.5f);
@@ -110,27 +96,13 @@ public class CardController : MonoBehaviour
 
         sequence.Append(_cardTransform.DOScaleX(1f, 0.2f));
 
-        sequence.Join(
-            _glowTransform
-                .DOScale(1f, 0.5f)
-                .SetEase(Ease.OutElastic)
-        );
+        sequence.Join(_glowTransform.DOScale(1f, 0.5f).SetEase(Ease.OutElastic));
 
-        sequence.Join(
-            _glowTransform.DOShakeRotation(
-                0.5f,
-                new Vector3(0f, 0f, 8f),
-                20,
-                90f,
-                true
-            )
-        );
+        sequence.Join(_glowTransform.DOShakeRotation(0.5f, new Vector3(0f, 0f, 8f), 20, 90f, true));
 
         sequence.AppendInterval(0.2f);
 
-        sequence.Append(
-            _glowImage.DOFade(0f, 0.4f)
-        );
+        sequence.Append(_glowImage.DOFade(0f, 0.4f));
 
         await sequence.AsyncWaitForCompletion();
     }
