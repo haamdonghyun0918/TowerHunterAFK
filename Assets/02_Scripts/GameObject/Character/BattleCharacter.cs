@@ -165,6 +165,11 @@ public class BattleCharacter : MonoBehaviour
                     _characterAnimator.SetBool("IsDamaged", true);
                 }
                 break;
+            case CharacterState.Run:
+                {
+                    _characterAnimator.SetBool("IsMoved", true);
+                }
+                break;
         }
     }
 
@@ -174,5 +179,6 @@ public class BattleCharacter : MonoBehaviour
         _characterAnimator.SetBool("IsSkillAttack", false);
         _characterAnimator.SetBool("IsDead", false);
         _characterAnimator.SetBool("IsDamaged", false);
+        _characterAnimator.SetBool("IsMoved", false);
     }
 }
