@@ -109,6 +109,18 @@
         return _equipmentService.RequestUnequip(_characterUniqueId, slot);
     }
 
+    public bool RequestOpenEnhance(EquipmentSlot slot)
+    {
+        string equipmentUniqueId = GetEquippedEquipmentUiqueId(slot);
+
+        if(string.IsNullOrEmpty(equipmentUniqueId))
+        {
+            return false;
+        }
+
+        return _equipmentService.TrySetEnhanceTarget(equipmentUniqueId);
+    }
+
     public void NotifyCharacterEquipmentChanged(string characterUniqueId)
     {
         if (_characterUniqueId == characterUniqueId)
@@ -129,7 +141,7 @@
             return "";
         }
 
-        EquipmentModel equipmentModel = _equipmentService.GetEquippedEquipmentModel(_characterUniqueId, slot);
+        EquipmentModel equipmentModel = GetEquippedEquipmentModel(slot);
 
         if (equipmentModel == null)
         {
