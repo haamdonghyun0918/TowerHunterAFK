@@ -34,6 +34,8 @@ public class Character : BattleCharacter
 
     private int _characterEnhancement;
 
+    public bool _isRunning;
+
     [Header("전투 관련")]
     private Skill _skill;
 
@@ -239,7 +241,7 @@ public class Character : BattleCharacter
 
     public async UniTask AtkTarget(Monster targetMonster, MonsterParty monsterParty)
     {
-
+        _isRunning = false;
 
         if (targetMonster._isDead == true) return;
 
@@ -262,6 +264,13 @@ public class Character : BattleCharacter
         ChangeState(CharacterState.Idle);
 
         InvokeCostChangedEvent();
+    }
+
+    public void RunningCharacter()
+    {
+        if (_isRunning == true) return;
+        _isRunning = true;
+        ChangeState(CharacterState.Run);
     }
 
     private void SetSingleTargetTransform(Monster targetMonster)
@@ -430,29 +439,29 @@ public class Character : BattleCharacter
 
     // 테스트용 치트 함수 =======================================================
 
-    private void Update()   // 테스트용으로만 업데이트 사용
-    {
-        if (Input.GetKeyDown(KeyCode.C))
+        private void Update()   // 테스트용으로만 업데이트 사용
         {
-            TestGetMaxSkillCost();
-        }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                TestGetMaxSkillCost();
+            }
 
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            _characterLevelManager.AddExp(5000);
-            Debug.Log($"경험치 5000증가, 현재 경험치: {_characterLevelManager.GetCurrentExp()}");
-        }
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                _characterLevelManager.AddExp(5000);
+                Debug.Log($"경험치 5000증가, 현재 경험치: {_characterLevelManager.GetCurrentExp()}");
+            }
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            LevelUp();
-            Debug.Log($"[{_characterId}]\n현재레벨: {_characterLevel}\n현재경험치: {_characterCurrentExp}\n현재강화단계: {_characterEnhancement}");
-        }
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                LevelUp();
+                Debug.Log($"[{_characterId}]\n현재레벨: {_characterLevel}\n현재경험치: {_characterCurrentExp}\n현재강화단계: {_characterEnhancement}");
+            }
 
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            UpgradeCharacter();
-        }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                UpgradeCharacter();
+            }
     }
 
     private void TestGetMaxSkillCost()
