@@ -25,7 +25,7 @@ public class Monster : BattleCharacter
 
     }
 
-    public void InitMonster(MonsterData monsterData)
+    public void InitMonster(MonsterData monsterData, int stageNum)
     {
         _monsterData = monsterData;
 
@@ -40,16 +40,28 @@ public class Monster : BattleCharacter
         _monsterId = _monsterData.Id;
         _isBoss = _monsterData.IsBoss;
 
-        SetStatData();
+        SetStatData(stageNum);
     }
 
-    private void SetStatData()
+    private void SetStatData(int stageNum)
     {
-        _characterAtk = _monsterData.BaseAtk;
-        _characterAtkSpeed = _monsterData.BaseAtkSpeed;
-        _characterHp = _monsterData.BaseHp;
-        _characterMaxHp = _monsterData.BaseHp;
-        _characterDefense = _monsterData.BaseDef;
+        if (_isBoss == true) 
+        {
+            _characterAtk = _monsterData.BaseAtk;
+            _characterAtkSpeed = _monsterData.BaseAtkSpeed;
+            _characterHp = _monsterData.BaseHp;
+            _characterMaxHp = _monsterData.BaseHp;
+            _characterDefense = _monsterData.BaseDef;
+        }
+        else
+        {
+            _characterAtk = ((_monsterData.BaseAtk) + stageNum);
+            _characterAtkSpeed = _monsterData.BaseAtkSpeed;
+            _characterHp = _monsterData.BaseHp + stageNum;
+            _characterMaxHp = _monsterData.BaseHp + stageNum;
+            _characterDefense = _monsterData.BaseDef + stageNum;
+        }
+            
     }
 
     public async UniTask AtkTarget(Character TargetCharacter)
