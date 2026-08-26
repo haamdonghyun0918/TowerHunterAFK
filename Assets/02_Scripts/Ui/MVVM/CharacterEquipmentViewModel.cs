@@ -99,6 +99,16 @@
         return equipmentModel.Name;
     }
 
+    public bool RequestUnequip(EquipmentSlot slot)
+    {
+        if (HasTarget == false)
+        {
+            return false;
+        }
+
+        return _equipmentService.RequestUnequip(_characterUniqueId, slot);
+    }
+
     public void NotifyCharacterEquipmentChanged(string characterUniqueId)
     {
         if (_characterUniqueId == characterUniqueId)
