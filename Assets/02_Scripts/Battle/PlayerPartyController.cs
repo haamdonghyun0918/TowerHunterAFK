@@ -35,6 +35,10 @@ public class PlayerPartyController : PlayerPartyControllerBase
         if ((_isPaused == false) && (_isBattling == false) && (_isMovable == true))
         {
             transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
+            for (int i = 0; i < 3; i++) {
+                var character = GetHunter(i);
+                character.RunningCharacter();
+            }
         }
     }
 

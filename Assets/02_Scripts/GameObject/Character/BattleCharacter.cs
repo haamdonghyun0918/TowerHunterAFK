@@ -136,7 +136,7 @@ public class BattleCharacter : MonoBehaviour
         _onChangedHp?.Invoke(_characterHp, _characterMaxHp);
     }
 
-    protected void ChangeState(CharacterState newState)
+    public void ChangeState(CharacterState newState)
     {
         switch (newState)
         {

@@ -62,6 +62,12 @@ public class BattleManager : MonoBehaviour
         if (playerParty is PlayerPartyController normalParty)
         {
             Debug.Log("일반 전투 시작");
+            normalParty._isMovable = false;
+            for (int i = 0; i < 3; i++)
+            {
+                var character = normalParty.GetHunter(i);
+                character.ChangeState(CharacterState.Idle);
+            }
             AutoBattleRoutine(normalParty, enemyParty).Forget();
         }
 
