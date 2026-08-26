@@ -48,7 +48,14 @@
         {
             if (HasTarget)
             {
-                return _targetEquipment.Name;
+                if (_targetEquipment.EnhanceLevel > 0)
+                {
+                    return $"{_targetEquipment.Name} +{_targetEquipment.EnhanceLevel}";
+                }
+                else
+                {
+                    return _targetEquipment.Name;
+                }
             }
 
             return "";

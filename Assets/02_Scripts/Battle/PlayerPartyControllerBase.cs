@@ -24,7 +24,11 @@ public class PlayerPartyControllerBase : MonoBehaviour
 
     public Character GetHunter(int index)
     {
-        if (index >= 0 && index < _hunters.Length) return _hunters[index];
+        if (index >= 0 && index < _hunters.Length)
+        {
+            return _hunters[index];
+        }
+
         return null;
     }
 
@@ -33,8 +37,12 @@ public class PlayerPartyControllerBase : MonoBehaviour
         int count = 0;
         foreach (var hunter in _hunters)
         {
-            if (hunter != null && !hunter._isDead) count++;
+            if (hunter != null && !hunter._isDead)
+            {
+                count++;
+            }
         }
+
         return count;
     }
 
