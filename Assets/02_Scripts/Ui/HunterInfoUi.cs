@@ -724,6 +724,129 @@ public class HunterInfoUi : UiBase
         OpenEquipmentInventoryAsync(EquipmentSlot.Accessory).Forget();
     }
 
+    private void OnClickEquipmentSlot(EquipmentSlot slot)
+    {
+        if(_equipmentViewModel == null)
+        {
+            return;
+        }
+
+        if(_equipmentViewModel.HasEquipment(slot) ==  false)
+        {
+            CloseEquipmentOptionPanel();
+            OpenEquipmentInventoryAsync(slot).Forget();
+            return;
+        }
+
+        OpenEquipmentOptionPanel(slot);
+    }
+
+    private void OpenEquipmentOptionPanel(EquipmentSlot slot)
+    {
+        if(_equipmentOptionPanel == null)
+        {
+            Debug.LogWarning("[HunterInfoUi]: 장비 옵션 패널이 연결되지 않았습니다. 프리팹에서 _equipmentOptionPanel을 연결해 주세요.");
+            return;
+        }
+
+        _selectedEquipmentSlot = slot;
+        _equipmentOptionPanel.SetActive(true);
+
+        BindButton(_buttonUnequip, OnClickUnequip);
+        BindButton(_buttonEquipmentEnhance, OnClickEquipmentEnhance);
+        BindButton(_buttonEquipmentOptionClose, CloseEquipmentOptionPanel);
+
+        SetText(_textEquipmentOptionName, _equipmentViewModel.GetEquippedEquipmentName(slot));
+    }
+
+    private void CloseEquipmentOptionPanel()
+    {
+        _selectedEquipmentSlot = EquipmentSlot.None;
+        if(_equipmentOptionPanel == null)
+        {
+            return;
+        }
+
+        BindButton(_buttonUnequip, OnClickUnequip);
+        BindButton(_buttonEquipmentEnhance, OnClickEquipmentEnhance);
+        BindButton(_buttonEquipmentOptionClose, CloseEquipmentOptionPanel);
+
+        _equipmentOptionPanel.SetActive(false);
+    }
+
+    private bool IsEquipmentOptionPanelOpen()
+    {
+        if(_equipmentOptionPanel == null)
+        {
+            return false;
+        }
+
+        return _equipmentOptionPanel.activeSelf;
+    }
+
+    private void RefreshEquipmentOptionPanel()
+    {
+        if(IsEquipmentOptionPanelOpen() == false)
+        {
+            return;
+        }
+
+        if(_equipmentViewModel == null)
+        {
+            CloseEquipmentOptionPanel();
+            return;
+        }
+        if(_equipmentViewModel.HasEquipment(_selectedEquipmentSlot) == false)
+        {
+            CloseEquipmentOptionPanel();
+            return;
+        }
+
+        SetText(_textEquipmentOptionName, _equipmentViewModel.GetEquippedEquipmentName(_selectedEquipmentSlot));
+    }
+
+    private void OnClickUnequip()
+    {
+        if(_equipmentViewModel == null || _selectedEquipmentSlot == EquipmentSlot.None)
+        {
+            return;
+        }
+
+        bool IsUnequipped = _equipmentViewModel.RequestUnequip(_selectedEquipmentSlot);
+
+        if(IsUnequipped == false)
+        {
+            Debug.LogWarning($"[HunterInfoUi] 장비 해제에 실패했습니다. Slot: {_selectedEquipmentSlot}");
+            return;
+        }
+
+        CloseEquipmentOptionPanel();
+
+        if(OnHunterStateChanged != null)
+        {
+            OnHunterStateChanged.Invoke();
+        }
+    }
+
+    private void OnClickEquipmentEnhance()
+    {
+        if(_equipmentViewModel == null || _selectedEquipmentSlot == EquipmentSlot.None)
+        {
+            return;
+        }
+
+        bool canOpenEnhance = _equipmentViewModel.RequestOpenEnhance(_selectedEquipmentSlot);
+
+        if(canOpenEnhance == false)
+        {
+            Debug.LogWarning($"[HunterInfoUi] 장비 강화 창을 열 수 없습니다. Slot: {_selectedEquipmentSlot}");
+            return;
+        }
+
+        CloseEquipmentOptionPanel();
+        UiManager.Instance.OpenUi<EquipmentEnhanceUI>().Forget();
+    }
+
     private async UniTask OpenEquipmentInventoryAsync(EquipmentSlot slot)
     {
         if (_equipmentViewModel == null)
