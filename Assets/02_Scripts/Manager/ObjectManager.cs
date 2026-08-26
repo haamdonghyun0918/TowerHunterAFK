@@ -193,6 +193,18 @@ public class ObjectManager : MonoBehaviour
             }
         }
 
+        if (_currentPlayerParty != null)
+        {
+            if (NetworkManager.Instance == null || NetworkManager.Instance.CharacterStatusService == null)
+            {
+                Debug.LogError("[ObjectManager] CharacterStatusService가 없습니다.");
+            }
+            else
+            {
+                NetworkManager.Instance.CharacterStatusService.SetBossParty(_currentPlayerParty);
+            }
+        }
+
         GameObject gObj_BossMonsterParty = Instantiate(Prefab_MonsterParty, monsterSpawnSpotForBoss.position, Quaternion.identity);
         MonsterParty bossMonsterParty = gObj_BossMonsterParty.GetComponent<MonsterParty>();
 
