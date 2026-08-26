@@ -272,6 +272,7 @@ public class HunterInventoryUi : UiBase
             currentParty[i] = _originalPartyUids[i];
         }
 
+        SaveManager.Instance.SaveCurrentData();
         UiManager.Instance.CloseUi<HunterInventoryUi>();
     }
 }

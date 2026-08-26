@@ -492,7 +492,7 @@ public class Character : BattleCharacter
             return;
         }
 
-        NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged += OnCharacterEquipmentChanged;
+        //NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged += OnCharacterEquipmentChanged;
         _isEquipmentEventBound = true;
     }
 
@@ -505,7 +505,7 @@ public class Character : BattleCharacter
 
         if (NetworkManager.Instance != null && NetworkManager.Instance.EquipmentService != null)
         {
-            NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged -= OnCharacterEquipmentChanged;
+            //NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged -= OnCharacterEquipmentChanged;
         }
 
         _isEquipmentEventBound = false;

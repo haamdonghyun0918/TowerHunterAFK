@@ -893,6 +893,7 @@ public class HunterInfoUi : UiBase
 
     private void CloseHunterInfoUi()
     {
+        SaveManager.Instance.SaveCurrentData();
         UiManager.Instance.CloseUi<HunterInfoUi>();
     }
 }
