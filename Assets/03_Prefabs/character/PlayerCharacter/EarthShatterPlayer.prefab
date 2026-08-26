@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: cf8bc269523f9eb4291cfdc8202cda1d, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 83ad398be5eb1ab4fb23e08672c3edc4, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -97,6 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
   _characterAnimator: {fileID: 4681421759339812356}
+  _isRunning: 0
 --- !u!95 &4681421759339812356 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 83ad398be5eb1ab4fb23e08672c3edc4, type: 3}
