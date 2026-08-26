@@ -40,6 +40,9 @@ public class HunterInfoUi : UiBase
     [SerializeField] private UiButton _buttonEnhance;
     [SerializeField] private UiButton _buttonLevelUp;
 
+    [SerializeField] private TMP_Text _textEnhanceGold;
+    [SerializeField] private TMP_Text _textLevelUpGold;
+
     private CharacterEquipmentViewModel _equipmentViewModel;
     private CharacterData _characterData;
     private BaseStatData _baseStatData;
@@ -188,13 +191,17 @@ public class HunterInfoUi : UiBase
         for (int i = 0; i < saveData.CurrentPartyCharacterUids.Length; i++)
         {
             if (saveData.CurrentPartyCharacterUids[i] == uniqueId)
+            {
                 return true;
+            }
         }
 
         for (int i = 0; i < saveData.ExpeditionPartyUids.Length; i++)
         {
             if (saveData.ExpeditionPartyUids[i] == uniqueId)
+            {
                 return true;
+            }
         }
 
         return false;
@@ -211,6 +218,132 @@ public class HunterInfoUi : UiBase
             case "S": maxLevel = 25 + (rank * 5); break;
         }
         return maxLevel;
+    }
+
+    private long GetEnhanceGoldCost(string rarity, int rank)
+    {
+        if (rarity == "C")
+        {
+            if (rank == 0)
+            {
+                return 1000L;
+            }
+            if (rank == 1)
+            {
+                return 3000L;
+            }
+            if (rank == 2)
+            {
+                return 5000L;
+            }
+            if (rank == 3)
+            {
+                return 7000L;
+            }
+            if (rank == 4)
+            {
+                return 10000L;
+            }
+        }
+
+        else if (rarity == "B")
+        {
+            if (rank == 0)
+            {
+                return 3000L;
+            }
+            if (rank == 1)
+            {
+                return 5000L;
+            }
+            if (rank == 2)
+            {
+                return 7000L;
+            }
+            if (rank == 3)
+            {
+                return 10000L;
+            }
+            if (rank == 4)
+            {
+                return 15000L;
+            }
+        }
+
+        else if (rarity == "A")
+        {
+            if (rank == 0)
+            {
+                return 5000L;
+            }
+            if (rank == 1)
+            {
+                return 7000L;
+            }
+            if (rank == 2)
+            {
+                return 10000L;
+            }
+            if (rank == 3)
+            {
+                return 15000L;
+            }
+            if (rank == 4)
+            {
+                return 30000L;
+            }
+        }
+
+        else if (rarity == "S")
+        {
+            if (rank == 0)
+            {
+                return 10000L;
+            }
+            if (rank == 1)
+            {
+                return 20000L;
+            }
+            if (rank == 2)
+            {
+                return 30000L;
+            }
+            if (rank == 3)
+            {
+                return 50000L;
+            }
+            if (rank == 4)
+            {
+                return 100000L;
+            }
+        }
+
+        return 0L;
+    }
+
+    private long GetLevelUpGoldCost(string rarity)
+    {
+        if (rarity == "C")
+        {
+            return 1500L;
+        }
+
+        if (rarity == "B")
+        {
+            return 3000L;
+        }
+
+        if (rarity == "A")
+        {
+            return 5000L;
+        }
+
+        if (rarity == "S")
+        {
+            return 10000L;
+        }
+
+        return 0L;
     }
 
     private List<CharacterSaveData> GetAvailableMaterials()
@@ -236,7 +369,11 @@ public class HunterInfoUi : UiBase
     private int CompareMaterialSpec(CharacterSaveData a, CharacterSaveData b)
     {
         int rankComparison = a.Rank.CompareTo(b.Rank);
-        if (rankComparison != 0) return rankComparison;
+
+        if (rankComparison != 0)
+        {
+            return rankComparison;
+        }
 
         return a.Exp.CompareTo(b.Exp);
     }
@@ -251,7 +388,11 @@ public class HunterInfoUi : UiBase
         int maxLevel = GetMaxLevel(_characterData.Rarity, _characterSaveData.Rank);
 
         _currentLevel = 1 + (int)(_characterSaveData.Exp / _levelUpExp);
-        if (_currentLevel > maxLevel) _currentLevel = maxLevel;
+
+        if (_currentLevel > maxLevel)
+        {
+            _currentLevel = maxLevel;
+        }
 
         SetText(_textLevel, $"{_currentLevel} / {maxLevel}");
         SetText(_textRank, $"{_characterSaveData.Rank} / 5");
@@ -259,6 +400,7 @@ public class HunterInfoUi : UiBase
         if (_characterSaveData.Rank >= 5)
         {
             SetText(_textEnhanceRequirement, "최대강화");
+            SetText(_textEnhanceGold, "MAX");
         }
 
         else
@@ -266,11 +408,15 @@ public class HunterInfoUi : UiBase
             int requiredDuplicates = _characterSaveData.Rank + 1;
             int ownedDuplicates = GetOwnedDuplicatesCount();
             SetText(_textEnhanceRequirement, $"{ownedDuplicates} / {requiredDuplicates}");
+
+            long enhanceGold = GetEnhanceGoldCost(_characterData.Rarity, _characterSaveData.Rank);
+            SetText(_textEnhanceGold, enhanceGold.ToString("N0"));
         }
 
         if (_currentLevel >= maxLevel)
         {
             SetText(_textLevelUpRequirement, "최대레벨");
+            SetText(_textLevelUpGold, "MAX");
         }
 
         else
@@ -278,6 +424,9 @@ public class HunterInfoUi : UiBase
             long ownedExp = SaveManager.Instance.CurrentSaveData.Exp;
             long requiredExp = _levelUpExp;
             SetText(_textLevelUpRequirement, $"{ownedExp} / {requiredExp}");
+
+            long levelUpGold = GetLevelUpGoldCost(_characterData.Rarity);
+            SetText(_textLevelUpGold, levelUpGold.ToString("N0"));
         }
     }
 
@@ -298,14 +447,26 @@ public class HunterInfoUi : UiBase
             return;
         }
 
+        long requiredGold = GetEnhanceGoldCost(_characterData.Rarity, _characterSaveData.Rank);
+        PlayerResourceViewModel resourceVM = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel();
+
+        if (resourceVM.Gold < requiredGold)
+        {
+            Debug.LogWarning($"골드가 부족합니다! (필요 골드: {requiredGold})");
+            return;
+        }
+
+
         List<CharacterSaveData> materialsToUse = availableMaterials.GetRange(0, required);
 
         long totalBonusExp = 0;
         bool hasHighRankMaterial = false;
 
-        foreach (var mat in materialsToUse)
+        for (int i = 0; i < materialsToUse.Count; i++)
         {
+            CharacterSaveData mat = materialsToUse[i];
             totalBonusExp += mat.Exp;
+
             if (mat.Rank > _characterSaveData.Rank)
             {
                 hasHighRankMaterial = true;
@@ -348,12 +509,30 @@ public class HunterInfoUi : UiBase
 
     private void ExecuteEnhance(List<CharacterSaveData> materialsToUse, long bonusExp)
     {
-        foreach (var mat in materialsToUse)
+        if (NetworkManager.Instance == null || NetworkManager.Instance.PlayerResourceService == null)
         {
+            Debug.LogError("[HunterInfoUi] PlayerResourceService가 없습니다.");
+            return;
+        }
+
+        long requiredGold = GetEnhanceGoldCost(_characterData.Rarity, _characterSaveData.Rank);
+        bool isGoldUsed = NetworkManager.Instance.PlayerResourceService.RequestUseGold(requiredGold);
+
+        if (isGoldUsed == false)
+        {
+            Debug.LogError("[HunterInfoUi] 골드 차감에 실패했습니다.");
+            return;
+        }
+
+        for (int i = 0; i < materialsToUse.Count; i++)
+        {
+            CharacterSaveData mat = materialsToUse[i];
             CharacterSaveData match = null;
 
-            foreach (var character in SaveManager.Instance.CurrentSaveData.OwnedCharacters)
+            for (int j = 0; j < SaveManager.Instance.CurrentSaveData.OwnedCharacters.Count; j++)
             {
+                CharacterSaveData character = SaveManager.Instance.CurrentSaveData.OwnedCharacters[j];
+
                 if (character.UniqueId == mat.UniqueId)
                 {
                     match = character;
@@ -365,11 +544,13 @@ public class HunterInfoUi : UiBase
             {
                 SaveManager.Instance.CurrentSaveData.OwnedCharacters.Remove(match);
             }
+
             SaveManager.Instance.CharacterDict.Remove(mat.UniqueId);
         }
 
         _characterSaveData.Rank++;
         _characterSaveData.Exp += bonusExp;
+
         int newMaxLevel = GetMaxLevel(_characterData.Rarity, _characterSaveData.Rank);
         long maxAllowableExp = (newMaxLevel - 1) * _levelUpExp;
 
@@ -381,8 +562,13 @@ public class HunterInfoUi : UiBase
 
         SaveManager.Instance.SaveCurrentData();
 
-        Debug.Log($"{_characterData.Name}이(가) {_characterSaveData.Rank}강으로 강화되었습니다! (이전된 경험치: {bonusExp})");
-        OnHunterStateChanged?.Invoke();
+        Debug.Log($"{_characterData.Name}이(가) {_characterSaveData.Rank}강으로 강화되었습니다! (소모 골드: {requiredGold})");
+
+        if (OnHunterStateChanged != null)
+        {
+            OnHunterStateChanged.Invoke();
+        }
+
         UpdateHunterInfo();
     }
 
@@ -403,6 +589,17 @@ public class HunterInfoUi : UiBase
             Debug.Log($"경험치가 부족합니다. (보유: {ownedExp} / 필요: {_levelUpExp})");
             return;
         }
+
+        long requiredGold = GetLevelUpGoldCost(_characterData.Rarity);
+        PlayerResourceViewModel resourceVM = NetworkManager.Instance.PlayerResourceService.GetPlayerResourceViewModel();
+
+        if (resourceVM.Gold < requiredGold)
+        {
+            Debug.LogWarning($"골드가 부족합니다! (필요 골드: {requiredGold})");
+            return;
+        }
+
+        bool isGoldUsed = NetworkManager.Instance.PlayerResourceService.RequestUseGold(requiredGold);
 
         NetworkManager.Instance.PlayerResourceService.RequestUseExp(_levelUpExp);
 

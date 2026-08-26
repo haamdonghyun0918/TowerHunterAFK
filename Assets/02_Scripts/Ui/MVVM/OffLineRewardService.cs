@@ -12,8 +12,30 @@ public class OffLineRewardService
 
     private const double MaxOfflineHours = 24.0;
 
+    private bool _isCalculated = false;
+    private bool _isClaimed = false;
+
     public bool CalculateOfflineReward()
     {
+        if (_isClaimed == true)
+        {
+            OfflineTime = TimeSpan.Zero;
+            RewardGold = 0;
+            RewardExp = 0;
+            RewardMagicStone = 0;
+            RewardEquipments.Clear();
+            return false;
+        }
+
+        if (_isCalculated == true)
+        {
+            if (OfflineTime.TotalSeconds <= 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
         if (SaveManager.Instance == null)
         {
             Debug.LogError("[OfflineRewardService] SaveManager.Instance가 null입니다.");
@@ -43,7 +65,7 @@ public class OffLineRewardService
             OfflineTime = TimeSpan.FromHours(MaxOfflineHours);
         }
 
-        if (OfflineTime.TotalMinutes < 1)
+        if (OfflineTime.TotalSeconds <= 0)
         {
             return false;
         }
@@ -57,8 +79,8 @@ public class OffLineRewardService
 
         double totalHours = OfflineTime.TotalHours;
 
-        RewardGold = (long)(maxStage * 500 * totalHours);
-        RewardExp = (long)(maxStage * 500 * totalHours);
+        RewardGold = (long)(maxStage * 300 * totalHours);
+        RewardExp = (long)(maxStage * 300 * totalHours);
         RewardMagicStone = (long)(maxStage * 10 * totalHours);
 
         int equipmentDropCount = (int)totalHours;
@@ -68,6 +90,7 @@ public class OffLineRewardService
             CalculateEquipmentDrops(maxStage, equipmentDropCount);
         }
 
+        _isCalculated = true;
         return true;
     }
 
@@ -103,13 +126,11 @@ public class OffLineRewardService
             t2Prob = 50;
             t3Prob = 30;
         }
-
         else if (maxStage >= 30)
         {
             t2Prob = 40;
             t3Prob = 10;
         }
-
         else if (maxStage >= 10)
         {
             t2Prob = 20;
@@ -125,12 +146,10 @@ public class OffLineRewardService
             {
                 targetTier = EquipmentTier.Epic;
             }
-
             else if (roll <= t3Prob + t2Prob)
             {
                 targetTier = EquipmentTier.Rare;
             }
-
             else
             {
                 targetTier = EquipmentTier.Normal;
@@ -156,6 +175,11 @@ public class OffLineRewardService
 
     public void ClaimRewards()
     {
+        if (_isClaimed == true)
+        {
+            return;
+        }
+
         if (NetworkManager.Instance == null)
         {
             Debug.LogError("[OfflineRewardService] NetworkManager.Instance가 null입니다.");
@@ -191,7 +215,10 @@ public class OffLineRewardService
 
             foreach (EquipmentData equip in RewardEquipments)
             {
-                equipUtils.AddEquipments(equip.Id);
+                if (equip != null)
+                {
+                    equipUtils.AddEquipments(equip.Id);
+                }
             }
         }
 
@@ -201,11 +228,15 @@ public class OffLineRewardService
             return;
         }
 
+        _isClaimed = true;
+
         SaveManager.Instance.SaveLogoutTime();
+        SaveManager.Instance.SaveCurrentData();
 
         RewardGold = 0;
         RewardExp = 0;
         RewardMagicStone = 0;
         RewardEquipments.Clear();
+        OfflineTime = TimeSpan.Zero;
     }
 }

@@ -15,6 +15,10 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     [SerializeField] private Image _hunterIcon;
     [SerializeField] private Image _progressRing;
 
+    [SerializeField] private GameObject _weaponCannes;
+    [SerializeField] private GameObject _armorCannes;
+    [SerializeField] private GameObject _accessoriesCannes;
+
     private string _uniqueId;
     private Action<string> _onClickSlot;
     private Action<string> _onLongPressSlot;
@@ -40,6 +44,9 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         _cts?.Cancel();
         _cts?.Dispose();
         _cts = new CancellationTokenSource();
+
+        BindEquipmentEvent();
+        UpdateEquipmentCannes();
 
         if (data != null)
         {
@@ -93,6 +100,95 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             _progressRing.fillAmount = 0f;
             _progressRing.gameObject.SetActive(false);
         }
+    }
+
+    private void BindEquipmentEvent()
+    {
+        if (NetworkManager.Instance == null)
+        {
+            Debug.LogError("[HunterSlot] NetworkManager.Instance가 없습니다.");
+            return;
+        }
+
+        if (NetworkManager.Instance.EquipmentService == null)
+        {
+            Debug.LogError("[HunterSlot] EquipmentService가 없습니다.");
+            return;
+        }
+
+        NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged -= OnHunterEquipmentChanged;
+        NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged += OnHunterEquipmentChanged;
+    }
+
+    private void UnbindEquipmentEvent()
+    {
+        if (NetworkManager.Instance != null)
+        {
+            if (NetworkManager.Instance.EquipmentService != null)
+            {
+                NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged -= OnHunterEquipmentChanged;
+            }
+        }
+    }
+
+    private void OnHunterEquipmentChanged(string changedHunterUid)
+    {
+        if (_uniqueId == changedHunterUid)
+        {
+            UpdateEquipmentCannes();
+        }
+    }
+
+    private void UpdateEquipmentCannes()
+    {
+        if (_weaponCannes == null)
+        {
+            Debug.LogError("[HunterSlot] _weaponCannes가 연결되지 않았습니다.");
+            return;
+        }
+
+        if (_armorCannes == null)
+        {
+            Debug.LogError("[HunterSlot] _armorCannes가 연결되지 않았습니다.");
+            return;
+        }
+
+        if (_accessoriesCannes == null)
+        {
+            Debug.LogError("[HunterSlot] _accessoriesCannes가 연결되지 않았습니다.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_uniqueId) == true)
+        {
+            _weaponCannes.SetActive(false);
+            _armorCannes.SetActive(false);
+            _accessoriesCannes.SetActive(false);
+            return;
+        }
+
+        if (SaveManager.Instance == null)
+        {
+            Debug.LogError("[HunterSlot] SaveManager.Instance가 없습니다.");
+            return;
+        }
+
+        CharacterSaveData mySaveData;
+        bool isExist = SaveManager.Instance.CharacterDict.TryGetValue(_uniqueId, out mySaveData);
+
+        if (isExist == false)
+        {
+            Debug.LogError($"[HunterSlot] 세이브 데이터에서 헌터를 찾을 수 없습니다. UID: {_uniqueId}");
+            return;
+        }
+
+        bool hasWeapon = string.IsNullOrEmpty(mySaveData.EquippedWeaponUid) == false;
+        bool hasArmor = string.IsNullOrEmpty(mySaveData.EquippedArmorUid) == false;
+        bool hasAccessory = string.IsNullOrEmpty(mySaveData.EquippedAccessoryUid) == false;
+
+        _weaponCannes.SetActive(hasWeapon);
+        _armorCannes.SetActive(hasArmor);
+        _accessoriesCannes.SetActive(hasAccessory);
     }
 
     private void UpdateSlotInfo(string uniqueId)
@@ -177,6 +273,8 @@ public class HunterSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         _cts?.Dispose();
         _longPressCts?.Cancel();
         _longPressCts?.Dispose();
+
+        UnbindEquipmentEvent();
     }
 
     public void OnPointerDown(PointerEventData eventData)

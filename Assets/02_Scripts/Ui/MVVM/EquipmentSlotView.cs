@@ -10,6 +10,7 @@ public class EquipmentSlotView : MonoBehaviour
     [SerializeField] private Image Image_EquipmentIcon;
     [SerializeField] private TMP_Text Text_EnhanceLevel;
     [SerializeField] private UiButton Button_Equipment;
+    [SerializeField] private GameObject _hunterCannes;
 
     private string _uniqueId;
     private Action<string> _onClickEquipment;
@@ -29,6 +30,9 @@ public class EquipmentSlotView : MonoBehaviour
         UpdateEnhanceLevel(viewModel.EnhanceLevel);
         BindButton();
         RequestLoadIcon(viewModel.IconAddress);
+
+        BindEquipmentEvent();
+        UpdateEquippedStatus();
     }
 
     private void UpdateEnhanceLevel(int enhanceLevel)
@@ -118,10 +122,81 @@ public class EquipmentSlotView : MonoBehaviour
         CancelIconLoad();
         HideIcon();
 
+        UnbindEquipmentEvent();
+
         if (Text_EnhanceLevel != null)
         {
             Text_EnhanceLevel.text = "";
         }
+
+        if (_hunterCannes != null)
+        {
+            _hunterCannes.SetActive(false);
+        }
+    }
+
+    private void BindEquipmentEvent()
+    {
+        if (NetworkManager.Instance == null)
+        {
+            Debug.LogError("[EquipmentSlotView] NetworkManager.Instance가 없습니다.");
+            return;
+        }
+
+        if (NetworkManager.Instance.EquipmentService == null)
+        {
+            Debug.LogError("[EquipmentSlotView] EquipmentService가 없습니다.");
+            return;
+        }
+
+        NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged -= OnCharacterEquipmentChanged;
+        NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged += OnCharacterEquipmentChanged;
+    }
+
+    private void UnbindEquipmentEvent()
+    {
+        if (NetworkManager.Instance != null)
+        {
+            if (NetworkManager.Instance.EquipmentService != null)
+            {
+                NetworkManager.Instance.EquipmentService.CharacterEquipmentChanged -= OnCharacterEquipmentChanged;
+            }
+        }
+    }
+
+    private void OnCharacterEquipmentChanged(string characterUniqueId)
+    {
+        UpdateEquippedStatus();
+    }
+
+    private void UpdateEquippedStatus()
+    {
+        if (_hunterCannes == null)
+        {
+            Debug.LogError("[EquipmentSlotView] Obj_EquippedMark가 연결되지 않았습니다.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_uniqueId) == true)
+        {
+            _hunterCannes.SetActive(false);
+            return;
+        }
+
+        if (NetworkManager.Instance == null)
+        {
+            Debug.LogError("[EquipmentSlotView] NetworkManager.Instance가 없습니다.");
+            return;
+        }
+
+        if (NetworkManager.Instance.EquipmentService == null)
+        {
+            Debug.LogError("[EquipmentSlotView] EquipmentService가 없습니다.");
+            return;
+        }
+
+        bool isEquipped = NetworkManager.Instance.EquipmentService.IsEquipmentEquipped(_uniqueId);
+        _hunterCannes.SetActive(isEquipped);
     }
 
     private void OnDisable()
@@ -132,6 +207,8 @@ public class EquipmentSlotView : MonoBehaviour
     private void OnDestroy()
     {
         CancelIconLoad();
+
+        UnbindEquipmentEvent();
 
         if (Button_Equipment != null)
         {
