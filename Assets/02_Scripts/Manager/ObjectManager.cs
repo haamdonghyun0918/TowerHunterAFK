@@ -15,6 +15,8 @@ public class ObjectManager : MonoBehaviour
     private Queue<MonsterParty> _monsterPartyPool = new Queue<MonsterParty>();
     private Dictionary<string, Queue<Monster>> _monsterPoolDictionary = new Dictionary<string, Queue<Monster>>();
 
+    private int _curStageNum;
+
     public static ObjectManager Instance { get; set; }
 
     private void Awake()
@@ -31,6 +33,9 @@ public class ObjectManager : MonoBehaviour
 
     public async UniTask SpawnEntities(int stage)
     {
+        StageService stageService = NetworkManager.Instance.StageService;
+        _curStageNum = stageService.CurrentStage;
+
         ClearCurrentEntities();
 
         Transform playerSpawnSpot = MapManager.Instance.GetPlayerSpawnSpot();
@@ -144,7 +149,7 @@ public class ObjectManager : MonoBehaviour
 
                     MonsterParty newMonsterParty = GetOrCreateMonsterParty(spot.position);
 
-                    string[] testMonsterIds = { "monster_Test_01", "monster_Test_02", "monster_Test_03" };
+                    string[] testMonsterIds = { "monster_FirstFloor_01", "monster_FirstFloor_02", "monster_FirstFloor_03" };
                     foreach (string monsterId in testMonsterIds)
                     {
                         await SpawnMonster(monsterId, newMonsterParty);
@@ -168,6 +173,9 @@ public class ObjectManager : MonoBehaviour
 
     public async UniTaskVoid SpawnBossRaidEntities(int bossNum)
     {
+        StageService stageService = NetworkManager.Instance.StageService;
+        _curStageNum = stageService.CurrentStage;
+
         Transform playerSpawnSpotForBoss = MapManager.Instance.GetPlayerSpawnSpotForBoss();
         Transform monsterSpawnSpotForBoss = MapManager.Instance.GetMonsterSpawnSpotForBoss();
 
@@ -261,7 +269,7 @@ public class ObjectManager : MonoBehaviour
         {
             Monster reuseMonster = pool.Dequeue();
             reuseMonster.gameObject.SetActive(true);
-            reuseMonster.InitMonster(data);
+            reuseMonster.InitMonster(data, _curStageNum);
             targetMonsterParty.AddMonster(reuseMonster);
             return;
         }
@@ -286,7 +294,7 @@ public class ObjectManager : MonoBehaviour
         {
             GameObject mobObj = Instantiate(prefabToSpawn);
             Monster newMonster = mobObj.GetComponent<Monster>();
-            newMonster.InitMonster(data);
+            newMonster.InitMonster(data, _curStageNum);
             newMonster._instanceId = monsterId;
             targetMonsterParty.AddMonster(newMonster);
         }
