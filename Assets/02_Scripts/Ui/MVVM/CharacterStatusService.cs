@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterStatusService
 {
-    private const int MaxPartyCount = 3;
+    private const int MaxPartyCount = 8;
 
     private readonly CharacterStatusViewModel[] _characterStatusViewModels = new CharacterStatusViewModel[MaxPartyCount];
     private readonly Character[] _characters = new Character[MaxPartyCount];
@@ -45,7 +45,7 @@ public class CharacterStatusService
         return _characterStatusViewModels;
     }
 
-    public void SetParty(PlayerPartyController playerParty)
+    public void SetParty(PlayerPartyControllerBase playerParty)
     {
         if (playerParty == null)
         {
@@ -55,6 +55,22 @@ public class CharacterStatusService
         }
 
         for(int i = 0; i < MaxPartyCount; i++)
+        {
+            Character character = playerParty.GetHunter(i);
+            SetCharacter(i, character);
+        }
+    }
+
+    public void SetBossParty(PlayerPartyControllerBase playerParty)
+    {
+        if (playerParty == null)
+        {
+            Debug.LogError("[CharacterStatusService] PlayerPartyController가 없습니다.");
+            ClearParty();
+            return;
+        }
+
+        for (int i = 3; i < MaxPartyCount; i++)
         {
             Character character = playerParty.GetHunter(i);
             SetCharacter(i, character);
