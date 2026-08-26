@@ -302,15 +302,4 @@ public class GachaSystem : MonoBehaviour
 
         _isHigherGacha = false;
     }
-
-
-    // 테스트용 치트 함수 ==============================================
-
-    private async void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            await UiManager.Instance.OpenUi<GachaUi>();
-        }
-    }
 }
