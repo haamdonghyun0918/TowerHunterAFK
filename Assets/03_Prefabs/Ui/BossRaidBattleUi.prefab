@@ -5121,7 +5121,7 @@ GameObject:
   - component: {fileID: 4923062059228889421}
   - component: {fileID: 6004294918611987994}
   m_Layer: 5
-  m_Name: BossRaidBattleUI
+  m_Name: BossRaidBattleUi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

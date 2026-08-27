@@ -1812,11 +1812,11 @@ MonoBehaviour:
   _buttonStart: {fileID: 4359001292989258538}
   _buttonClose: {fileID: 1171099089878460997}
   _bossRaidSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5308189847752283885}
+  - {fileID: 295272456348552064}
+  - {fileID: 1234891940096863586}
+  - {fileID: 4501992909449097763}
+  - {fileID: 8626521023151149680}
 --- !u!1 &7289467236628040251
 GameObject:
   m_ObjectHideFlags: 0
@@ -2661,6 +2661,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
+--- !u!114 &295272456348552064 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 753012895569515336, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
+  m_PrefabInstance: {fileID: 1038705891201341640}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7aa2ff88114c09438c34485f163c9b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HunterSlot
 --- !u!224 &8570221780787961474 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8684544046989297226, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
@@ -2763,6 +2774,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
+--- !u!114 &1234891940096863586 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 753012895569515336, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
+  m_PrefabInstance: {fileID: 1968084652476530218}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7aa2ff88114c09438c34485f163c9b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HunterSlot
 --- !u!224 &7193858685805082720 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8684544046989297226, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
@@ -2865,6 +2887,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
+--- !u!114 &4501992909449097763 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 753012895569515336, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
+  m_PrefabInstance: {fileID: 3749659624899338603}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7aa2ff88114c09438c34485f163c9b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HunterSlot
 --- !u!224 &5516000538392012577 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8684544046989297226, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
@@ -2972,6 +3005,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8684544046989297226, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
   m_PrefabInstance: {fileID: 4889017725083026853}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5308189847752283885 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 753012895569515336, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
+  m_PrefabInstance: {fileID: 4889017725083026853}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7aa2ff88114c09438c34485f163c9b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HunterSlot
 --- !u!1001 &9062564164041998648
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3074,3 +3118,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8684544046989297226, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
   m_PrefabInstance: {fileID: 9062564164041998648}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8626521023151149680 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 753012895569515336, guid: ea15af027cbf51d4cbad4b443e7e287e, type: 3}
+  m_PrefabInstance: {fileID: 9062564164041998648}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7aa2ff88114c09438c34485f163c9b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HunterSlot
