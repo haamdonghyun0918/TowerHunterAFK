@@ -7,9 +7,10 @@ using System.ComponentModel;
 public class PlayerInfo : MonoBehaviour
 {
     [Header("UI Elements")]
-    [SerializeField] private TextMeshProUGUI _textRank;
-    [SerializeField] private TextMeshProUGUI _textLevel;
+    [SerializeField] private TMP_Text _textRank;
+    [SerializeField] private TMP_Text _textLevel;
     [SerializeField] private Image _imageGuild;
+    [SerializeField] private TMP_Text _textGuildName;
 
     private StageViewModel _stageViewModel;
 
@@ -39,6 +40,7 @@ public class PlayerInfo : MonoBehaviour
             _stageViewModel = NetworkManager.Instance.StageService.GetStageViewModel();
             Bind();
         }
+
         else
         {
             Debug.LogWarning("[PlayerInfo] StageService를 찾을 수 없습니다.");
@@ -132,6 +134,11 @@ public class PlayerInfo : MonoBehaviour
             {
                 Debug.LogWarning($"[PlayerInfo] 어드레서블에서 이미지를 찾을 수 없습니다: {imageKey}");
             }
+        }
+
+        if (_textGuildName != null)
+        {
+            _textGuildName.text = saveData.GuildName;
         }
     }
 }
