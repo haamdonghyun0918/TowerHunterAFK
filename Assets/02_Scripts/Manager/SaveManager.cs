@@ -230,6 +230,13 @@ public class SaveManager : MonoBehaviour
         Debug.Log($"[SaveManager] 마지막 접속 시간 저장: {CurrentSaveData.LastLogoutTime}");
     }
 
+    public void SaveGuildName(string name)
+    {
+        CurrentSaveData.GuildName = name;
+        SaveToFile(CurrentSaveData);
+        Debug.Log($"[SaveManager] 플레이어 이름 저장 완료. 이름: {name}");
+    }
+
     public string GetLogoutTime()
     {
         return CurrentSaveData.LastLogoutTime;
