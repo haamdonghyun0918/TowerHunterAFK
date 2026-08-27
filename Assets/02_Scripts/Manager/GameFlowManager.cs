@@ -42,10 +42,22 @@ public class GameFlowManager : MonoBehaviour
         {
             await SaveManager.Instance.Init();
         }
+
         else
         {
             Debug.LogError("[GameFlowManager] SaveManager가 없습니다.");
             return;
+        }
+
+        if (string.IsNullOrEmpty(SaveManager.Instance.CurrentSaveData.GuildName))
+        {
+            Debug.Log("[GameFlowManager] 길드 이름이 없으므로 처음 앱 시작=> 오프닝씬 시작");
+
+            OpeningUi openingUi = await UiManager.Instance.OpenUi<OpeningUi>();
+
+            await openingUi.OpeningScene();
+
+            UiManager.Instance.CloseUi<OpeningUi>();
         }
 
         if (NetworkManager.Instance == null || NetworkManager.Instance.StageService == null || NetworkManager.Instance.PlayerResourceService == null)
@@ -78,6 +90,7 @@ public class GameFlowManager : MonoBehaviour
             MapManager.Instance.OnStageFailed += HandleStageFailed;
             await MapManager.Instance.Init();
         }
+
         else
         {
             Debug.LogError("[GameFlowManager] MapManager가 없습니다.");
