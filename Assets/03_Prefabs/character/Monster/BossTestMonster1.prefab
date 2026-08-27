@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossTestMonster1
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 48747752f9b3c254593bd4a5a0a5def6, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a23e05b5450e3de498ab960b085e5144, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -71,6 +75,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 48747752f9b3c254593bd4a5a0a5def6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5169491492074348131}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 48747752f9b3c254593bd4a5a0a5def6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5025017787262853426}
   m_SourcePrefab: {fileID: 100100000, guid: 48747752f9b3c254593bd4a5a0a5def6, type: 3}
 --- !u!95 &3724006977636928837 stripped
 Animator:
@@ -95,3 +102,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   _characterAnimator: {fileID: 3724006977636928837}
+--- !u!114 &-5025017787262853426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7927928422920981893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5d6efe2920a5d42804e4eb6d6f7bbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Skill
