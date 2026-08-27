@@ -76,6 +76,11 @@ public class BattleManager : MonoBehaviour
             }
         }
 
+        if (NetworkManager.Instance != null && NetworkManager.Instance.BossRaidService != null)
+        {
+            NetworkManager.Instance.BossRaidService.RequestCompleteBossRaid(false);
+        }
+
         MainUi.TriggerBossRaidEnd();
     }
 
@@ -363,20 +368,29 @@ public class BattleManager : MonoBehaviour
 
         if (_isBossBattleForceStopped == false)
         {
-            //bool isWin = false;
-
             if (playerParty.GetCurrentHunterCount() == 0)
             {
                 Debug.Log("보스 토벌 실패. 파티가 전멸했습니다.");
-                //isWin = true;
-                // [TODO] 방치형 스테이지 카메라로 복귀 또는 결과창 띄우기
+                if (NetworkManager.Instance != null)
+                {
+                    NetworkManager.Instance.BossRaidService.RequestCompleteBossRaid(true);
+                }
+
+                UiManager.Instance.CloseUi<BossRaidBattleUI>();
+                UiManager.Instance.OpenUi<MainUi>().Forget();
             }
             else if (enemyParty.GetCurrentMonsterCount() == 0)
             {
                 Debug.Log("보스 토벌 성공.");
-                //isWin = false;
-                // [TODO] 길드 등급업 처리 및 보상 지급
+                if (NetworkManager.Instance != null)
+                {
+                    NetworkManager.Instance.BossRaidService.RequestCompleteBossRaid(true);
+                }
+
+                UiManager.Instance.CloseUi<BossRaidBattleUI>();
+                UiManager.Instance.OpenUi<MainUi>().Forget();
             }
+
             EndBossBattle(playerParty, enemyParty);
         }
         else
