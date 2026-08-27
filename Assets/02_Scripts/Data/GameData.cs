@@ -50,6 +50,7 @@ public class MonsterData : GameDataBase
     public int BaseDef;
     public string PrefabPath;
     public bool IsBoss;
+    public string SkillId;
 }
 
 [System.Serializable]

@@ -97,7 +97,8 @@
     "BaseAtkSpeed": 15,
 	"BaseDef": 150,
 	"PrefabPath": "Boss1",
-	"IsBoss": true
+	"IsBoss": true,
+	"SkillId": "skill_Projectile_01"
   },
   {
     "Id": "monster_Boss_2",
@@ -107,7 +108,8 @@
     "BaseAtkSpeed": 20,
 	"BaseDef": 200,
 	"PrefabPath": "Boss2",
-	"IsBoss": true
+	"IsBoss": true,
+	"SkillId": "skill_Projectile_01"
   },
   {
     "Id": "monster_Boss_3",
@@ -117,7 +119,8 @@
     "BaseAtkSpeed": 27,
 	"BaseDef": 260,
 	"PrefabPath": "Boss3",
-	"IsBoss": true
+	"IsBoss": true,
+	"SkillId": "skill_Projectile_01"
   },
   {
     "Id": "monster_Boss_4",
@@ -127,7 +130,8 @@
     "BaseAtkSpeed": 35,
 	"BaseDef": 260,
 	"PrefabPath": "Boss4",
-	"IsBoss": true
+	"IsBoss": true,
+	"SkillId": "skill_Projectile_01"
   },
   {
     "Id": "monster_Boss_5",
@@ -137,7 +141,8 @@
     "BaseAtkSpeed": 30,
 	"BaseDef": 500,
 	"PrefabPath": "Boss5",
-	"IsBoss": true
+	"IsBoss": true,
+	"SkillId": "skill_Projectile_01"
   },
   {
     "Id": "monster_Boss_6",
@@ -147,6 +152,7 @@
     "BaseAtkSpeed": 40,
 	"BaseDef": 700,
 	"PrefabPath": "Boss6",
-	"IsBoss": true
+	"IsBoss": true,
+	"SkillId": "skill_Projectile_01"
   }
 ]
