@@ -166,7 +166,7 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    public async UniTaskVoid SpawnBossRaidEntities(int bossNum)
+    public async UniTaskVoid SpawnBossRaidEntities(string bossMonsterId)
     {
         Transform playerSpawnSpotForBoss = MapManager.Instance.GetPlayerSpawnSpotForBoss();
         Transform monsterSpawnSpotForBoss = MapManager.Instance.GetMonsterSpawnSpotForBoss();
@@ -177,39 +177,49 @@ public class ObjectManager : MonoBehaviour
             return;
         }
 
+        if (string.IsNullOrEmpty(bossMonsterId))
+        {
+            Debug.LogError("[ObjectManager] 생성할 보스 MonsterId가 없습니다.");
+            return;
+        }
+
         GameObject gObj_BossParty = Instantiate(Prefab_BossPlayerParty, playerSpawnSpotForBoss.position, Quaternion.identity);
         PlayerPartyControllerForBoss bossParty = gObj_BossParty.GetComponent<PlayerPartyControllerForBoss>();
 
+        if (bossParty == null)
+        {
+            Debug.LogError("[ObjectManager] PlayerPartyControllerForBoss가 없습니다.");
+            Destroy(gObj_BossParty);
+            return;
+        }
+
         string[] bossPartyUids = SaveManager.Instance.CurrentSaveData.BossRaidPartyUids;
+
         for (int i = 0; i < bossPartyUids.Length; i++)
         {
             string uid = bossPartyUids[i];
-            if (string.IsNullOrEmpty(uid) == false)
+
+            if (string.IsNullOrEmpty(uid) == false && SaveManager.Instance.CharacterDict.TryGetValue(uid, out CharacterSaveData charData))
             {
-                if (SaveManager.Instance.CharacterDict.TryGetValue(uid, out CharacterSaveData charData))
-                {
-                    await SpawnHunter(charData.BaseId, uid, bossParty);
-                }
+                await SpawnHunter(charData.BaseId, uid, bossParty);
             }
         }
 
-        if (_currentPlayerParty != null)
+        if (NetworkManager.Instance == null || NetworkManager.Instance.CharacterStatusService == null)
         {
-            if (NetworkManager.Instance == null || NetworkManager.Instance.CharacterStatusService == null)
-            {
-                Debug.LogError("[ObjectManager] CharacterStatusService가 없습니다.");
-            }
-            else
-            {
-                NetworkManager.Instance.CharacterStatusService.SetBossParty(_currentPlayerParty);
-            }
+            Debug.LogError("[ObjectManager] CharacterStatusService가 없습니다.");
+        }
+        else
+        {
+            NetworkManager.Instance.CharacterStatusService.SetBossParty(bossParty);
         }
 
         GameObject gObj_BossMonsterParty = Instantiate(Prefab_MonsterParty, monsterSpawnSpotForBoss.position, Quaternion.identity);
         MonsterParty bossMonsterParty = gObj_BossMonsterParty.GetComponent<MonsterParty>();
 
-        string currentBossId = $"monster_Boss_{bossNum}"; 
-        await SpawnMonster(currentBossId, bossMonsterParty);
+        await SpawnMonster(bossMonsterId, bossMonsterParty);
+
+        bossParty._isMovable = true;
     }
 
     private async UniTask<bool> SpawnHunter(string characterId, string characterUniqueId, PlayerPartyControllerBase targetParty)
