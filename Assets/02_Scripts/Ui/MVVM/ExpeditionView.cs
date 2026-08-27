@@ -18,7 +18,6 @@ public class ExpeditionView : MonoBehaviour
 
     [Header("Reward Setting")]
     [SerializeField] private TMP_Text _rewardGold;
-    [SerializeField] private TMP_Text _rewardDiamond;
     [SerializeField] private TMP_Text _rewardEquipment;
 
     [Header("Button & Time")]
@@ -209,11 +208,6 @@ public class ExpeditionView : MonoBehaviour
         if (_rewardGold)
         {
             _rewardGold.text = $"{data.RewardGold} Gold";
-        }
-        // 다이아몬드는 Json에 추가하고 연결할 것
-        if (_rewardDiamond)
-        {
-            _rewardDiamond.text = "0 Diamond";
         }
 
         if (_rewardEquipment)
