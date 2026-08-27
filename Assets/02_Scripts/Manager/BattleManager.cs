@@ -9,6 +9,7 @@ public class BattleManager : MonoBehaviour
     public static BattleManager Instance { get; private set; }
 
     public bool _isPaused = false;
+    public bool _isBossBattleForceStopped = false;
 
     private void Awake()
     {
@@ -25,13 +26,13 @@ public class BattleManager : MonoBehaviour
     private void OnEnable()
     {
         MainUi.OnBossRaidStart += PauseBattle;
-        MainUi.OnBossRaidEnd += PauseBattle;
+        MainUi.OnBossRaidEnd += ResumeBattle;
     }
 
     private void OnDisable()
     {
         MainUi.OnBossRaidStart -= PauseBattle;
-        MainUi.OnBossRaidEnd -= PauseBattle;
+        MainUi.OnBossRaidEnd -= ResumeBattle;
     }
 
     public void PauseBattle()
@@ -47,6 +48,35 @@ public class BattleManager : MonoBehaviour
     private bool CheckIsNotPaused()
     {
         return _isPaused == false;
+    }
+    
+    public void ForceStopBossBattle(PlayerPartyControllerForBoss playerParty, MonsterParty bossMonsterParty)
+    {
+        _isBossBattleForceStopped = true;
+
+        if (playerParty != null)
+        {
+            if (playerParty._isBattling == false)
+            {
+                Destroy(playerParty.gameObject);
+
+                if (bossMonsterParty != null)
+                {
+                    Destroy(bossMonsterParty.gameObject);
+                }
+            }
+            else
+            {
+                playerParty.gameObject.SetActive(false);
+
+                if (bossMonsterParty != null)
+                {
+                    bossMonsterParty.gameObject.SetActive(false);
+                }
+            }
+        }
+
+        MainUi.TriggerBossRaidEnd();
     }
 
     public void StartBattle(PlayerPartyControllerBase playerParty, GameObject monsterParty)
@@ -78,6 +108,7 @@ public class BattleManager : MonoBehaviour
         if (playerParty is PlayerPartyControllerForBoss bossParty)
         {
             Debug.Log("보스 전투 시작");
+            _isBossBattleForceStopped = false;
             BossBattleRoutine(bossParty, enemyParty).Forget();
         }
     }
@@ -210,7 +241,7 @@ public class BattleManager : MonoBehaviour
             Debug.Log("헌터 파티 승리!");
         }
 
-        EndBattle(playerParty, enemyParty.gameObject);
+        EndBattle(playerParty, enemyParty);
     }
 
     private async UniTaskVoid BossBattleRoutine(PlayerPartyControllerForBoss playerParty, MonsterParty enemyParty)
@@ -237,10 +268,25 @@ public class BattleManager : MonoBehaviour
 
         turnQueue.Sort(CompareActionOrder);
 
-        while ((playerParty.GetCurrentHunterCount() > 0) && (enemyParty.GetCurrentMonsterCount() > 0))
+        while ((_isBossBattleForceStopped == false) && (playerParty.GetCurrentHunterCount() > 0) && (enemyParty.GetCurrentMonsterCount() > 0))
         {
+            if (_isBossBattleForceStopped == true)
+            {
+                break;
+            }
+
             foreach (BattleCharacter curUnit in turnQueue)
             {
+                if (_isBossBattleForceStopped == true)
+                {
+                    break;
+                }
+
+                if ((curUnit == null) || (curUnit.gameObject == null))
+                {
+                    continue;
+                }
+
                 if (curUnit._isDead == true)
                 {
                     continue;
@@ -315,39 +361,54 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        //bool isWin = false;
-
-        if (playerParty.GetCurrentHunterCount() == 0)
+        if (_isBossBattleForceStopped == false)
         {
-            Debug.Log("보스 토벌 실패. 파티가 전멸했습니다.");
-            //isWin = true;
-            // [TODO] 방치형 스테이지 카메라로 복귀 또는 결과창 띄우기
+            //bool isWin = false;
+
+            if (playerParty.GetCurrentHunterCount() == 0)
+            {
+                Debug.Log("보스 토벌 실패. 파티가 전멸했습니다.");
+                //isWin = true;
+                // [TODO] 방치형 스테이지 카메라로 복귀 또는 결과창 띄우기
+            }
+            else if (enemyParty.GetCurrentMonsterCount() == 0)
+            {
+                Debug.Log("보스 토벌 성공.");
+                //isWin = false;
+                // [TODO] 길드 등급업 처리 및 보상 지급
+            }
+            EndBossBattle(playerParty, enemyParty);
         }
-        else if (enemyParty.GetCurrentMonsterCount() == 0)
+        else
         {
-            Debug.Log("보스 토벌 성공.");
-            //isWin = false;
-            // [TODO] 길드 등급업 처리 및 보상 지급
+            if (playerParty != null)
+            {
+                Destroy(playerParty.gameObject);
+            }
+            
+            if (enemyParty != null)
+            {
+                Destroy(enemyParty.gameObject);
+            }
         }
 
-        EndBossBattle(playerParty, enemyParty.gameObject);
-        MainUi.TriggerBossRaidEnd();
     }
     
-    public void EndBossBattle(PlayerPartyControllerForBoss playerParty, GameObject monsterParty)
+    public void EndBossBattle(PlayerPartyControllerForBoss playerParty, MonsterParty monsterParty)
     {
         Debug.Log("보스 전투 종료 로직 실행");
-        monsterParty.SetActive(false);
 
         if (monsterParty != null)
         {
-            Destroy(monsterParty);
+            Destroy(monsterParty.gameObject);
         }
 
         if (playerParty != null)
         {
             Destroy(playerParty.gameObject);
         }
+
+        MainUi.TriggerBossRaidEnd();
     }
 
     private int CompareActionOrder(BattleCharacter a, BattleCharacter b)
@@ -440,11 +501,13 @@ public class BattleManager : MonoBehaviour
         return lowestHpHunter;
     }
 
-    public void EndBattle(PlayerPartyController playerParty, GameObject monsterParty)
+    public void EndBattle(PlayerPartyController playerParty, MonsterParty monsterParty)
     {
         Debug.Log("전투 종료!");
-        monsterParty.SetActive(false);
+        monsterParty.gameObject.SetActive(false);
         playerParty._isBattling = false;
         playerParty._isMovable = true;
     }
+
+    
 }
