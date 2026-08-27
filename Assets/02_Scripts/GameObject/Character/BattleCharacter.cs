@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 using UnityEngine;
 
 public enum CharacterState
@@ -23,6 +24,8 @@ public class BattleCharacter : MonoBehaviour
 
     [Header("애니메이터")]
     [SerializeField] private Animator _characterAnimator;
+
+    private CancellationTokenSource _hitCancellationTokenSource;
 
     public int _characterAtkSpeed { get; protected set; }
     public bool _isDead { get; protected set; }
@@ -53,6 +56,9 @@ public class BattleCharacter : MonoBehaviour
 
         int currentDamage = ApplyDefenseDamage(damage);
 
+        _hitCancellationTokenSource?.Cancel();
+        _hitCancellationTokenSource = new CancellationTokenSource();
+
         ChangeState(CharacterState.Hit);
 
 
@@ -72,8 +78,16 @@ public class BattleCharacter : MonoBehaviour
 
         else
         {
-            await UniTask.Delay(500);
-            ChangeState(CharacterState.Idle);
+            try
+            {
+                await UniTask.Delay(500, cancellationToken: _hitCancellationTokenSource.Token);
+                ChangeState(CharacterState.Idle);
+            }
+
+            catch(OperationCanceledException)
+            {
+
+            }
         }
     }
 

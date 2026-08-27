@@ -8,15 +8,24 @@ public class Monster : BattleCharacter
     private MonsterData _monsterData;
     private string _monsterId;
     private bool _isBoss;
+    private Skill _skill;
 
     private void Awake()
     {
         this.gameObject.SetActive(true);
+
+        if (_skill == null)
+        {
+            _skill = GetComponent<Skill>();
+            if (_skill == null)
+            {
+                Debug.LogError($"[Monster] 스킬 컴포넌트를 가져오지 못했습니다.");
+            }
+        }
     }
 
     private void OnEnable()
     {
-
         //[TODO] Hud 생성, 오브젝트매니저에 캐릭터 등록(소통후)
         if (GameDataManager.Instance == null)
         {
@@ -40,7 +49,23 @@ public class Monster : BattleCharacter
         _monsterId = _monsterData.Id;
         _isBoss = _monsterData.IsBoss;
 
+        InitializeSkill();
         SetStatData(stageNum);
+    }
+
+    private void InitializeSkill()
+    {
+        if (_monsterData == null) return;
+        if (_monsterData.IsBoss == false) return;
+        string skillId = _monsterData.SkillId;
+
+        if (_skill == null)
+        {
+            Debug.LogError($"[Monster] 스킬 데이터를 불러오지 못했습니다.");
+            return;
+        }
+
+        _skill.InitializeSkill(skillId);
     }
 
     private void SetStatData(int stageNum)
@@ -78,8 +103,46 @@ public class Monster : BattleCharacter
         ChangeState(CharacterState.Idle);
     }
 
+    public async UniTask UseProjectileSkill(Character targetCharacter)
+    {
+        if (_monsterData == null) return;
+        if (_monsterData.IsBoss == false) return;
+
+        float skillDuration = GetSkillDuration();
+
+        ChangeState(CharacterState.SkillAttack);
+        var skillData = _skill.GetSkillData();
+
+        await UniTask.Delay(skillData.SkillDuration);
+
+        await _skill.UseProjectileSkillAsync(this.gameObject.transform, targetCharacter, skillDuration);
+        targetCharacter.TakeDamage(GetCurrentDamage()).Forget();
+
+
+        await UniTask.Delay(1050);
+
+        await _skill.UseProjectileSkillAsync(this.gameObject.transform, targetCharacter, skillDuration);
+        targetCharacter.TakeDamage(GetCurrentDamage()).Forget();
+
+        await UniTask.Delay(1800);
+    }
+
+    private int GetCurrentDamage()
+    {
+        int currentDamage = _monsterData.BaseAtk + _skill.GetSkillDamage();
+        return currentDamage;
+    }
+
     public bool GetIsMonsterBoss()
     {
         return _isBoss;
+    }
+
+    private int GetSkillDuration()
+    {
+        string skillId = _monsterData.SkillId;
+        var skillData = GameDataManager.Instance.GetData<SkillData>(skillId);
+        int skillDuration = skillData.SkillDuration;
+        return skillDuration;
     }
 }
