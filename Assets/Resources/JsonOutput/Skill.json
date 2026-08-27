@@ -158,5 +158,15 @@
 	"PrefabPath": "ElectricStrike",
 	"SkillDuration": 3000,
 	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_Projectile_01",
+    "Name": "투사체스킬_블루",
+    "RequiredCost": 2,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget",
+	"PrefabPath": "ProjectileCometBlue",
+	"SkillDuration": 2000,
+	"MotionDuration": 1400
   }
 ]
