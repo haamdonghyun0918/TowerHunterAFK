@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 48747752f9b3c254593bd4a5a0a5def6, type: 3}
       propertyPath: m_Name
-      value: BossTestMonster1
+      value: BossMonster1
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 48747752f9b3c254593bd4a5a0a5def6, type: 3}
       propertyPath: m_Controller

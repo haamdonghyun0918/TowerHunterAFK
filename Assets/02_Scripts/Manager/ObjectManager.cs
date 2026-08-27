@@ -235,7 +235,10 @@ public class ObjectManager : MonoBehaviour
             string bossName = bossData != null ? bossData.Name : "보스 몬스터";
 
             bossRaidBattleUI.Init(bossParty, bossMonsterParty, bossName);
+            bossParty._isMovable = true;
         }
+
+        UiManager.Instance.CloseUi<MainUi>();   
     }
 
     private async UniTask<bool> SpawnHunter(string characterId, string characterUniqueId, PlayerPartyControllerBase targetParty)

@@ -93,10 +93,60 @@
     "Id": "monster_Boss_1",
     "Name": "고블린 보스",
     "BaseAtk": 100,
-    "BaseHp": 2000,
+    "BaseHp": 20000,
     "BaseAtkSpeed": 15,
 	"BaseDef": 150,
-	"PrefabPath": "GoblinBoss",
+	"PrefabPath": "Boss1",
+	"IsBoss": true
+  },
+  {
+    "Id": "monster_Boss_2",
+    "Name": "오크 보스",
+    "BaseAtk": 180,
+    "BaseHp": 30000,
+    "BaseAtkSpeed": 20,
+	"BaseDef": 200,
+	"PrefabPath": "Boss2",
+	"IsBoss": true
+  },
+  {
+    "Id": "monster_Boss_3",
+    "Name": "라이칸슬로프 보스",
+    "BaseAtk": 210,
+    "BaseHp": 60000,
+    "BaseAtkSpeed": 27,
+	"BaseDef": 260,
+	"PrefabPath": "Boss3",
+	"IsBoss": true
+  },
+  {
+    "Id": "monster_Boss_4",
+    "Name": "스켈레톤 보스",
+    "BaseAtk": 300,
+    "BaseHp": 80000,
+    "BaseAtkSpeed": 35,
+	"BaseDef": 260,
+	"PrefabPath": "Boss4",
+	"IsBoss": true
+  },
+  {
+    "Id": "monster_Boss_5",
+    "Name": "스톤골렘 보스",
+    "BaseAtk": 400,
+    "BaseHp": 100000,
+    "BaseAtkSpeed": 30,
+	"BaseDef": 500,
+	"PrefabPath": "Boss5",
+	"IsBoss": true
+  },
+  {
+    "Id": "monster_Boss_6",
+    "Name": "데스나이트",
+    "BaseAtk": 600,
+    "BaseHp": 200000,
+    "BaseAtkSpeed": 40,
+	"BaseDef": 700,
+	"PrefabPath": "Boss6",
 	"IsBoss": true
   }
 ]
