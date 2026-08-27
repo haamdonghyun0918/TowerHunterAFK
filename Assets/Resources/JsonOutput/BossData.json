@@ -1,0 +1,8 @@
+[
+  {
+    "Id": "Boss_1",
+    "MonsterId": "monster_Boss_1",
+    "LimitLevel": 10,
+    "RewardDiamond": 100
+  }
+]
