@@ -112,3 +112,11 @@ public class EquipmentData: GameDataBase
     public string IconAddress;
     public int Price;
 }
+
+[System.Serializable]
+public class BossData: GameDataBase
+{
+    public string MonsterId;
+    public int LimitLevel;
+    public uint RewardDiamond;
+}
