@@ -96,13 +96,17 @@ public class MainUi : UiBase
 
     private async void OpenBossRaidUi()
     {
-        //await UiManager.Instance.OpenUI<BossRaidUi>();
-        OnBossRaidStart?.Invoke();
+        await UiManager.Instance.OpenUi<BossRaidUI>();
     }
 
     private async void OpenOffLineRewardUi()
     {
         await UiManager.Instance.OpenUi<OffLineRewardUi>();
+    }
+
+    public static void TriggerBossRaidStart()
+    {
+        OnBossRaidStart?.Invoke();
     }
 
     public static void TriggerBossRaidEnd()

@@ -99,9 +99,23 @@ public class MapManager : MonoBehaviour
 
         LoadMapSpriteForBoss(_mapAddressableKeyForBoss).Forget();
 
+        if (NetworkManager.Instance == null || NetworkManager.Instance.BossRaidService == null)
+        {
+            Debug.LogError("[MapManager] BossRaidService가 없습니다.");
+            return;
+        }
+
+        string bossMonsterId = NetworkManager.Instance.BossRaidService.GetSelectedBossMonsterId();
+
+        if (string.IsNullOrEmpty(bossMonsterId))
+        {
+            Debug.LogError("[MapManager] 선택된 보스의 MonsterId가 없습니다.");
+            return;
+        }
+
         if (ObjectManager.Instance != null)
         {
-            ObjectManager.Instance.SpawnBossRaidEntities(1).Forget();
+            ObjectManager.Instance.SpawnBossRaidEntities(bossMonsterId).Forget();
         }
     }
 
@@ -114,6 +128,11 @@ public class MapManager : MonoBehaviour
             {
                 mainParty.SetCameraActive(true);
             }
+        }
+
+        if (NetworkManager.Instance != null && NetworkManager.Instance.CharacterStatusService != null)
+        {
+            NetworkManager.Instance.CharacterStatusService.ClearBossParty();
         }
     }
 
@@ -194,9 +213,9 @@ public class MapManager : MonoBehaviour
 
     private async UniTask LoadMapSpriteForBoss(string mapKey)
     {
-        if (_mapBackGround == null)
+        if (_mapBackGroundForBoss == null)
         {
-            Debug.LogError("[MapManager]: 맵 배경 SpriteRenderer가 연결되지 않았습니다.");
+            Debug.LogError("[MapManager]: 보스 맵 배경 SpriteRenderer가 연결되지 않았습니다.");
             return;
         }
 

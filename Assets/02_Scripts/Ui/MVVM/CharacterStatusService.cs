@@ -6,6 +6,9 @@ public class CharacterStatusService
 {
     private const int MaxPartyCount = 8;
 
+    private const int BossPartyStartIndex = 3;
+    private const int BossPartyCount = 5;
+
     private readonly CharacterStatusViewModel[] _characterStatusViewModels = new CharacterStatusViewModel[MaxPartyCount];
     private readonly Character[] _characters = new Character[MaxPartyCount];
     private readonly Action<int, int>[] _hpChangedCallbacks = new Action<int, int>[MaxPartyCount];
@@ -70,12 +73,22 @@ public class CharacterStatusService
             return;
         }
 
-        for (int i = 3; i < MaxPartyCount; i++)
+        for (int bossPartyIndex = 0; bossPartyIndex < BossPartyCount; bossPartyIndex++)
         {
-            Character character = playerParty.GetHunter(i);
-            SetCharacter(i, character);
+            int statusSlotIndex = BossPartyStartIndex + bossPartyIndex;
+            Character character = playerParty.GetHunter(bossPartyIndex);
+            SetCharacter(statusSlotIndex, character);
         }
     }
+
+    public void ClearBossParty()
+    {
+        for (int i = BossPartyStartIndex; i < MaxPartyCount; i++)
+        {
+            RemoveCharacter(i);
+        }
+    }
+
 
     public void ClearParty()
     {
