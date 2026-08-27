@@ -218,6 +218,16 @@ public class ObjectManager : MonoBehaviour
 
         string currentBossId = $"monster_Boss_{bossNum}"; 
         await SpawnMonster(currentBossId, bossMonsterParty);
+
+        BossRaidBattleUI bossRaidBattleUI = await UiManager.Instance.OpenUi<BossRaidBattleUI>(); 
+
+        if (bossRaidBattleUI != null)
+        {
+            var bossData = GameDataManager.Instance.GetData<MonsterData>(currentBossId);
+            string bossName = bossData != null ? bossData.Name : "보스 몬스터";
+
+            bossRaidBattleUI.Init(bossParty, bossMonsterParty, bossName);
+        }
     }
 
     private async UniTask<bool> SpawnHunter(string characterId, string characterUniqueId, PlayerPartyControllerBase targetParty)
@@ -368,4 +378,5 @@ public class ObjectManager : MonoBehaviour
         return _currentPlayerParty;
     }
 
+    
 }
