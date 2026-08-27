@@ -225,14 +225,13 @@ public class ObjectManager : MonoBehaviour
         GameObject gObj_BossMonsterParty = Instantiate(Prefab_MonsterParty, monsterSpawnSpotForBoss.position, Quaternion.identity);
         MonsterParty bossMonsterParty = gObj_BossMonsterParty.GetComponent<MonsterParty>();
 
-        string currentBossId = $"monster_Boss_{bossNum}"; 
-        await SpawnMonster(currentBossId, bossMonsterParty);
+        await SpawnMonster(bossMonsterId, bossMonsterParty);
 
         BossRaidBattleUI bossRaidBattleUI = await UiManager.Instance.OpenUi<BossRaidBattleUI>(); 
 
         if (bossRaidBattleUI != null)
         {
-            var bossData = GameDataManager.Instance.GetData<MonsterData>(currentBossId);
+            var bossData = GameDataManager.Instance.GetData<MonsterData>(bossMonsterId);
             string bossName = bossData != null ? bossData.Name : "보스 몬스터";
 
             bossRaidBattleUI.Init(bossParty, bossMonsterParty, bossName);
