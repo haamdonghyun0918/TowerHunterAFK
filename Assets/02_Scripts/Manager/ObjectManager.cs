@@ -15,6 +15,8 @@ public class ObjectManager : MonoBehaviour
     private Queue<MonsterParty> _monsterPartyPool = new Queue<MonsterParty>();
     private Dictionary<string, Queue<Monster>> _monsterPoolDictionary = new Dictionary<string, Queue<Monster>>();
 
+    private List<string> _normalMonsterIdList = new List<string>();
+
     private int _curStageNum;
 
     public static ObjectManager Instance { get; set; }
@@ -106,7 +108,6 @@ public class ObjectManager : MonoBehaviour
                 _currentPlayerParty.MakeFullHPAllHunters();
             }
 
-            //추가
             if (_currentPlayerParty != null)
             {
                 if (NetworkManager.Instance == null || NetworkManager.Instance.CharacterStatusService == null)
@@ -118,7 +119,6 @@ public class ObjectManager : MonoBehaviour
                     NetworkManager.Instance.CharacterStatusService.SetParty(_currentPlayerParty);
                 }
             }
-            //끝
         }
 
         int maxCleared = 0;
@@ -126,6 +126,7 @@ public class ObjectManager : MonoBehaviour
         {
             maxCleared = NetworkManager.Instance.StageService.MaxClearedStage;
         }
+
         bool isRestArea = (stage % 10 == 0) && (maxCleared >= stage);
 
         if (isRestArea)
@@ -137,7 +138,8 @@ public class ObjectManager : MonoBehaviour
         }
         else
         {
-            //[TODO] : 나중에는 Stage 숫자를 기반으로 맵 데이터에서 등장 몬스터 Id를 가져오거나 할 것.
+            InitNormalMonsterList();
+
             if ((Prefab_MonsterParty != null) && (monsterSpawnSpots != null))
             {
                 foreach (Transform spot in monsterSpawnSpots)
@@ -149,10 +151,14 @@ public class ObjectManager : MonoBehaviour
 
                     MonsterParty newMonsterParty = GetOrCreateMonsterParty(spot.position);
 
-                    string[] testMonsterIds = { "monster_FirstFloor_01", "monster_FirstFloor_02", "monster_FirstFloor_03" };
-                    foreach (string monsterId in testMonsterIds)
+                    if (_normalMonsterIdList.Count > 0)
                     {
-                        await SpawnMonster(monsterId, newMonsterParty);
+                        for (int i = 0; i < 3; i++)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, _normalMonsterIdList.Count);
+                            string randomMonsterId = _normalMonsterIdList[randomIndex];
+                            await SpawnMonster(randomMonsterId, newMonsterParty);
+                        }
                     }
 
                     _monsterPartyList.Add(newMonsterParty);
@@ -389,5 +395,27 @@ public class ObjectManager : MonoBehaviour
         return _currentPlayerParty;
     }
 
+    private void InitNormalMonsterList()
+    {
+        if (_normalMonsterIdList.Count > 0)
+        {
+            return;
+        }
+
+        List<MonsterData> allMonsters = GameDataManager.Instance.GetAllData<MonsterData>();
+
+        if (allMonsters == null)
+        {
+            return;
+        }
+
+        foreach (var monster in allMonsters)
+        {
+            if (monster.IsBoss == false)
+            {
+                _normalMonsterIdList.Add(monster.Id);
+            }
+        }
+    }
     
 }
