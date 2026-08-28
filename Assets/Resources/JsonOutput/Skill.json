@@ -192,11 +192,31 @@
   {
     "Id": "skill_MagicSparks_01",
     "Name": "보스_스킬_매직스파크",
-    "RequiredCost": 0,
+    "RequiredCost": 2,
     "SkillDamage": 20,
     "SkillType": "SingleTarget",
 	"PrefabPath": "MagicSparks",
 	"SkillDuration": 1500,
 	"MotionDuration": 300
+  },
+  {
+    "Id": "skill_WindCircle_01",
+    "Name": "보스_스킬_윈드서클",
+    "RequiredCost": 2,
+    "SkillDamage": 20,
+    "SkillType": "SingleTarget",
+	"PrefabPath": "WindCircle",
+	"SkillDuration": 5000,
+	"MotionDuration": 1000
+  },
+  {
+    "Id": "skill_BuffSkill_01",
+    "Name": "보스_스킬_버프",
+    "RequiredCost": 1,
+    "SkillDamage": 20,
+    "SkillType": "SelfTarget",
+	"PrefabPath": "BuffSkill",
+	"SkillDuration": 3000,
+	"MotionDuration": 0
   }
 ]
