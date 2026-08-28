@@ -18,6 +18,7 @@ public class BossRaidUI : UiBase
 
     [Header("Reward")]
     [SerializeField] private TMP_Text _rewardDiamond;
+    [SerializeField] private TMP_Text _rewardRank;
 
     [Header("Buttons")]
     [SerializeField] private UiButton _buttonStart;
@@ -153,6 +154,7 @@ public class BossRaidUI : UiBase
             if (_infoHp != null) _infoHp.text = "-";
             if (_infoLimitLevel != null) _infoLimitLevel.text = "-";
             if (_rewardDiamond != null) _rewardDiamond.text = "-";
+            if (_rewardRank != null) _rewardRank.text = "-";
             return;
         }
 
@@ -176,6 +178,19 @@ public class BossRaidUI : UiBase
         if (_rewardDiamond != null)
         {
             _rewardDiamond.text = $"{bossData.RewardDiamond:N0} Diamond";
+        }
+
+        if(_rewardRank != null)
+        {
+            if(bossData.RewardRank == GuildRank.None)
+            {
+                _rewardRank.text = "등급 보상 없음";
+            }
+
+            else
+            {
+                _rewardRank.text = $"{bossData.RewardRank} 등급 승급";
+            }
         }
     }
 
