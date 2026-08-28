@@ -29,7 +29,7 @@ public class BossRaidBattleUI : UiBase
 
     private void BindButton()
     {
-        Button_ExitBossRaid.onClick.AddListener(OnClick_RxitBossRaidButton);
+        Button_ExitBossRaid.onClick.AddListener(OnClick_ExitBossRaidButton);
     }
 
     private void UnBindButton()
@@ -57,7 +57,7 @@ public class BossRaidBattleUI : UiBase
         Slider_BossHP.value = currentHp;
     }
 
-    public void OnClick_RxitBossRaidButton()
+    public void OnClick_ExitBossRaidButton()
     {
         if (BattleManager.Instance != null)
         {

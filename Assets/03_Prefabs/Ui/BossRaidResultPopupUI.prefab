@@ -222,7 +222,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6073898533826314783}
   m_Layer: 5
-  m_Name: Layout_Result
+  m_Name: Layout_Desc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -283,8 +283,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0009765625, y: 0.0016479492}
-  m_SizeDelta: {x: 1268.3, y: 219.3366}
+  m_AnchoredPosition: {x: 0, y: 8.9047}
+  m_SizeDelta: {x: 1109.4209, y: 258.8027}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6474022125112572344
 CanvasRenderer:
@@ -515,6 +515,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 590959422258741301}
+  - component: {fileID: 3214058578275947228}
   m_Layer: 5
   m_Name: BossRaidResultPopupUI
   m_TagString: Untagged
@@ -545,6 +546,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 33.618286}
   m_SizeDelta: {x: 1392.437, y: 605.5196}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3214058578275947228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5810551813262691641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b38fd1e5b2fa9a44988859cd84ed2586, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaidResultPopupUI
+  Text_RaidResult: {fileID: 3140184835464921582}
+  Text_Desc: {fileID: 3481296944460761840}
 --- !u!1 &7052052789134527010
 GameObject:
   m_ObjectHideFlags: 0

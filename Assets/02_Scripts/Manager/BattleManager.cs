@@ -368,6 +368,16 @@ public class BattleManager : MonoBehaviour
 
         if (_isBossBattleForceStopped == false)
         {
+            uint rewardDiamond = 0;
+            if (NetworkManager.Instance != null && NetworkManager.Instance.BossRaidService != null)
+            {
+                var selectedBoss = NetworkManager.Instance.BossRaidService.GetBossRaidViewModel().SelectedBoss;
+                if (selectedBoss != null)
+                {
+                    rewardDiamond = selectedBoss.RewardDiamond;
+                }
+            }
+
             if (playerParty.GetCurrentHunterCount() == 0)
             {
                 Debug.Log("보스 토벌 실패. 파티가 전멸했습니다.");
@@ -378,6 +388,12 @@ public class BattleManager : MonoBehaviour
 
                 UiManager.Instance.CloseUi<BossRaidBattleUI>();
                 UiManager.Instance.OpenUi<MainUi>().Forget();
+
+                var resultPopup = await UiManager.Instance.OpenUi<BossRaidResultPopupUI>();
+                if (resultPopup != null) 
+                {
+                    resultPopup.Init(false, 0);
+                }
             }
             else if (enemyParty.GetCurrentMonsterCount() == 0)
             {
@@ -389,6 +405,12 @@ public class BattleManager : MonoBehaviour
 
                 UiManager.Instance.CloseUi<BossRaidBattleUI>();
                 UiManager.Instance.OpenUi<MainUi>().Forget();
+
+                var resultPopup = await UiManager.Instance.OpenUi<BossRaidResultPopupUI>();
+                if (resultPopup != null)
+                {
+                    resultPopup.Init(true, rewardDiamond);
+                }
             }
 
             EndBossBattle(playerParty, enemyParty);
