@@ -178,5 +178,25 @@
 	"PrefabPath": "LightningSpark",
 	"SkillDuration": 2500,
 	"MotionDuration": 1700
+  },
+  {
+    "Id": "skill_LightningRain_01",
+    "Name": "보스_스킬_라이트닝레인",
+    "RequiredCost": 2,
+    "SkillDamage": 20,
+    "SkillType": "SingleTarget",
+	"PrefabPath": "LightningRain",
+	"SkillDuration": 2000,
+	"MotionDuration": 0
+  },
+  {
+    "Id": "skill_MagicSparks_01",
+    "Name": "보스_스킬_매직스파크",
+    "RequiredCost": 0,
+    "SkillDamage": 20,
+    "SkillType": "SingleTarget",
+	"PrefabPath": "MagicSparks",
+	"SkillDuration": 1500,
+	"MotionDuration": 300
   }
 ]

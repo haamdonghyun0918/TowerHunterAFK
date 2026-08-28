@@ -104,10 +104,10 @@ public class Monster : BattleCharacter
         {
             if (_monsterData.SkillType == "Projectile")
             {
-                UseProjectileSkill(targetCharacter).Forget();
+                await UseProjectileSkill(targetCharacter);
                     return;
             }
-            UseSkill(targetCharacter, null).Forget();
+            await UseSkill(targetCharacter, null);
             return;
         }
 
@@ -148,7 +148,7 @@ public class Monster : BattleCharacter
             {
                 if (playerParty != null)
                 {
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < playerParty.GetCurrentHunterCount(); i++)
                     {
                         var targetCharacterInParty = playerParty.GetHunter(i);
 
@@ -168,8 +168,8 @@ public class Monster : BattleCharacter
                     Debug.Log($"[스킬공격] 타겟{targetCharacter.name}에게 {currentDamage} 데미지를 줍니다.");
                 }
             }
+            ChangeState(CharacterState.Idle);
         }
-        CheckSkillUseable();
         InvokeCostChangedEvent();
     }
 

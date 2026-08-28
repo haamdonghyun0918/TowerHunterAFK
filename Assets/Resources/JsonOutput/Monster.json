@@ -98,7 +98,7 @@
 	"BaseDef": 150,
 	"PrefabPath": "Boss1",
 	"IsBoss": true,
-	"SkillId": "skill_Projectile_01"
+	"SkillId": "skill_MagicSparks_01"
   },
   {
     "Id": "monster_Boss_2",
@@ -131,7 +131,7 @@
 	"BaseDef": 260,
 	"PrefabPath": "Boss4",
 	"IsBoss": true,
-	"SkillId": "skill_Projectile_01"
+	"SkillId": "skill_LightningRain_01"
   },
   {
     "Id": "monster_Boss_5",
