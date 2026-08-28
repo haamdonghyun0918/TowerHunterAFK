@@ -1,0 +1,21 @@
+# 유니티 자동 생성 파일들을 통계에서 제외 (linguist-generated=true)
+*.mat linguist-generated=true
+*.anim linguist-generated=true
+*.unity linguist-generated=true
+*.prefab linguist-generated=true
+*.asset linguist-generated=true
+*.meta linguist-generated=true
+*.controller linguist-generated=true
+*.physicsMaterial2D linguist-generated=true
+*.physicsMaterial linguist-generated=true
+
+# Wolfram Language 등으로 오해받는 플러그인/설정 파일 통계 제외
+*.m linguist-generated=true
+*.wl linguist-generated=true
+*.wls linguist-generated=true
+
+# C#과 셰이더 파일만 프로젝트의 주 언어로 인식하도록 설정
+*.cs linguist-detectable=true
+*.shader linguist-detectable=true
+*.cginc linguist-detectable=true
+*.compute linguist-detectable=true
