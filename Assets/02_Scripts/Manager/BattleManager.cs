@@ -105,7 +105,6 @@ public class BattleManager : MonoBehaviour
                 {
                     character.ChangeState(CharacterState.Idle);
                 }
-
             }
             AutoBattleRoutine(normalParty, enemyParty).Forget();
         }
@@ -354,7 +353,7 @@ public class BattleManager : MonoBehaviour
                         continue;
                     }
 
-                    await monster.AtkTarget(target);
+                    await monster.AtkTarget(target, playerParty);
                     await UniTask.Delay(300);
 
                     if (monster._isDead == false)

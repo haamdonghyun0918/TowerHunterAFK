@@ -103,7 +103,7 @@ public class Monster : BattleCharacter
 
     }
 
-    public async UniTask AtkTarget(Character targetCharacter)
+    public async UniTask AtkTarget(Character targetCharacter, PlayerPartyControllerForBoss playerParty = null)
     {
         if (targetCharacter._isDead == true) return;
 
@@ -115,7 +115,7 @@ public class Monster : BattleCharacter
                 UseSkillCost();
                 return;
             }
-            await UseSkill(targetCharacter, null);
+            await UseSkill(targetCharacter, playerParty);
             UseSkillCost();
             return;
         }
@@ -136,7 +136,7 @@ public class Monster : BattleCharacter
         CheckSkillUseable();
     }
 
-    private async UniTask UseSkill(Character targetCharacter, PlayerPartyController playerParty = null)
+    private async UniTask UseSkill(Character targetCharacter, PlayerPartyControllerBase playerParty = null)
     {
         SetSingleTargetTransform(targetCharacter);
 
@@ -250,8 +250,6 @@ public class Monster : BattleCharacter
         {
             _currentSkillCost = 2;
         }
-
-        Debug.LogError($"현재 스킬 코스트: {_currentSkillCost}");
     }
 
     private void InvokeCostChangedEvent()
