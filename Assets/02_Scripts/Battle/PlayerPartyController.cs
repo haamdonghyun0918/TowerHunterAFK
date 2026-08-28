@@ -44,6 +44,26 @@ public class PlayerPartyController : PlayerPartyControllerBase
         }
     }
 
+    public void SyncPartyHpToSaveData()
+    {
+        if (SaveManager.Instance == null) return;
+
+        foreach (var hunter in _hunters)
+        {
+            if (hunter != null)
+            {
+                string uid = hunter.GetCharacterUniqueId();
+                if (SaveManager.Instance.CharacterDict.TryGetValue(uid, out var saveData))
+                {
+                    saveData.CurrentHP = hunter._isDead ? 0 : hunter.GetCurrentHp();
+                }
+            }
+        }
+
+        SaveManager.Instance.SaveCurrentData(); 
+        Debug.Log("[PlayerPartyController] 다음 층 진입: 현재 파티의 체력을 저장했습니다.");
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("MonsterParty"))
@@ -57,6 +77,7 @@ public class PlayerPartyController : PlayerPartyControllerBase
         else if (other.CompareTag("ClearSpot"))
         {
             _isMovable = false;
+            SyncPartyHpToSaveData();
             MapManager.Instance.ClearedCurrentStage();
         }
     }

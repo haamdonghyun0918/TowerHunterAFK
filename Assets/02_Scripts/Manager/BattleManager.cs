@@ -522,6 +522,4 @@ public class BattleManager : MonoBehaviour
         playerParty._isBattling = false;
         playerParty._isMovable = true;
     }
-
-    
 }

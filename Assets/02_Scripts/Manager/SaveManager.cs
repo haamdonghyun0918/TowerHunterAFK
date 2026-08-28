@@ -241,4 +241,10 @@ public class SaveManager : MonoBehaviour
     {
         return CurrentSaveData.LastLogoutTime;
     }
+
+    private void OnApplicationQuit()
+    {
+        SaveCurrentData();
+        Debug.Log("[SaveManager] 게임 강제 종료 감지: 체력 등 현재 상태 자동 저장 완료");
+    }
 }
