@@ -206,6 +206,8 @@ public class Monster : BattleCharacter
 
     private void CheckSkillUseable()
     {
+        if (_isBoss == false) return;
+
         int requiredSkillCost = _skill.GetRequiredSkillCost();
 
         if (requiredSkillCost <= _currentSkillCost)
