@@ -215,6 +215,14 @@ public class Character : BattleCharacter
             ChangeState(CharacterState.SkillAttack);
             _skill.UseSkillAsync().Forget();
             await UniTask.Delay(GetSkillDuration());
+
+            //[방어코드1 추가]
+            if (this == null || this.gameObject == null || _isDead)
+            {
+                return;
+            }
+            //[방어코드1 끝]
+
             if (_skill.GetSkillType() == SkillType.SelfTarget)
             {
                 this.TakeDamage(currentDamage).Forget();
@@ -222,17 +230,30 @@ public class Character : BattleCharacter
             }
             else if (_skill.GetSkillType() == SkillType.MultiTarget || _skill.GetSkillType() == SkillType.MultiTarget_SelfSpawn)
             {
-                for (int i = 0; i < 3; i++)
+                //[방어코드2 추가]
+                if (monsterParty != null)
                 {
-                    var targetMonsterInParty = monsterParty.GetMonster(i);
-                    targetMonsterInParty.TakeDamage(currentDamage).Forget();
-                    Debug.Log($"[스킬공격] 타겟{targetMonsterInParty.name}에게 {currentDamage} 데미지를 줍니다.");
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var targetMonsterInParty = monsterParty.GetMonster(i);
+
+                        //[방어코드3 추가]
+                        if ((targetMonsterInParty != null) && (targetMonsterInParty._isDead == false))
+                        {
+                            targetMonsterInParty.TakeDamage(currentDamage).Forget();
+                            Debug.Log($"[스킬공격] 타겟{targetMonsterInParty.name}에게 {currentDamage} 데미지를 줍니다.");
+                        }
+                    }
                 }
             }
             else
             {
-                targetMonster.TakeDamage(currentDamage).Forget();
-                Debug.Log($"[스킬공격] 타겟{targetMonster.name}에게 {currentDamage} 데미지를 줍니다.");
+                //[방어코드 4 추가]
+                if ((targetMonster != null) && (targetMonster._isDead == false))
+                {
+                    targetMonster.TakeDamage(currentDamage).Forget();
+                    Debug.Log($"[스킬공격] 타겟{targetMonster.name}에게 {currentDamage} 데미지를 줍니다.");
+                }
             }
         }
         CheckSkillUseable();
@@ -282,10 +303,24 @@ public class Character : BattleCharacter
 
     private async UniTask UseNormalAttack(Monster targetMonster)
     {
+
+        if (this == null || this.gameObject == null || _isDead)
+        {
+            return;
+        }
+
         ChangeState(CharacterState.NormalAttack);
+
         var characterType = _characterData.CharacterType;
+
         await UniTask.Delay(GetNormalAttackMotionDuration(SetCharacterType(characterType)));
-        targetMonster.TakeDamage(_characterAtk).Forget();
+
+        if (targetMonster != null && targetMonster._isDead == false)
+        {
+            targetMonster.TakeDamage(_characterAtk).Forget();
+        }
+
+        await UniTask.Delay(200);
     }
 
     public void IncreaseCurrentSkillCost(int amount)
@@ -332,19 +367,19 @@ public class Character : BattleCharacter
                 }
             case NormalAttackType.Warrior:
                 {
-                    return 1000;
+                    return 800;
                 }
             case NormalAttackType.Wizard:
                 {
-                    return 1000;
+                    return 800;
                 }
             case NormalAttackType.Monk:
                 {
-                    return 1000;
+                    return 800;
                 }
             default:
                 {
-                    return 1000;
+                    return 800;
                 }
         }
     }

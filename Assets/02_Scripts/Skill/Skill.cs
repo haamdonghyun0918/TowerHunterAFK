@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -92,6 +93,11 @@ public class Skill : MonoBehaviour
         return _requiredSkillCost;
     }
 
+    public SkillData GetSkillData()
+    {
+        return _skillData;
+    }
+
     public async UniTaskVoid UseSkillAsync()
     {
         if (_skillData == null)
@@ -121,6 +127,36 @@ public class Skill : MonoBehaviour
         
     }
 
+    public async UniTask UseProjectileSkillAsync(Transform parentTransform, Character targetCharacter, float duration)
+    {
+        if (_skillData == null)
+        {
+            Debug.LogError($"[Skill] 스킬 데이터가 초기화 되지 않았습니다.");
+            return;
+        }
+
+        try
+        {
+            InstantiateAndShootSkill(_skillPrefabPath, parentTransform, duration).Forget();
+        }
+
+        catch (System.OperationCanceledException)
+        {
+
+        }
+
+    }
+
+    private async UniTask InstantiateAndShootSkill(string skillPrefabPath, Transform parentTransform, float duration)
+    {
+        GameObject instance = await InstantiateAsync(_skillPrefabPath, parentTransform);
+
+        if (instance != null)
+        {
+            _spawnedEffectInstances.Add(instance);
+        }
+    }
+
     private async UniTask<GameObject> InstantiateAsync(string prefabPath, Transform parentTransform = null)
     {
         AsyncOperationHandle<GameObject> handle = Addressables.InstantiateAsync(prefabPath, parentTransform);
@@ -145,6 +181,29 @@ public class Skill : MonoBehaviour
         }
     }
 
+    //private async UniTask<GameObject> InstantiateProjectileAsync(string prefabPath, Transform parentTransform = null, Transform targetTransform = null)
+    //{
+    //    AsyncOperationHandle<GameObject> handle = Addressables.InstantiateAsync(prefabPath, parentTransform);
+
+    //    try
+    //    {
+    //        GameObject instance = await handle.ToUniTask(cancellationToken: _actionCancellationTokenSource.Token);
+
+    //        return instance;
+    //    }
+
+    //    catch (System.Exception e)
+    //    {
+    //        Debug.LogError($"[Skill] 스킬 프리팹 생성 실패: {prefabPath} / 에러: {e.Message}");
+
+    //        if (handle.IsValid())
+    //        {
+    //            Addressables.Release(handle);
+    //        }
+
+    //        return null;
+    //    }
+    //}
     private void SetPrefabPath()
     {
         if (_skillData == null) return;

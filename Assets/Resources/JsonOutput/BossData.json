@@ -4,5 +4,35 @@
     "MonsterId": "monster_Boss_1",
     "LimitLevel": 10,
     "RewardDiamond": 100
+  },
+  {
+    "Id": "Boss_2",
+    "MonsterId": "monster_Boss_2",
+    "LimitLevel": 20,
+    "RewardDiamond": 200
+  },
+  {
+    "Id": "Boss_3",
+    "MonsterId": "monster_Boss_3",
+    "LimitLevel": 30,
+    "RewardDiamond": 300
+  },
+  {
+    "Id": "Boss_4",
+    "MonsterId": "monster_Boss_4",
+    "LimitLevel": 40,
+    "RewardDiamond": 400
+  },
+  {
+    "Id": "Boss_5",
+    "MonsterId": "monster_Boss_5",
+    "LimitLevel": 50,
+    "RewardDiamond": 500
+  },
+  {
+    "Id": "Boss_6",
+    "MonsterId": "monster_Boss_6",
+    "LimitLevel": 60,
+    "RewardDiamond": 600
   }
 ]
