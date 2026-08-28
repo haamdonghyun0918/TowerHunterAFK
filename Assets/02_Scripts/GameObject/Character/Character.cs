@@ -65,6 +65,12 @@ public class Character : BattleCharacter
             Debug.Log($"[Character] GameDataManager가 NULL입니다.");
         }
     }
+
+    private void OnDisable()
+    {
+        _skill.ClearAllSkillEffect();
+    }
+
     private void OnDestroy()
     {
         UnbindEquipmentChangedEvent(); 
@@ -507,30 +513,30 @@ public class Character : BattleCharacter
 
     // 테스트용 치트 함수 =======================================================
 
-        private void Update()   // 테스트용으로만 업데이트 사용
-        {
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                TestGetMaxSkillCost();
-            }
+        //private void Update()   // 테스트용으로만 업데이트 사용
+        //{
+        //    if (Input.GetKeyDown(KeyCode.C))
+        //    {
+        //        TestGetMaxSkillCost();
+        //    }
 
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                _characterLevelManager.AddExp(5000);
-                Debug.Log($"경험치 5000증가, 현재 경험치: {_characterLevelManager.GetCurrentExp()}");
-            }
+        //    if (Input.GetKeyDown(KeyCode.I))
+        //    {
+        //        _characterLevelManager.AddExp(5000);
+        //        Debug.Log($"경험치 5000증가, 현재 경험치: {_characterLevelManager.GetCurrentExp()}");
+        //    }
 
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                LevelUp();
-                Debug.Log($"[{_characterId}]\n현재레벨: {_characterLevel}\n현재경험치: {_characterCurrentExp}\n현재강화단계: {_characterEnhancement}");
-            }
+        //    if (Input.GetKeyDown(KeyCode.F))
+        //    {
+        //        LevelUp();
+        //        Debug.Log($"[{_characterId}]\n현재레벨: {_characterLevel}\n현재경험치: {_characterCurrentExp}\n현재강화단계: {_characterEnhancement}");
+        //    }
 
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                UpgradeCharacter();
-            }
-    }
+        //    if (Input.GetKeyDown(KeyCode.G))
+        //    {
+        //        UpgradeCharacter();
+        //    }
+        //}
 
     private void TestGetMaxSkillCost()
     {
