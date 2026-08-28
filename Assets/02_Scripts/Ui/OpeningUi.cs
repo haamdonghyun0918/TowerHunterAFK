@@ -20,9 +20,9 @@ public class OpeningUi : UiBase
     [SerializeField] private Image _skipRingBackspace;
     [SerializeField] private Image _skipRingSpace;
 
-    private readonly float _longPressTime = 3.0f;
+    private readonly float _longPressTime = 1.5f;
     private readonly float _holdDelay = 0.3f;
-    private readonly float _cooldownTime = 2.0f;
+    private readonly float _cooldownTime = 1.0f;
 
     [Header("GuildName Input UI")]
     [SerializeField] private GameObject _inputGroup;
@@ -221,11 +221,6 @@ public class OpeningUi : UiBase
 
     private void OnClickConfirm()
     {
-        if (_inputGuildName == null)
-        {
-            return;
-        }
-
         string inputName = _inputGuildName.text.Trim();
 
         if (Regex.IsMatch(inputName, @"^[a-zA-Z0-9가-힣]{2,10}$"))
