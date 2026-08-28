@@ -10,6 +10,7 @@ public class MainUi : UiBase
     [SerializeField] private UiButton _buttonOffLineReward;
     [SerializeField] private UiButton _buttonGacha;
 
+    public static event Action OnBossRaidUiOpen;
     public static event Action OnBossRaidStart;
     public static event Action OnBossRaidEnd;
 
@@ -96,12 +97,18 @@ public class MainUi : UiBase
 
     private async void OpenBossRaidUi()
     {
+        OnBossRaidUiOpen?.Invoke();
         await UiManager.Instance.OpenUi<BossRaidUI>();
     }
 
     private async void OpenOffLineRewardUi()
     {
         await UiManager.Instance.OpenUi<OffLineRewardUi>();
+    }
+
+    public static void TriggerBossRaidUiOpen()
+    {
+        OnBossRaidUiOpen?.Invoke();
     }
 
     public static void TriggerBossRaidStart()

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerPartyController : PlayerPartyControllerBase
 {
@@ -10,13 +9,13 @@ public class PlayerPartyController : PlayerPartyControllerBase
 
     private void OnEnable()
     {
-        MainUi.OnBossRaidStart += PauseMovement;
+        MainUi.OnBossRaidUiOpen += PauseMovement;
         MainUi.OnBossRaidEnd += ResumeMovement;
     }
 
     private void OnDisable()
     {
-        MainUi.OnBossRaidStart -= PauseMovement;
+        MainUi.OnBossRaidUiOpen -= PauseMovement;
         MainUi.OnBossRaidEnd -= ResumeMovement;
     }
 

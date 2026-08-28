@@ -25,13 +25,13 @@ public class BattleManager : MonoBehaviour
     
     private void OnEnable()
     {
-        MainUi.OnBossRaidStart += PauseBattle;
+        MainUi.OnBossRaidUiOpen += PauseBattle;
         MainUi.OnBossRaidEnd += ResumeBattle;
     }
 
     private void OnDisable()
     {
-        MainUi.OnBossRaidStart -= PauseBattle;
+        MainUi.OnBossRaidUiOpen -= PauseBattle;
         MainUi.OnBossRaidEnd -= ResumeBattle;
     }
 
