@@ -161,12 +161,22 @@
   },
   {
     "Id": "skill_Projectile_01",
-    "Name": "투사체스킬_블루",
+    "Name": "보스_투사체스킬_블루",
     "RequiredCost": 2,
     "SkillDamage": 20,
     "SkillType": "MultiTarget",
 	"PrefabPath": "ProjectileCometBlue",
 	"SkillDuration": 2000,
 	"MotionDuration": 1400
+  },
+  {
+    "Id": "skill_LightningSpark_01",
+    "Name": "보스_스킬_라이트닝스파크",
+    "RequiredCost": 2,
+    "SkillDamage": 20,
+    "SkillType": "MultiTarget_SelfSpawn",
+	"PrefabPath": "LightningSpark",
+	"SkillDuration": 2500,
+	"MotionDuration": 1700
   }
 ]

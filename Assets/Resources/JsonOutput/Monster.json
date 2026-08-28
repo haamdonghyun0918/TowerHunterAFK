@@ -109,7 +109,7 @@
 	"BaseDef": 200,
 	"PrefabPath": "Boss2",
 	"IsBoss": true,
-	"SkillId": "skill_Projectile_01"
+	"SkillId": "skill_LightningSpark_01"
   },
   {
     "Id": "monster_Boss_3",
@@ -153,6 +153,7 @@
 	"BaseDef": 700,
 	"PrefabPath": "Boss6",
 	"IsBoss": true,
-	"SkillId": "skill_Projectile_01"
+	"SkillId": "skill_Projectile_01",
+	"SkillType": "Projectile"
   }
 ]
