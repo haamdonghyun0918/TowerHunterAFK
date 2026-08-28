@@ -120,7 +120,7 @@
 	"BaseDef": 260,
 	"PrefabPath": "Boss3",
 	"IsBoss": true,
-	"SkillId": "skill_Projectile_01"
+	"SkillId": "skill_WindCircle_01"
   },
   {
     "Id": "monster_Boss_4",
@@ -142,7 +142,7 @@
 	"BaseDef": 500,
 	"PrefabPath": "Boss5",
 	"IsBoss": true,
-	"SkillId": "skill_Projectile_01"
+	"SkillId": "skill_BuffSkill_01"
   },
   {
     "Id": "monster_Boss_6",

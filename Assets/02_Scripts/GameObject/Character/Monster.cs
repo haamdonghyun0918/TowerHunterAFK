@@ -11,7 +11,11 @@ public class Monster : BattleCharacter
     private bool _isSkillUsable;
     private Skill _skill;
 
+    private int _currentDamage;
+
     private int _currentSkillCost;
+
+    private int _buffValue = 0;
 
     private event Action<int, int> _onSkillCostChange;
 
@@ -84,6 +88,7 @@ public class Monster : BattleCharacter
             _characterHp = _monsterData.BaseHp;
             _characterMaxHp = _monsterData.BaseHp;
             _characterDefense = _monsterData.BaseDef;
+            _currentDamage = _characterAtk * _skill.GetSkillDamage();
         }
         else
         {
@@ -92,8 +97,10 @@ public class Monster : BattleCharacter
             _characterHp = _monsterData.BaseHp + stageNum;
             _characterMaxHp = _monsterData.BaseHp + stageNum;
             _characterDefense = _monsterData.BaseDef + stageNum;
+            _currentDamage = _characterAtk;
         }
-            
+
+
     }
 
     public async UniTask AtkTarget(Character targetCharacter)
@@ -105,9 +112,11 @@ public class Monster : BattleCharacter
             if (_monsterData.SkillType == "Projectile")
             {
                 await UseProjectileSkill(targetCharacter);
-                    return;
+                UseSkillCost();
+                return;
             }
             await UseSkill(targetCharacter, null);
+            UseSkillCost();
             return;
         }
 
@@ -131,8 +140,6 @@ public class Monster : BattleCharacter
     {
         SetSingleTargetTransform(targetCharacter);
 
-        int currentDamage = _characterAtk * _skill.GetSkillDamage();
-
         if (_isSkillUsable == true)
         {
             ChangeState(CharacterState.SkillAttack);
@@ -144,7 +151,15 @@ public class Monster : BattleCharacter
                 return;
             }
 
-            if (_skill.GetSkillType() == SkillType.MultiTarget || _skill.GetSkillType() == SkillType.MultiTarget_SelfSpawn)
+            if (_skill.GetSkillType() == SkillType.SelfTarget)
+            {
+                _buffValue = 1000;
+                _currentDamage += _buffValue;
+                _characterDefense += 10;
+                Debug.LogError($"[Monster] 버프스킬: 현재 데미지는 {_currentDamage}, 현재 방어력은 {_characterDefense}입니다.");
+            }
+
+            else if (_skill.GetSkillType() == SkillType.MultiTarget || _skill.GetSkillType() == SkillType.MultiTarget_SelfSpawn)
             {
                 if (playerParty != null)
                 {
@@ -154,8 +169,8 @@ public class Monster : BattleCharacter
 
                         if ((targetCharacterInParty != null) && (targetCharacterInParty._isDead == false))
                         {
-                            targetCharacterInParty.TakeDamage(currentDamage).Forget();
-                            Debug.Log($"[스킬공격] 타겟{targetCharacterInParty.name}에게 {currentDamage} 데미지를 줍니다.");
+                            targetCharacterInParty.TakeDamage(_currentDamage).Forget();
+                            Debug.Log($"[Monster] [스킬공격] 타겟{targetCharacterInParty.name}에게 {_currentDamage} 데미지를 줍니다.");
                         }
                     }
                 }
@@ -164,8 +179,8 @@ public class Monster : BattleCharacter
             {
                 if ((targetCharacter != null) && (targetCharacter._isDead == false))
                 {
-                    targetCharacter.TakeDamage(currentDamage).Forget();
-                    Debug.Log($"[스킬공격] 타겟{targetCharacter.name}에게 {currentDamage} 데미지를 줍니다.");
+                    targetCharacter.TakeDamage(_currentDamage).Forget();
+                    Debug.Log($"[Monster] [스킬공격] 타겟{targetCharacter.name}에게 {_currentDamage} 데미지를 줍니다.");
                 }
             }
             ChangeState(CharacterState.Idle);
@@ -220,6 +235,13 @@ public class Monster : BattleCharacter
         }
     }
 
+    private void UseSkillCost()
+    {
+        int requiredCost = _skill.GetRequiredSkillCost();
+        _currentSkillCost -= requiredCost;
+        _isSkillUsable = false;
+    }
+
     private void IncreaseSkillCost(int amount)
     {
         _currentSkillCost += amount;
@@ -228,6 +250,8 @@ public class Monster : BattleCharacter
         {
             _currentSkillCost = 2;
         }
+
+        Debug.LogError($"현재 스킬 코스트: {_currentSkillCost}");
     }
 
     private void InvokeCostChangedEvent()
