@@ -64,6 +64,19 @@
         }
     }
 
+    public GuildRank PlayerGuildRank
+    {
+        get => _playerResourceModel.PlayerGuildRank;
+        private set
+        {
+            if(_playerResourceModel.PlayerGuildRank != value)
+            {
+                _playerResourceModel.PlayerGuildRank = value;
+                OnPropertyChanged(nameof(PlayerGuildRank));
+            }
+        }
+    }
+
     public void SetGoldOnLoad(long gold)
     {
         Gold = gold;
@@ -83,6 +96,11 @@
         MagicStone = magicStone;
     }
 
+    public void SetPlayerGuildRankOnLoad(GuildRank guildRank)
+    {
+        PlayerGuildRank = guildRank;
+    }
+
     public bool TryDecreaseGold(long amount)
     {
         if(amount <= 0 || Gold < amount)
@@ -93,6 +111,26 @@
         return true;
     }
 
+    public bool TryIncreasePlayerGuildRank(GuildRank rewardGuildRank)
+    {
+        if(rewardGuildRank <= GuildRank.None || rewardGuildRank > GuildRank.S)
+        {
+            return false;
+        }
+
+        if(PlayerGuildRank >= rewardGuildRank)
+        {
+            return false;
+        }
+
+        if ((int)PlayerGuildRank + 1 != (int)rewardGuildRank)
+        {
+            return false;
+        }
+
+        PlayerGuildRank = rewardGuildRank;
+        return true;
+    }
     public bool TryIncreaseGold(long amount)
     {
         if(amount <= 0)
@@ -173,6 +211,7 @@
         OnPropertyChanged(nameof(Exp));
         OnPropertyChanged(nameof(Diamond));
         OnPropertyChanged(nameof(MagicStone));
+        OnPropertyChanged(nameof(PlayerGuildRank));
     }
 
 }
