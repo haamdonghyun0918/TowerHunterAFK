@@ -303,20 +303,24 @@ public class Character : BattleCharacter
 
     private async UniTask UseNormalAttack(Monster targetMonster)
     {
-        ChangeState(CharacterState.NormalAttack);
-        var characterType = _characterData.CharacterType;
-        await UniTask.Delay(GetNormalAttackMotionDuration(SetCharacterType(characterType)));
 
-        //[방어코드 추가]
         if (this == null || this.gameObject == null || _isDead)
         {
             return;
         }
 
+        ChangeState(CharacterState.NormalAttack);
+
+        var characterType = _characterData.CharacterType;
+
+        await UniTask.Delay(GetNormalAttackMotionDuration(SetCharacterType(characterType)));
+
         if (targetMonster != null && targetMonster._isDead == false)
         {
             targetMonster.TakeDamage(_characterAtk).Forget();
         }
+
+        await UniTask.Delay(200);
     }
 
     public void IncreaseCurrentSkillCost(int amount)
@@ -363,19 +367,19 @@ public class Character : BattleCharacter
                 }
             case NormalAttackType.Warrior:
                 {
-                    return 1000;
+                    return 800;
                 }
             case NormalAttackType.Wizard:
                 {
-                    return 1000;
+                    return 800;
                 }
             case NormalAttackType.Monk:
                 {
-                    return 1000;
+                    return 800;
                 }
             default:
                 {
-                    return 1000;
+                    return 800;
                 }
         }
     }
