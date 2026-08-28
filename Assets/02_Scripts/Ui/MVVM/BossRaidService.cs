@@ -308,7 +308,9 @@ public class BossRaidService
                 return;
             }
 
-            if (selectedBoss.RewardDiamond > 0)
+            bool hasPlayerResourceReward = selectedBoss.RewardDiamond > 0 || selectedBoss.RewardRank != GuildRank.None;
+
+            if (hasPlayerResourceReward)
             {
                 if (NetworkManager.Instance == null || NetworkManager.Instance.PlayerResourceService == null)
                 {
@@ -335,5 +337,21 @@ public class BossRaidService
         }
 
         Debug.Log($"[BossRaidService] 보스 레이드 승리 보상으로 다이아 {selectedBoss.RewardDiamond}개를 지급했습니다.");
+
+        if (selectedBoss.RewardRank != GuildRank.None)
+        {
+            bool isRankIncreased = NetworkManager.Instance.PlayerResourceService.RequestIncreasePlayerGuildRank(selectedBoss.RewardRank);
+
+            if (isRankIncreased)
+            {
+                Debug.Log($"[BossRaidService] 길드 랭크가 {selectedBoss.RewardRank}(으)로 승급했습니다.");
+            }
+
+            else
+            {
+                Debug.Log($"[BossRaidService] 현재 랭크와 승급 순서가 맞지 않아 {selectedBoss.RewardRank} 랭크 보상이 적용되지 않았습니다.");
+            }
+        }
     }
+
 }
