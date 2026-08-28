@@ -67,7 +67,7 @@ public class Character : BattleCharacter
     }
     private void OnDestroy()
     {
-        UnbindEquipmentChangedEvent();
+        UnbindEquipmentChangedEvent(); 
     }
 
     public void InitCharacter(CharacterData characterData, string characterUniqueId)
@@ -100,6 +100,30 @@ public class Character : BattleCharacter
 
         InitializeSkill();
         SetStatData(true);
+
+        if (SaveManager.Instance != null && SaveManager.Instance.CharacterDict.TryGetValue(characterUniqueId, out var saveDataForHp))
+        {
+            if (saveDataForHp.CurrentHP != -1)
+            {
+                _characterHp = Mathf.Clamp(saveDataForHp.CurrentHP, 0, _characterMaxHp);
+
+                if (_characterHp <= 0)
+                {
+                    _isDead = true;
+                    this.gameObject.SetActive(false);
+                }
+                else
+                {
+                    _isDead = false;
+                    this.gameObject.SetActive(true);
+                }
+            }
+            else 
+            {
+                saveDataForHp.CurrentHP = _characterMaxHp;
+            }
+        }
+
         BindEquipmentChangedEvent();
     }
 

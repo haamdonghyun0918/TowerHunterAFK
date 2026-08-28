@@ -12,6 +12,7 @@ public class EquipmentSaveData
 [Serializable]
 public class CharacterSaveData
 {
+    public int CurrentHP = -1;
     public string UniqueId;
     public string BaseId;
     public string Rarity = "";

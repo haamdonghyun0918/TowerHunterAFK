@@ -106,6 +106,11 @@ public class ObjectManager : MonoBehaviour
             if (_currentPlayerParty.GetCurrentHunterCount() == 0)
             {
                 _currentPlayerParty.MakeFullHPAllHunters();
+
+                if (SaveManager.Instance != null)
+                {
+                    SaveManager.Instance.SaveCurrentData();
+                }
             }
 
             if (_currentPlayerParty != null)
@@ -134,6 +139,16 @@ public class ObjectManager : MonoBehaviour
             if (_currentPlayerParty != null)
             {
                 _currentPlayerParty.MakeFullHPAllHunters();
+
+                if (SaveManager.Instance != null)
+                {
+                    foreach(var characterSave in SaveManager.Instance.CharacterDict.Values)
+                    {
+                        characterSave.CurrentHP = -1;
+                    }
+
+                    SaveManager.Instance.SaveCurrentData();
+                }
             }
         }
         else
