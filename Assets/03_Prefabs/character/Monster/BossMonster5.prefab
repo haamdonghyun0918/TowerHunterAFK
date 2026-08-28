@@ -67,7 +67,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 550eb343b0eedd24b89223a73f2853de, type: 2}
+      objectReference: {fileID: 22100000, guid: 608362dbe2819584189658c3a1f72dbc, type: 2}
     - target: {fileID: 5866666021909216657, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -79,6 +79,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4182794463787116670}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1491429288451603031}
   m_SourcePrefab: {fileID: 100100000, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
 --- !u!1 &2624487761955091627 stripped
 GameObject:
@@ -98,6 +101,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   _characterAnimator: {fileID: 8775248270306636907}
+--- !u!114 &1491429288451603031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2624487761955091627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5d6efe2920a5d42804e4eb6d6f7bbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Skill
 --- !u!95 &8775248270306636907 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
