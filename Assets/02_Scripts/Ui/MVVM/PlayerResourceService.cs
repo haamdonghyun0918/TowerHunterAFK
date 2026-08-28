@@ -46,6 +46,13 @@
         viewModel.SetMagicStoneOnLoad(magicStone);
     }
 
+    public void SetPlayerGuildRankOnLoad(GuildRank guildRank)
+    {
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
+
+        viewModel.SetPlayerGuildRankOnLoad(guildRank);
+    }
+
     public void RequestAddGold(long addGold)
     {
         PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
@@ -166,7 +173,21 @@
         return true;
     }
 
+    public bool RequestIncreasePlayerGuildRank(GuildRank rewardGuildRank)
+    {
+        PlayerResourceViewModel viewModel = GetPlayerResourceViewModel();
 
+        if (viewModel.TryIncreasePlayerGuildRank(rewardGuildRank) == false)
+        {
+            return false;
+        }
+        if(SaveManager.Instance != null)
+        {
+            SaveManager.Instance.SaveGuildRank(viewModel.PlayerGuildRank);
+        }
+
+        return true;    
+    }
 
 
     //ToDo 장비 아이템 데이터

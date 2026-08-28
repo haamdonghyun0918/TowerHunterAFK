@@ -70,6 +70,7 @@ public class GameFlowManager : MonoBehaviour
         NetworkManager.Instance.PlayerResourceService.SetDiamondOnLoad(SaveManager.Instance.CurrentSaveData.Diamond);
         NetworkManager.Instance.PlayerResourceService.SetExpOnLoad(SaveManager.Instance.CurrentSaveData.Exp);
         NetworkManager.Instance.PlayerResourceService.SetMagicStoneOnLoad(SaveManager.Instance.CurrentSaveData.MagicStone);
+        NetworkManager.Instance.PlayerResourceService.SetPlayerGuildRankOnLoad(SaveManager.Instance.GetGuildRank());
 
         HunterInven = new HunterInventory();
         HunterInven.Init();

@@ -237,6 +237,48 @@ public class SaveManager : MonoBehaviour
         Debug.Log($"[SaveManager] 플레이어 이름 저장 완료. 이름: {name}");
     }
 
+    public GuildRank GetGuildRank()
+    {
+        if (CurrentSaveData == null)
+        {
+            Debug.LogError("[SaveManager] Init이 먼저 호출되어야 합니다.");
+            return GuildRank.F;
+        }
+
+        bool isParsed = Enum.TryParse(CurrentSaveData.GuildRank, true, out GuildRank guildRank);
+
+        bool isDefined = isParsed && Enum.IsDefined(typeof(GuildRank), guildRank);
+
+        if(isDefined == false || guildRank == GuildRank.None)
+        {
+            Debug.LogWarning($"[SaveManager] 저장된 길드 랭크가 잘못되었습니다. F 랭크를 사용합니다. 저장값: {CurrentSaveData.GuildRank}");
+            CurrentSaveData.GuildRank = GuildRank.F.ToString();
+            return GuildRank.F;
+        }
+
+        return guildRank;
+    }
+
+    public void SaveGuildRank(GuildRank guildRank)
+    {
+        if(CurrentSaveData == null)
+        {
+            Debug.LogError("[SaveManager] Init이 먼저 호출되어야 합니다.");
+            return;
+        }
+
+        if(guildRank <= GuildRank.None || guildRank > GuildRank.S)
+        {
+            Debug.LogWarning($"[SaveManager] 저장할 수 없는 길드 랭크입니다: {guildRank}");
+            return;
+        }
+
+        CurrentSaveData.GuildRank = guildRank.ToString();
+        SaveToFile(CurrentSaveData);
+
+        Debug.Log($"[SaveManager] 길드 랭크 저장 완료: {guildRank}");
+    }
+
     public string GetLogoutTime()
     {
         return CurrentSaveData.LastLogoutTime;
