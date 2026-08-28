@@ -120,4 +120,5 @@ public class BossData: GameDataBase
     public string MonsterId;
     public int LimitLevel;
     public uint RewardDiamond;
+    public GuildRank RewardRank;
 }
