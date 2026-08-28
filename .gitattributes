@@ -1,4 +1,4 @@
-# 유니티 자동 생성 파일들을 통계에서 제외 (linguist-generated=true)
+# 유니티 주요 에셋 파일들 통계에서 제외
 *.mat linguist-generated=true
 *.anim linguist-generated=true
 *.unity linguist-generated=true
@@ -6,15 +6,14 @@
 *.asset linguist-generated=true
 *.meta linguist-generated=true
 *.controller linguist-generated=true
-*.physicsMaterial2D linguist-generated=true
-*.physicsMaterial linguist-generated=true
 
-# Wolfram Language 등으로 오해받는 플러그인/설정 파일 통계 제외
-*.m linguist-generated=true
-*.wl linguist-generated=true
-*.wls linguist-generated=true
+# olfram Language로 오해받는 플러그인 파일들을 '외부 라이브러리(vendored)'로 강제 지정하여 통계에서 완전히 삭제
+*.m linguist-vendored=true
+*.wl linguist-vendored=true
+*.wls linguist-vendored=true
+*.nb linguist-vendored=true
 
-# C#과 셰이더 파일만 프로젝트의 주 언어로 인식하도록 설정
+# C#과 셰이더만 프로젝트의 주 언어로 인식
 *.cs linguist-detectable=true
 *.shader linguist-detectable=true
 *.cginc linguist-detectable=true
