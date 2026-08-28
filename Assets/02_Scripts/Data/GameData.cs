@@ -123,3 +123,10 @@ public class BossData: GameDataBase
     public uint RewardDiamond;
     public GuildRank RewardRank;
 }
+
+[System.Serializable]
+public class OpeningDialogData : GameDataBase
+{
+    public string Dialog;
+    public string NextId;
+}

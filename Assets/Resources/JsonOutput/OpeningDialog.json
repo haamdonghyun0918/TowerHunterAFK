@@ -1,0 +1,52 @@
+[
+  {
+    "Id": "OpeningDialog_1",
+    "Dialog": "어느날, 땅이 흔들렸다.\n평소와 다른 지진이었다.",
+    "NextId": "OpeningDialog_2"
+  },
+  {
+    "Id": "OpeningDialog_2",
+    "Dialog": "그 진동은 멈추지 않았고 무언가 땅을 뚫고 나왔다",
+    "NextId": "OpeningDialog_3"
+  },
+  {
+    "Id": "OpeningDialog_3",
+    "Dialog": "탑이었다. 칠흑과 같은 탑.\n끝이 보이지 않을 만큼 높은 탑이 도시 중앙에 솟아났다",
+    "NextId": "OpeningDialog_4"
+  },
+  {
+    "Id": "OpeningDialog_4",
+    "Dialog": "끝이 아니었다. 하늘과 땅에서 공간이 일그러졌다",
+    "NextId": "OpeningDialog_5"
+  },
+  {
+    "Id": "OpeningDialog_5",
+    "Dialog": "그리고 그곳에서 나온 것은 몬스터들이었다.\n그들은 도시를 파괴하고 사람들을 학살했다.",
+    "NextId": "OpeningDialog_6"
+  },
+  {
+    "Id": "OpeningDialog_6",
+    "Dialog": "바뀐 것은 그들 뿐만이 아니었다\n마나를 깨우친 사람들이 하나 둘 생기기 시작했다",
+    "NextId": "OpeningDialog_7"
+  },
+  {
+    "Id": "OpeningDialog_7",
+    "Dialog": "그들이 하나 둘 뭉쳐 몬스터들에게 대항하기 시작했다",
+    "NextId": "OpeningDialog_8"
+  },
+  {
+    "Id": "OpeningDialog_8",
+    "Dialog": "게이트로부터 몬스터를 몰아낸 뒤 하나 둘 시스템들이 만들어졌다\n대표적으로 길드.",
+    "NextId": "OpeningDialog_9"
+  },
+  {
+    "Id": "OpeningDialog_9",
+    "Dialog": "헌터들의 파티를 꾸려주며\n검은 탑을 정복할 수 있도록 지원하는 매니지먼트 기업이다",
+    "NextId": "OpeningDialog_10"
+  },
+  {
+    "Id": "OpeningDialog_10",
+    "Dialog": "당신만의 길드를 창설하세요",
+    "NextId": ""
+  }
+]

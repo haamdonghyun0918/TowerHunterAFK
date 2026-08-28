@@ -834,6 +834,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2c52b957e18e57a4d85e63c7e2f1bc1f, type: 3}
   - {fileID: 21300000, guid: a881033bb872ed84a9c522a205b9b600, type: 3}
   _screenImage: {fileID: 2647485748341738770}
+  _textDialog: {fileID: 3265272383722294078}
   _leftKeyGuide: {fileID: 5666636591320969001}
   _rightKeyGuide: {fileID: 5683310425495650733}
   _skipRingBackspace: {fileID: 5904080876522383895}
