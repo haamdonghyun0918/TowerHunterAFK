@@ -13,6 +13,7 @@ public class OpeningUi : UiBase
     [Header("CutScene")]
     [SerializeField] private Sprite[] _comicCuts;
     [SerializeField] private Image _screenImage;
+    [SerializeField] private TMP_Text _textDialog;
 
     [Header("Skip Controls")]
     [SerializeField] private GameObject _leftKeyGuide;
@@ -183,6 +184,8 @@ public class OpeningUi : UiBase
             _screenImage.sprite = _comicCuts[_currentCutIndex];
         }
 
+        UpdateDialog();
+
         bool isFirstCut = (_currentCutIndex == 0);
         bool isLastCut = (_currentCutIndex == _comicCuts.Length - 1);
 
@@ -200,6 +203,33 @@ public class OpeningUi : UiBase
         {
             _inputGroup.SetActive(isLastCut);
         }
+    }
+
+    private void UpdateDialog()
+    {
+        if(_textDialog == null)
+        {
+            Debug.LogError("[OpeningUi] Text_Dialog가 연결되지 않았습니다.");
+            return;
+        }
+
+        if(GameDataManager.Instance == null)
+        {
+            _textDialog.text = "";
+            Debug.LogError("[OpeningUi] GameDataManager가 존재하지 않습니다.");
+            return;
+        }
+
+        string dialogId = $"OpeningDialog_{_currentCutIndex + 1}";
+        OpeningDialogData dialogData = GameDataManager.Instance.GetData<OpeningDialogData>(dialogId);
+
+        if(dialogData == null)
+        {
+            _textDialog.text = "";
+            Debug.LogError($"[OpeningUi] 다이어로그를 찾을 수 없습니다. Id: {dialogId}");
+            return;
+        }
+        _textDialog.text = dialogData.Dialog;
     }
 
     private void UpdateRingUI(Image ring, float holdTimer)
