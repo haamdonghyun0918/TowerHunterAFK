@@ -237,5 +237,6 @@ public class BossRaidUI : UiBase
     {
         _bossRaidService.ReloadPartyFromSave();
         UiManager.Instance.CloseUi<BossRaidUI>();
+        MainUi.TriggerBossRaidEnd();
     }
 }
