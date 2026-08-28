@@ -8,7 +8,12 @@ public class Monster : BattleCharacter
     private MonsterData _monsterData;
     private string _monsterId;
     private bool _isBoss;
+    private bool _isSkillUsable;
     private Skill _skill;
+
+    private int _currentSkillCost;
+
+    private event Action<int, int> _onSkillCostChange;
 
     private void Awake()
     {
@@ -17,9 +22,9 @@ public class Monster : BattleCharacter
         if (_skill == null)
         {
             _skill = GetComponent<Skill>();
-            if (_skill == null)
+            if (_skill != null)
             {
-                Debug.LogError($"[Monster] 스킬 컴포넌트를 가져오지 못했습니다.");
+                Debug.LogWarning($"[Monster] 스킬 컴포넌트를 가져왔습니다. {this.name}");
             }
         }
     }
@@ -31,7 +36,6 @@ public class Monster : BattleCharacter
         {
             Debug.Log("[Monster] GameDataManager가 NULL입니다.");
         }
-
     }
 
     public void InitMonster(MonsterData monsterData, int stageNum)
@@ -45,6 +49,9 @@ public class Monster : BattleCharacter
         }
 
         _isDead = false;
+        _isSkillUsable = false;
+
+        _currentSkillCost = 0;
 
         _monsterId = _monsterData.Id;
         _isBoss = _monsterData.IsBoss;
@@ -89,20 +96,81 @@ public class Monster : BattleCharacter
             
     }
 
-    public async UniTask AtkTarget(Character TargetCharacter)
+    public async UniTask AtkTarget(Character targetCharacter)
     {
-        if (TargetCharacter._isDead == true) return;
+        if (targetCharacter._isDead == true) return;
+
+        if (_isSkillUsable == true && _isBoss == true)
+        {
+            if (_monsterData.SkillType == "Projectile")
+            {
+                UseProjectileSkill(targetCharacter).Forget();
+                    return;
+            }
+            UseSkill(targetCharacter, null).Forget();
+            return;
+        }
 
         ChangeState(CharacterState.NormalAttack);
 
-
-
-        await TargetCharacter.TakeDamage(_characterAtk);
+        await targetCharacter.TakeDamage(_characterAtk);
 
         await UniTask.Delay(800);
 
-        Debug.Log($"타겟{TargetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
+        Debug.Log($"타겟{targetCharacter.name}에게 {_characterAtk} 데미지를 줍니다.");
         ChangeState(CharacterState.Idle);
+
+        if (_isBoss == true)
+        {
+            IncreaseSkillCost(1);
+        }
+        CheckSkillUseable();
+    }
+
+    private async UniTask UseSkill(Character targetCharacter, PlayerPartyController playerParty = null)
+    {
+        SetSingleTargetTransform(targetCharacter);
+
+        int currentDamage = _characterAtk * _skill.GetSkillDamage();
+
+        if (_isSkillUsable == true)
+        {
+            ChangeState(CharacterState.SkillAttack);
+            _skill.UseSkillAsync().Forget();
+            await UniTask.Delay(GetSkillDuration());
+
+            if (this == null || this.gameObject == null || _isDead)
+            {
+                return;
+            }
+
+            if (_skill.GetSkillType() == SkillType.MultiTarget || _skill.GetSkillType() == SkillType.MultiTarget_SelfSpawn)
+            {
+                if (playerParty != null)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var targetCharacterInParty = playerParty.GetHunter(i);
+
+                        if ((targetCharacterInParty != null) && (targetCharacterInParty._isDead == false))
+                        {
+                            targetCharacterInParty.TakeDamage(currentDamage).Forget();
+                            Debug.Log($"[스킬공격] 타겟{targetCharacterInParty.name}에게 {currentDamage} 데미지를 줍니다.");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if ((playerParty != null) && (targetCharacter._isDead == false))
+                {
+                    targetCharacter.TakeDamage(currentDamage).Forget();
+                    Debug.Log($"[스킬공격] 타겟{targetCharacter.name}에게 {currentDamage} 데미지를 줍니다.");
+                }
+            }
+        }
+        CheckSkillUseable();
+        InvokeCostChangedEvent();
     }
 
     public async UniTask UseProjectileSkill(Character targetCharacter)
@@ -127,6 +195,42 @@ public class Monster : BattleCharacter
         targetCharacter.TakeDamage(GetCurrentDamage()).Forget();
 
         await UniTask.Delay(1800);
+    }
+
+    private void SetSingleTargetTransform(Character targetCharacter)
+    {
+        if (_skill.GetSkillType() != SkillType.SingleTarget && _skill.GetSkillType() != SkillType.MultiTarget) return;
+        var singleTargetTransform = targetCharacter.gameObject.transform;
+        _skill.SetSingleTargetTransform(singleTargetTransform);
+    }
+
+    private void CheckSkillUseable()
+    {
+        int requiredSkillCost = _skill.GetRequiredSkillCost();
+
+        if (requiredSkillCost <= _currentSkillCost)
+        {
+            _isSkillUsable = true;
+        }
+        else
+        {
+            _isSkillUsable = false;
+        }
+    }
+
+    private void IncreaseSkillCost(int amount)
+    {
+        _currentSkillCost += amount;
+
+        if (_currentSkillCost >= 2)
+        {
+            _currentSkillCost = 2;
+        }
+    }
+
+    private void InvokeCostChangedEvent()
+    {
+        _onSkillCostChange?.Invoke(_currentSkillCost, 2);
     }
 
     private int GetCurrentDamage()
