@@ -84,7 +84,7 @@ public class ExpeditionView : MonoBehaviour
         Bind();
 
         ExpeditionPartySetting.OnPartyChanged += UpdateExpeditionPartySlots;
-
+        HunterInfoUi.OnHunterStateChanged += UpdateExpeditionPartySlots;
         ExpeditionData selectedExpedition = _expeditionViewModel.SelectedExpedition;
 
         if (selectedExpedition != null && _expeditionViewModel.IsExpeditionStart)
@@ -116,6 +116,7 @@ public class ExpeditionView : MonoBehaviour
     {
         UnBind();
         ExpeditionPartySetting.OnPartyChanged -= UpdateExpeditionPartySlots;
+        HunterInfoUi.OnHunterStateChanged -= UpdateExpeditionPartySlots;
     }
 
     private void Bind()

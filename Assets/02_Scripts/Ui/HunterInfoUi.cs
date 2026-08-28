@@ -6,7 +6,6 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
-using Unity.Jobs;
 
 public class HunterInfoUi : UiBase
 {
