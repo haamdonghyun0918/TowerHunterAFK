@@ -236,6 +236,8 @@ public class BattleManager : MonoBehaviour
             }
         }
 
+        EndBattle(playerParty, enemyParty);
+
         if (playerParty.GetCurrentHunterCount() == 0)
         {
             Debug.Log("헌터 파티가 모두 리타이어 했습니다. 안전지대로 돌아갑니다.");
@@ -245,8 +247,6 @@ public class BattleManager : MonoBehaviour
         {
             Debug.Log("헌터 파티 승리!");
         }
-
-        EndBattle(playerParty, enemyParty);
     }
 
     private async UniTaskVoid BossBattleRoutine(PlayerPartyControllerForBoss playerParty, MonsterParty enemyParty)
