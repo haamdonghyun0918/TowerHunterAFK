@@ -4,8 +4,6 @@ using System;
 public class ExpeditionPartySetting
 {
     private const int _maxSlots = 3;
-
-    // 파티가 바뀌었을 때 화면을 새로고침 하라고 알리는 신호기 역할
     public static Action OnPartyChanged;
 
     public bool AddHunterToExpedition(string uniqueId)

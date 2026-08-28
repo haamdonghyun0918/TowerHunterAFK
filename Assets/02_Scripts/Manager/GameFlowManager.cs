@@ -5,7 +5,6 @@ public class GameFlowManager : MonoBehaviour
 {
     public static GameFlowManager Instance { get; private set; }
     public HunterInventory HunterInven { get; private set; }
-    //public EquipmentInventory EquipInven { get; private set; }
 
     private float _inactivityTimer = 0f;
     private const float _sleepModeTimer = 300f;
@@ -74,10 +73,6 @@ public class GameFlowManager : MonoBehaviour
 
         HunterInven = new HunterInventory();
         HunterInven.Init();
-
-        //일단은 비활성화. 모델과 서비스 등이 완성되고 나서 수정 계획할지도 JU
-        //EquipInven = new EquipmentInventory();
-        //EquipInven.Init();
 
         if (ExpeditionManager.Instance != null)
         {

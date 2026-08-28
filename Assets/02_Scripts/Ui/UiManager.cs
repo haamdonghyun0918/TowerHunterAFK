@@ -49,7 +49,7 @@ public class UiManager : MonoBehaviour
         if (_openUiDic.Contains(uiType) == false)
         {
             openedUi.gameObject.SetActive(true);
-            openedUi.transform.SetAsLastSibling(); // 추가로 수정할 부분이 있으면 수정해도 됨
+            openedUi.transform.SetAsLastSibling();
             _openUiDic.Add(uiType);
         }
 

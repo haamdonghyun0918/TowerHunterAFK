@@ -1,5 +1,5 @@
 ﻿using System;
-//일단 사용 중지
+
 public class EquipmentModel
 {
     private readonly EquipmentSaveData _saveData;
@@ -49,7 +49,6 @@ public class EquipmentModel
 
     public int GetEquipmentTotalAtk()
     {
-        //Todo Datadriven 강화 단계 데이터셋 추가 시 교체 JU
         int enhanceBonus = EnhanceLevel * 5;
         return BuffAtk + enhanceBonus;
     }
@@ -66,7 +65,6 @@ public class EquipmentModel
 
     public int GetEquipmentTotalDef()
     {
-        //Todo Datadriven 강화 단계 데이터셋 추가 시 교체 JU
         int enhanceBonus = EnhanceLevel * 3;
 
         return BuffDef + enhanceBonus;
