@@ -341,8 +341,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 68.9
-  m_fontSizeBase: 68.9
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -560,6 +560,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaidResultPopupUI
   Text_RaidResult: {fileID: 3140184835464921582}
   Text_Desc: {fileID: 3481296944460761840}
+  Button_ExitBossRaidResultPopup: {fileID: 8487578827300381008}
 --- !u!1 &7052052789134527010
 GameObject:
   m_ObjectHideFlags: 0

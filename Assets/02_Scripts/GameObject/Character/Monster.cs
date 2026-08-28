@@ -162,7 +162,7 @@ public class Monster : BattleCharacter
             }
             else
             {
-                if ((playerParty != null) && (targetCharacter._isDead == false))
+                if ((targetCharacter != null) && (targetCharacter._isDead == false))
                 {
                     targetCharacter.TakeDamage(currentDamage).Forget();
                     Debug.Log($"[스킬공격] 타겟{targetCharacter.name}에게 {currentDamage} 데미지를 줍니다.");

@@ -70,7 +70,7 @@ public class Character : BattleCharacter
         UnbindEquipmentChangedEvent(); 
     }
 
-    public void InitCharacter(CharacterData characterData, string characterUniqueId)
+    public void InitCharacter(CharacterData characterData, string characterUniqueId, bool isBossRaid = false)
     {
         _characterData = characterData;
         _characterUniqueId = characterUniqueId;
@@ -101,30 +101,39 @@ public class Character : BattleCharacter
         InitializeSkill();
         SetStatData(true);
 
-        if (SaveManager.Instance != null && SaveManager.Instance.CharacterDict.TryGetValue(characterUniqueId, out var saveDataForHp))
+        if (isBossRaid == true)
         {
-            if (saveDataForHp.CurrentHP != -1)
+            _characterHp = _characterMaxHp;
+            _isDead = false;
+            this.gameObject.SetActive(true);
+        }
+        else
+        {
+            if (SaveManager.Instance != null && SaveManager.Instance.CharacterDict.TryGetValue(characterUniqueId, out var saveDataForHp))
             {
-                _characterHp = Mathf.Clamp(saveDataForHp.CurrentHP, 0, _characterMaxHp);
-
-                if (_characterHp <= 0)
+                if (saveDataForHp.CurrentHP != -1)
                 {
-                    _isDead = true;
-                    this.gameObject.SetActive(false);
+                    _characterHp = Mathf.Clamp(saveDataForHp.CurrentHP, 0, _characterMaxHp);
+
+                    if (_characterHp <= 0)
+                    {
+                        _isDead = true;
+                        this.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        _isDead = false;
+                        this.gameObject.SetActive(true);
+                    }
                 }
                 else
                 {
-                    _isDead = false;
-                    this.gameObject.SetActive(true);
+                    saveDataForHp.CurrentHP = _characterMaxHp;
                 }
             }
-            else 
-            {
-                saveDataForHp.CurrentHP = _characterMaxHp;
-            }
-        }
 
-        BindEquipmentChangedEvent();
+            BindEquipmentChangedEvent();
+        }
     }
 
     public string GetCharacterId()

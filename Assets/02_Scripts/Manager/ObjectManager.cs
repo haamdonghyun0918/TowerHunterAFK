@@ -289,7 +289,9 @@ public class ObjectManager : MonoBehaviour
         {
             GameObject hunterObj = Instantiate(hunterPrefab);
             Character newHunter = hunterObj.GetComponent<Character>();
-            newHunter.InitCharacter(data, characterUniqueId);
+
+            bool isBossRaid = targetParty is PlayerPartyControllerForBoss;
+            newHunter.InitCharacter(data, characterUniqueId, isBossRaid);
             targetParty.AddHunter(newHunter);
             return true;
         }

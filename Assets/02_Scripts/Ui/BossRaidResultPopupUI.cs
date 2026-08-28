@@ -34,8 +34,7 @@ public class BossRaidResultPopupUI : UiBase
         if (isVictory)
         {
             Text_RaidResult.text = "레이드 성공!";
-            Text_RaidResult.color = Color.yellow; 
-            Text_Desc.text = $"길드의 랭크가 상승했습니다!\n\n보상 : 다이아 {rewardDiamond}개";
+            Text_Desc.text = $"길드의 랭크가 상승했습니다!\n보상 : 다이아 {rewardDiamond}개";
         }
         else
         {
