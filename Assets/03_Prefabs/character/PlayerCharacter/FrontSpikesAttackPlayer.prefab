@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
   _characterAnimator: {fileID: 6997966792048585678}
-  _hitFlashEffect: {fileID: 0}
+  _hitFlashEffect: {fileID: 7889344936089755218}
   _damageTextEffect: {fileID: 737931112710546530}
   _isRunning: 0
 --- !u!114 &6714137343367951029
