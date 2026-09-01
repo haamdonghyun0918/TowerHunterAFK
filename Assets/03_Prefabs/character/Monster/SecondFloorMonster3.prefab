@@ -1,5 +1,87 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6344299248567301307
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8310885408100132396}
+    m_Modifications:
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6235598945178849283, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_Name
+      value: TextEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 7789279058596389074, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+--- !u!1 &1045458254962762936 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6235598945178849283, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+  m_PrefabInstance: {fileID: 6344299248567301307}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3752182958197789801 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7789279058596389074, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+  m_PrefabInstance: {fileID: 6344299248567301307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshPro
+--- !u!4 &8315810281205460851 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3129100046284053448, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+  m_PrefabInstance: {fileID: 6344299248567301307}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8420758525712810439
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58,7 +140,10 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 550eb343b0eedd24b89223a73f2853de, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a2ad334c0970b00489e8b53ae2054cc8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8315810281205460851}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a2ad334c0970b00489e8b53ae2054cc8, type: 3}
       insertIndex: -1
@@ -66,10 +151,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a2ad334c0970b00489e8b53ae2054cc8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8433416499172417826}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a2ad334c0970b00489e8b53ae2054cc8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4090228555854426643}
   m_SourcePrefab: {fileID: 100100000, guid: a2ad334c0970b00489e8b53ae2054cc8, type: 3}
 --- !u!95 &2717393417208659030 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a2ad334c0970b00489e8b53ae2054cc8, type: 3}
+  m_PrefabInstance: {fileID: 8420758525712810439}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8310885408100132396 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a2ad334c0970b00489e8b53ae2054cc8, type: 3}
   m_PrefabInstance: {fileID: 8420758525712810439}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &8655323177657400470 stripped
@@ -91,6 +184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   _characterAnimator: {fileID: 2717393417208659030}
   _hitFlashEffect: {fileID: 8433416499172417826}
+  _damageTextEffect: {fileID: 4090228555854426643}
 --- !u!114 &8433416499172417826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,3 +200,18 @@ MonoBehaviour:
   _targetRenderers: []
   _flashMaterial: {fileID: 2100000, guid: ea7f5884491f60144ac2f815f8c1e812, type: 2}
   _flashDuration: 0.08
+--- !u!114 &4090228555854426643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8655323177657400470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f92b371f11ad92d4195f906ba35238e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageTextEffect
+  Root_DamageText: {fileID: 1045458254962762936}
+  Text_Damage: {fileID: 3752182958197789801}
+  _displayDuration: 1

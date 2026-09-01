@@ -28,6 +28,9 @@ public class BattleCharacter : MonoBehaviour
     [Header("피격 이펙트")]
     [SerializeField] private HitFlashEffect _hitFlashEffect;
 
+    [Header("피격 데미지 텍스트")]
+    [SerializeField] private DamageTextEffect _damageTextEffect;
+
     private CancellationTokenSource _hitCancellationTokenSource;
 
     public int _characterAtkSpeed { get; protected set; }
@@ -65,6 +68,11 @@ public class BattleCharacter : MonoBehaviour
         ChangeState(CharacterState.Hit);
 
         _hitFlashEffect?.PlayHitFlash();
+
+        if (currentDamage > 0)
+        {
+            _damageTextEffect?.ShowDamage(currentDamage);
+        }
 
         _characterHp -= currentDamage;
         
