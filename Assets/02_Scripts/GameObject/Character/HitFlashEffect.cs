@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 public class HitFlashEffect : MonoBehaviour
@@ -35,9 +36,46 @@ public class HitFlashEffect : MonoBehaviour
             return;
         }
 
-        _flashCancellationTokenSource = new CancellationTokenSource();
 
-        
+        _flashCancellationTokenSource = new CancellationTokenSource();
+    }
+
+    private async UniTask TakeDamageFlashAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            int durationMillisecons = Mathf.CeilToInt(_flashDuration * 1000f);
+
+            await UniTask.Delay(durationMillisecons, cancellationToken: cancellationToken);
+
+        }
+        catch
+        {
+        }
+    }
+
+    private void CacheMaterials()
+    {
+        _originalMaterials = new Material[_targetRenderers.Length][];
+        _flashMaterials = new Material[_targetRenderers.Length][];
+
+        for(int i = 0; i < _originalMaterials.Length; i++)
+        {
+            Renderer targetRenderer = _targetRenderers[i];
+
+            if (targetRenderer == null)
+            {
+                continue;
+            }
+
+            _originalMaterials[i] = targetRenderer.sharedMaterials;
+            _flashMaterials[i] = new Material[_originalMaterials[i].Length];
+
+            for(int j = 0; j< _flashMaterials[i].Length; j++)
+            {
+                _flashMaterials[i][j] = _flashMaterial;
+            }
+        }
     }
 
 
