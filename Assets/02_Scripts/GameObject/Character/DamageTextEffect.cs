@@ -10,6 +10,8 @@ public class DamageTextEffect : MonoBehaviour
     [SerializeField] private GameObject Root_DamageText;
     [SerializeField] private TMP_Text Text_Damage;
     [SerializeField] private float _displayDuration = 1f;
+    
+    private Transform _targetCameraTransform;
 
     private CancellationTokenSource _damageTextCancellationTokenSource;
 
@@ -17,6 +19,16 @@ public class DamageTextEffect : MonoBehaviour
     {
         StopDamageText();
         HideDamageText();
+    }
+
+    private void LateUpdate()
+    {
+        if (Root_DamageText == null || Root_DamageText.activeInHierarchy == false)
+        {
+            return;
+        }
+
+        FaceCamera();
     }
 
     private void OnDestroy()
@@ -40,7 +52,10 @@ public class DamageTextEffect : MonoBehaviour
         StopDamageText();
 
         Text_Damage.text = damage.ToString();
+        SetTargetCameraFromObjectManager();
         Root_DamageText.SetActive(true);
+
+        FaceCamera();
 
         _damageTextCancellationTokenSource = new CancellationTokenSource();
         HideDamageTextAsync(_damageTextCancellationTokenSource.Token).Forget();
@@ -59,6 +74,40 @@ public class DamageTextEffect : MonoBehaviour
         catch (OperationCanceledException)
         {
         }
+    }
+
+    private void SetTargetCameraFromObjectManager()
+    {
+        _targetCameraTransform = null;
+
+        if (ObjectManager.Instance == null)
+        {
+            return;
+        }
+
+        PlayerPartyCamera playerPartyCamera =
+            ObjectManager.Instance.GetCurrentPlayerPartyCamera();
+
+        if (playerPartyCamera == null)
+        {
+            Debug.LogWarning(
+                "[DamageTextEffect] ObjectManager에 현재 PlayerPartyCamera가 없습니다.");
+
+            return;
+        }
+
+        _targetCameraTransform = playerPartyCamera.transform;
+    }
+
+    private void FaceCamera()
+    {
+        if (_targetCameraTransform == null)
+        {
+            return;
+        }
+
+        Root_DamageText.transform.rotation =
+            _targetCameraTransform.rotation;
     }
 
     private void HideDamageText()

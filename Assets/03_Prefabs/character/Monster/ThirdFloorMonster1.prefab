@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThirdFloorMonster1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e78af787e3084fb4ab28796d55b3d442, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: e78af787e3084fb4ab28796d55b3d442, type: 3}
       propertyPath: m_Controller
       value: 
@@ -184,6 +188,10 @@ PrefabInstance:
     - target: {fileID: 6235598945178849283, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
       propertyPath: m_Name
       value: TextEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 6235598945178849283, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7789279058596389074, guid: b18fb1cc1f6e27440a8df429b3f6969d, type: 3}
       propertyPath: m_text
