@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 8548518114222310000}
   - component: {fileID: 5950893318751976772}
   - component: {fileID: 6722793128372143200}
+  - component: {fileID: 4695889694287621075}
   m_Layer: 0
   m_Name: PlayerPartyCamera
   m_TagString: Untagged
@@ -168,6 +169,18 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &4695889694287621075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3180502732685970185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab3e0c5588c2a14390e07cadbe36dd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPartyCamera
 --- !u!1 &3703283062352211394
 GameObject:
   m_ObjectHideFlags: 0

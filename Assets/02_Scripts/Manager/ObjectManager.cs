@@ -10,6 +10,8 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private GameObject Prefab_BossPlayerParty;
 
     private PlayerPartyController _currentPlayerParty;
+    private PlayerPartyCamera _currentPlayerPartyCamera;
+
     private List<MonsterParty> _monsterPartyList = new List<MonsterParty>();
 
     private Queue<MonsterParty> _monsterPartyPool = new Queue<MonsterParty>();
@@ -100,6 +102,11 @@ public class ObjectManager : MonoBehaviour
                         hunter.RefreshStatFromSaveData();
                     }
                 }
+            }
+
+            if (_currentPlayerParty != null)
+            {
+                SetCurrentPlayerPartyCamera(_currentPlayerParty.gameObject);
             }
 
             if (_currentPlayerParty.GetCurrentHunterCount() == 0)
@@ -220,6 +227,8 @@ public class ObjectManager : MonoBehaviour
             Destroy(gObj_BossParty);
             return;
         }
+
+        SetCurrentPlayerPartyCamera(gObj_BossParty);
 
         string[] bossPartyUids = SaveManager.Instance.CurrentSaveData.BossRaidPartyUids;
 
@@ -403,12 +412,34 @@ public class ObjectManager : MonoBehaviour
         {
             Destroy(_currentPlayerParty.gameObject);
             _currentPlayerParty = null;
+            _currentPlayerPartyCamera = null;
         }
     }
 
     public PlayerPartyController GetCurrentPlayerParty()
     {
         return _currentPlayerParty;
+    }
+
+    public PlayerPartyCamera GetCurrentPlayerPartyCamera()
+    {
+        return _currentPlayerPartyCamera;
+    }
+
+    private void SetCurrentPlayerPartyCamera(GameObject partyObject)
+    {
+        if (partyObject == null)
+        {
+            _currentPlayerPartyCamera = null;
+            return;
+        }
+
+        _currentPlayerPartyCamera = partyObject.GetComponentInChildren<PlayerPartyCamera>(true);
+
+        if (_currentPlayerPartyCamera == null)
+        {
+            Debug.LogWarning($"[ObjectManager] {partyObject.name} 안에 PlayerPartyCamera가 없습니다.");
+        }
     }
 
     private void InitNormalMonsterList()
