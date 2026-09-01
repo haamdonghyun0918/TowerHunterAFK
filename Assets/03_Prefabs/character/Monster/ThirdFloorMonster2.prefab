@@ -63,6 +63,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4182794463787116670}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2210956419222657534}
   m_SourcePrefab: {fileID: 100100000, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
 --- !u!1 &2624487761955091627 stripped
 GameObject:
@@ -82,6 +85,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   _characterAnimator: {fileID: 8775248270306636907}
+  _hitFlashEffect: {fileID: 2210956419222657534}
+--- !u!114 &2210956419222657534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2624487761955091627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4654c80158472e04db06bed950e664b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlashEffect
+  _targetRenderers: []
+  _flashMaterial: {fileID: 2100000, guid: ea7f5884491f60144ac2f815f8c1e812, type: 2}
+  _flashDuration: 0.08
 --- !u!95 &8775248270306636907 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: d8f533c87ed72eb498b20da1bd851183, type: 3}
