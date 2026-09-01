@@ -25,6 +25,9 @@ public class BattleCharacter : MonoBehaviour
     [Header("애니메이터")]
     [SerializeField] private Animator _characterAnimator;
 
+    [Header("피격 이펙트")]
+    [SerializeField] private HitFlashEffect _hitFlashEffect;
+
     private CancellationTokenSource _hitCancellationTokenSource;
 
     public int _characterAtkSpeed { get; protected set; }
@@ -61,6 +64,7 @@ public class BattleCharacter : MonoBehaviour
 
         ChangeState(CharacterState.Hit);
 
+        _hitFlashEffect?.PlayHitFlash();
 
         _characterHp -= currentDamage;
         
@@ -117,7 +121,6 @@ public class BattleCharacter : MonoBehaviour
         }
     }
 
-    //추가
     public int GetCurrentHp()
     {
         return _characterHp;
@@ -132,7 +135,6 @@ public class BattleCharacter : MonoBehaviour
     {
         _onChangedHp -= hpChangeCallback;
     }
-    //끝
 
     public void BindOnStatChangedEvent(Action<int, int> hpChangeCallback)
     {
@@ -144,7 +146,6 @@ public class BattleCharacter : MonoBehaviour
         _onChangedHp = null;
     }
 
-    //Character.MakeFullHp()에서 호출할 수 있도록
     protected void InvokeStatChangedEvent()
     {
         _onChangedHp?.Invoke(_characterHp, _characterMaxHp);
