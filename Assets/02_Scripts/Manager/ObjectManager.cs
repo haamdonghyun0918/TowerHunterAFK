@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 public class ObjectManager : MonoBehaviour
 {
@@ -16,7 +15,8 @@ public class ObjectManager : MonoBehaviour
 
     private Queue<MonsterParty> _monsterPartyPool = new Queue<MonsterParty>();
     private Dictionary<string, Queue<Monster>> _monsterPoolDictionary = new Dictionary<string, Queue<Monster>>();
-
+    private Dictionary<Character, string> _playerAssetPathDict = new Dictionary<Character, string>();
+    private List<string> _bossRaidAssetPaths = new List<string>();
     private List<string> _normalMonsterIdList = new List<string>();
 
     private int _curStageNum;
@@ -253,7 +253,7 @@ public class ObjectManager : MonoBehaviour
         GameObject gObj_BossMonsterParty = Instantiate(Prefab_MonsterParty, monsterSpawnSpotForBoss.position, Quaternion.identity);
         MonsterParty bossMonsterParty = gObj_BossMonsterParty.GetComponent<MonsterParty>();
 
-        await SpawnMonster(bossMonsterId, bossMonsterParty);
+        await SpawnMonster(bossMonsterId, bossMonsterParty, true);
 
         BossRaidBattleUI bossRaidBattleUI = await UiManager.Instance.OpenUi<BossRaidBattleUI>(); 
 
@@ -281,7 +281,7 @@ public class ObjectManager : MonoBehaviour
         GameObject hunterPrefab = null;
         if (string.IsNullOrEmpty(data.PrefabPath) == false)
         {
-            GameObject loadedPrefab = await Addressables.LoadAssetAsync<GameObject>(data.PrefabPath);
+            GameObject loadedPrefab = await ResourceManager.Instance.LoadAsset<GameObject>(data.PrefabPath);
             if (loadedPrefab != null)
             {
                 hunterPrefab = loadedPrefab;
@@ -301,13 +301,23 @@ public class ObjectManager : MonoBehaviour
             bool isBossRaid = targetParty is PlayerPartyControllerForBoss;
             newHunter.InitCharacter(data, characterUniqueId, isBossRaid);
             targetParty.AddHunter(newHunter);
+
+            if (isBossRaid)
+            {
+                _bossRaidAssetPaths.Add(data.PrefabPath);
+            }
+            else
+            {
+                _playerAssetPathDict[newHunter] = data.PrefabPath;
+            }
+
             return true;
         }
 
         return false;
     }
 
-    private async UniTask SpawnMonster(string monsterId, MonsterParty targetMonsterParty)
+    private async UniTask SpawnMonster(string monsterId, MonsterParty targetMonsterParty, bool isBossRaid = false)
     {
         var data = GameDataManager.Instance.GetData<MonsterData>(monsterId);
         if (data == null)
@@ -322,6 +332,7 @@ public class ObjectManager : MonoBehaviour
             reuseMonster.gameObject.SetActive(true);
             reuseMonster.InitMonster(data, _curStageNum);
             targetMonsterParty.AddMonster(reuseMonster);
+
             return;
         }
 
@@ -329,10 +340,15 @@ public class ObjectManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(data.PrefabPath) == false)
         {
-            GameObject loadedPrefab = await Addressables.LoadAssetAsync<GameObject>(data.PrefabPath);
+            GameObject loadedPrefab = await ResourceManager.Instance.LoadAsset<GameObject>(data.PrefabPath);
             if (loadedPrefab != null)
             {
                 prefabToSpawn = loadedPrefab;
+
+                if (isBossRaid)
+                {
+                    _bossRaidAssetPaths.Add(data.PrefabPath);
+                }
             }
             else
             {
@@ -409,10 +425,29 @@ public class ObjectManager : MonoBehaviour
     {
         if (_currentPlayerParty != null)
         {
+            for (int i = 0; i < _currentPlayerParty.MaxPartySize; i++)
+            {
+                Character hunter = _currentPlayerParty.GetHunter(i);
+                if (hunter != null && _playerAssetPathDict.TryGetValue(hunter, out string path))
+                {
+                    ResourceManager.Instance.Release(path);
+                    _playerAssetPathDict.Remove(hunter);
+                }
+            }
+
             Destroy(_currentPlayerParty.gameObject);
             _currentPlayerParty = null;
             _currentPlayerPartyCamera = null;
         }
+    }
+
+    public void ClearBossRaidAssets()
+    {
+        foreach (var path in _bossRaidAssetPaths)
+        {
+            ResourceManager.Instance.Release(path);
+        }
+        _bossRaidAssetPaths.Clear();
     }
 
     public PlayerPartyController GetCurrentPlayerParty()

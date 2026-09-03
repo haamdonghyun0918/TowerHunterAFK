@@ -443,6 +443,11 @@ public class BattleManager : MonoBehaviour
             Destroy(playerParty.gameObject);
         }
 
+        if (ObjectManager.Instance != null)
+        {
+            ObjectManager.Instance.ClearBossRaidAssets();
+        }
+
         MainUi.TriggerBossRaidEnd();
     }
 
