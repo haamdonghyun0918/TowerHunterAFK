@@ -112,6 +112,11 @@ public class BattleCharacter : MonoBehaviour
             currentDamage = damage - _characterDefense;
         }
 
+        if (currentDamage <= 0)
+        {
+            currentDamage = 1;
+        }
+
         return currentDamage;
     }
 
