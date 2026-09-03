@@ -138,11 +138,20 @@ public class BattleManager : MonoBehaviour
 
         turnQueue.Sort(CompareActionOrder);
 
-        while ((playerParty.GetCurrentHunterCount() > 0) && (enemyParty.GetCurrentMonsterCount() > 0))
+        bool isNotNullPlayerParty = (playerParty != null) && (playerParty.gameObject != null);
+        bool isNotNullEnemyParty = (enemyParty != null) && (enemyParty.gameObject != null);
+
+        while ((isNotNullPlayerParty && playerParty.GetCurrentHunterCount() > 0) &&
+               (isNotNullEnemyParty && enemyParty.GetCurrentMonsterCount() > 0))
         {
             foreach (BattleCharacter curUnit in turnQueue)
             {
                 await UniTask.WaitUntil(CheckIsNotPaused);
+
+                if (curUnit == null || curUnit.gameObject == null)
+                {
+                    return;
+                }
 
                 if (curUnit._isDead == true)
                 {
@@ -157,6 +166,11 @@ public class BattleManager : MonoBehaviour
                 {
                     for (int i = 0; i < 3; i++)
                     {
+                        if (playerParty == null)
+                        {
+                            return;
+                        }
+
                         if (playerParty.GetHunter(i) == hunter)
                         {
                             attackerIndex = i;
@@ -180,11 +194,23 @@ public class BattleManager : MonoBehaviour
                     }
 
                     await UniTask.Delay(300);
+
+                    if (hunter == null || hunter.gameObject == null)
+                    {
+                        return;
+                    }
+
                     await hunter.AtkTarget(target, enemyParty);
 
                     if (hunter._isDead == false)
                     {
                         await UniTask.Delay(300);
+
+                        if (hunter == null || hunter.gameObject == null)
+                        {
+                            return;
+                        }
+
                         attackerTransform.position = originPos;
                         await UniTask.Delay(500);
                     }
@@ -233,6 +259,11 @@ public class BattleManager : MonoBehaviour
                     break;
                 }
             }
+        }
+
+        if (playerParty == null || enemyParty == null)
+        {
+            return;
         }
 
         EndBattle(playerParty, enemyParty);
@@ -296,6 +327,11 @@ public class BattleManager : MonoBehaviour
                     continue;
                 }
 
+                if (playerParty == null || enemyParty == null)
+                {
+                    break;
+                }
+
                 if ((playerParty.GetCurrentHunterCount() == 0) || (enemyParty.GetCurrentMonsterCount() == 0))
                 {
                     break;
@@ -322,11 +358,21 @@ public class BattleManager : MonoBehaviour
                     }
 
                     await UniTask.Delay(300);
+                    if (_isBossBattleForceStopped || hunter == null || hunter.gameObject == null)
+                    {
+                        break;
+                    }
+
                     await hunter.AtkTarget(target, enemyParty);
 
                     if (hunter._isDead == false)
                     {
                         await UniTask.Delay(300);
+                        if (_isBossBattleForceStopped || hunter == null || hunter.gameObject == null)
+                        {
+                            break;
+                        }
+
                         attackerTransform.position = originPos;
                         await UniTask.Delay(500);
                     }
@@ -341,6 +387,11 @@ public class BattleManager : MonoBehaviour
                     else
                     {
                         target = FindHunterTarget(playerParty, -1);
+                    }
+
+                    if (target == null)
+                    {
+                        continue;
                     }
 
                     targetTransform = target.transform;
@@ -363,6 +414,11 @@ public class BattleManager : MonoBehaviour
                     }
                 }
             }
+        }
+
+        if (_isBossBattleForceStopped || playerParty == null || enemyParty == null)
+        {
+            return;
         }
 
         if (_isBossBattleForceStopped == false)

@@ -34,7 +34,6 @@ public class Character : BattleCharacter
 
     private int _characterEnhancement;
 
-    public bool _isRunning;
 
     [Header("전투 관련")]
     private Skill _skill;

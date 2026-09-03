@@ -138,6 +138,7 @@ public class ObjectManager : MonoBehaviour
         }
 
         bool isRestArea = ((stage % 10 == 0) && (maxCleared >= stage));
+        bool isFirstFloor = (stage == 1);
 
         if (isRestArea)
         {
@@ -153,6 +154,50 @@ public class ObjectManager : MonoBehaviour
                     }
 
                     SaveManager.Instance.SaveCurrentData();
+                }
+            }
+        }
+        else if (isFirstFloor)
+        {
+            if (_currentPlayerParty != null)
+            {
+                _currentPlayerParty.MakeFullHPAllHunters();
+
+                if (SaveManager.Instance != null)
+                {
+                    foreach (var characterSave in SaveManager.Instance.CharacterDict.Values)
+                    {
+                        characterSave.CurrentHP = -1;
+                    }
+
+                    SaveManager.Instance.SaveCurrentData();
+                }
+            }
+
+            InitNormalMonsterList();
+
+            if ((Prefab_MonsterParty != null) && (monsterSpawnSpots != null))
+            {
+                foreach (Transform spot in monsterSpawnSpots)
+                {
+                    if (spot == null)
+                    {
+                        continue;
+                    }
+
+                    MonsterParty newMonsterParty = GetOrCreateMonsterParty(spot.position);
+
+                    if (_normalMonsterIdList.Count > 0)
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, _normalMonsterIdList.Count);
+                            string randomMonsterId = _normalMonsterIdList[randomIndex];
+                            await SpawnMonster(randomMonsterId, newMonsterParty);
+                        }
+                    }
+
+                    _monsterPartyList.Add(newMonsterParty);
                 }
             }
         }

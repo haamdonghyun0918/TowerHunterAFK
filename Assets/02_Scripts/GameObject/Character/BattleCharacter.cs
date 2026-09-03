@@ -37,6 +37,7 @@ public class BattleCharacter : MonoBehaviour
     public bool _isDead { get; protected set; }
     public string _instanceId { get; set; }
 
+    public bool _isRunning;
 
     private Action<int, int> _onChangedHp;
 
@@ -93,6 +94,12 @@ public class BattleCharacter : MonoBehaviour
             try
             {
                 await UniTask.Delay(500, cancellationToken: _hitCancellationTokenSource.Token);
+
+                if (this == null || this.gameObject == null)
+                {
+                    return;
+                }
+
                 ChangeState(CharacterState.Idle);
             }
 
@@ -208,5 +215,6 @@ public class BattleCharacter : MonoBehaviour
         _characterAnimator.SetBool("IsDead", false);
         _characterAnimator.SetBool("IsDamaged", false);
         _characterAnimator.SetBool("IsMoved", false);
+        _isRunning = false;
     }
 }
