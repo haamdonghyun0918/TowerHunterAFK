@@ -79,7 +79,6 @@ public class ObjectManager : MonoBehaviour
                             else
                             {
                                 Debug.LogWarning($"[오브젝트 매니저] {targetData.BaseId} 스폰 중단됨");
-
                             }
                         }
                         else
