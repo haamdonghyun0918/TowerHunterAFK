@@ -200,11 +200,24 @@ public class Monster : BattleCharacter
 
         await UniTask.Delay(skillData.SkillDuration);
 
-        await _skill.UseProjectileSkillAsync(this.gameObject.transform, targetCharacter, skillDuration);
-        targetCharacter.TakeDamage(GetCurrentDamage()).Forget();
+        if (this == null || this.gameObject == null)
+        {
+            return;
+        }
 
+        await _skill.UseProjectileSkillAsync(this.gameObject.transform, targetCharacter, skillDuration);
+
+        if (targetCharacter != null && targetCharacter.gameObject != null)
+        {
+            targetCharacter.TakeDamage(GetCurrentDamage()).Forget();
+        }
 
         await UniTask.Delay(1050);
+
+        if (this == null || this.gameObject == null)
+        {
+            return;
+        }
 
         await _skill.UseProjectileSkillAsync(this.gameObject.transform, targetCharacter, skillDuration);
         targetCharacter.TakeDamage(GetCurrentDamage()).Forget();

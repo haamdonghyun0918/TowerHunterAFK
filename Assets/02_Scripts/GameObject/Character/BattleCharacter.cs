@@ -94,6 +94,12 @@ public class BattleCharacter : MonoBehaviour
             try
             {
                 await UniTask.Delay(500, cancellationToken: _hitCancellationTokenSource.Token);
+
+                if (this == null || this.gameObject == null)
+                {
+                    return;
+                }
+
                 ChangeState(CharacterState.Idle);
             }
 
